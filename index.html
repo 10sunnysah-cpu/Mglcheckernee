@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>📥 Emergency Bulk Data Backup</title>
+    <title>🤖 DeepSeek AI – MGL Data Leak Tool</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -18,9 +18,9 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #0d1520; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
 
-        .container { max-width: 1000px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
 
         .header {
             display: flex;
@@ -35,33 +35,45 @@
         .brand { display: flex; align-items: center; gap: 14px; }
         .brand-icon {
             width: 48px; height: 48px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 22px;
-            box-shadow: 0 0 40px rgba(245,158,11,0.2);
+            box-shadow: 0 0 40px rgba(139,92,246,0.2);
         }
-        .brand h1 { font-size: 22px; font-weight: 800; }
-        .brand h1 span { color: #f59e0b; }
-        .brand small { display: block; font-size: 11px; color: #64748b; }
+        .brand h1 {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #eef2ff, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand small {
+            display: block;
+            font-size: 11px;
+            color: #64748b;
+            -webkit-text-fill-color: #64748b;
+        }
 
-        .badge {
-            padding: 6px 18px;
-            background: #1c1a0d;
-            border-radius: 50px;
-            border: 1px solid #f59e0b;
-            font-size: 12px;
-            color: #f59e0b;
+        .badge-ai {
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 6px 18px;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            border-radius: 50px;
+            border: 1px solid #8b5cf6;
+            font-size: 12px;
+            font-weight: 600;
+            color: #eef2ff;
+            box-shadow: 0 0 30px rgba(139,92,246,0.2);
         }
-        .badge .dot {
+        .badge-ai .pulse {
             width: 8px; height: 8px;
             border-radius: 50%;
-            background: #f59e0b;
+            background: #22c55e;
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
@@ -96,7 +108,7 @@
         }
         .input-group .field {
             flex: 1;
-            min-width: 180px;
+            min-width: 200px;
             position: relative;
         }
         .input-group .field i {
@@ -106,7 +118,7 @@
             transform: translateY(-50%);
             color: #64748b;
         }
-        .input-group .field input {
+        .input-group .field input, .input-group .field select {
             width: 100%;
             padding: 14px 14px 14px 44px;
             background: #060b18;
@@ -118,10 +130,11 @@
             outline: none;
             transition: all 0.3s;
         }
-        .input-group .field input:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
+        .input-group .field input:focus, .input-group .field select:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 4px rgba(139,92,246,0.12);
         }
+        .input-group .field select option { background: #0f172a; }
 
         .btn {
             padding: 14px 28px;
@@ -137,13 +150,16 @@
             gap: 8px;
             white-space: nowrap;
         }
-        .btn-warning {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+        .btn-ai {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(245,158,11,0.18);
+            box-shadow: 0 4px 20px rgba(139,92,246,0.25);
         }
-        .btn-warning:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,158,11,0.25); }
-        .btn-warning:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-ai:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139,92,246,0.35);
+        }
+        .btn-ai:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-success {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
@@ -153,6 +169,7 @@
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: #fff;
         }
+        .btn-danger:hover:not(:disabled) { transform: translateY(-2px); }
         .btn-secondary {
             background: #1a2744;
             color: #94a3b8;
@@ -172,7 +189,7 @@
         #status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; display: block; }
         #status.success { background: #0d1c0d; border: 1px solid #22c55e; color: #22c55e; display: block; }
         #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
-        #status.warning { background: #1c1a0d; border: 1px solid #f59e0b; color: #f59e0b; display: block; }
+        #status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; display: block; }
 
         .progress-wrap { display: none; margin: 12px 0; }
         .progress-bar {
@@ -185,7 +202,7 @@
         .progress-bar .fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #f59e0b, #22c55e);
+            background: linear-gradient(90deg, #8b5cf6, #22c55e);
             border-radius: 10px;
             transition: width 0.3s;
         }
@@ -213,9 +230,80 @@
         }
         .stat-item .num { font-size: 24px; font-weight: 800; }
         .stat-item .label { font-size: 11px; color: #64748b; }
-        .stat-item .num.yellow { color: #f59e0b; }
-        .stat-item .num.green { color: #22c55e; }
-        .stat-item .num.red { color: #ef4444; }
+        .stat-item .num.leak { color: #ef4444; }
+        .stat-item .num.secure { color: #22c55e; }
+        .stat-item .num.total { color: #8b5cf6; }
+
+        #result {
+            display: none;
+            margin-top: 16px;
+        }
+        .result-card {
+            background: #0d1520;
+            border-radius: 12px;
+            border: 1px solid #1a2744;
+            overflow: hidden;
+        }
+        .result-header {
+            padding: 16px 20px;
+            background: #1c0d0d;
+            border-bottom: 1px solid #ef4444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .result-header .title { color: #ef4444; font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        .result-header .badge-risk { background: #ef4444; color: #fff; padding: 4px 16px; border-radius: 50px; font-size: 12px; font-weight: 600; }
+        .result-body { padding: 20px; }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        @media (max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: #060b18;
+            border-radius: 8px;
+            border: 1px solid #0d1520;
+            align-items: center;
+        }
+        .result-item .label { color: #8b949e; font-size: 13px; font-weight: 500; }
+        .result-item .value { color: #eef2ff; font-weight: 600; font-size: 14px; text-align: right; word-break: break-all; }
+        .result-item .value.leak { color: #ef4444; }
+        .result-item .value.safe { color: #22c55e; }
+
+        .response-box {
+            background: #060b18;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #0d1520;
+            margin-top: 16px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #1a2744;
+            border-top-color: #8b5cf6;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .log-area {
             background: #060b18;
@@ -235,18 +323,19 @@
         .log-area .success { color: #22c55e; }
         .log-area .error { color: #ef4444; }
         .log-area .info { color: #3b82f6; }
-        .log-area .warning { color: #f59e0b; }
+        .log-area .ai { color: #8b5cf6; }
 
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #1a2744;
-            border-top-color: #f59e0b;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
+        .download-section {
+            display: none;
+            margin-top: 16px;
+            padding: 16px 20px;
+            background: #0d1c0d;
+            border: 1px solid #22c55e;
+            border-radius: 10px;
+            text-align: center;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .download-section .big { font-size: 18px; font-weight: 700; color: #22c55e; }
+        .download-section .sub { color: #94a3b8; font-size: 13px; margin-top: 4px; }
 
         .footer {
             margin-top: 28px;
@@ -260,18 +349,7 @@
             color: #475569;
         }
         .footer .warn { color: #ef4444; }
-
-        .download-section {
-            display: none;
-            margin-top: 16px;
-            padding: 16px 20px;
-            background: #0d1c0d;
-            border: 1px solid #22c55e;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .download-section .big { font-size: 18px; font-weight: 700; color: #22c55e; }
-        .download-section .sub { color: #94a3b8; font-size: 13px; margin-top: 4px; }
+        .footer .ai-tag { color: #8b5cf6; }
 
         .toast {
             position: fixed;
@@ -308,50 +386,37 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .quick-ranges button:hover { border-color: #f59e0b; color: #eef2ff; }
-
-        .warning-box {
-            background: #1c1a0d;
-            border: 1px solid #f59e0b;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            color: #f59e0b;
-            font-size: 14px;
-        }
-        .warning-box strong { color: #ef4444; }
+        .quick-ranges button:hover { border-color: #8b5cf6; color: #eef2ff; }
     </style>
 </head>
 <body>
 
 <div class="container">
 
+    <!-- ─── HEADER ─── -->
     <div class="header">
         <div class="brand">
-            <div class="brand-icon"><i class="fas fa-database"></i></div>
+            <div class="brand-icon"><i class="fas fa-brain"></i></div>
             <div>
-                <h1>Data<span>Backup</span></h1>
-                <small>Emergency Bulk Data Export Tool</small>
+                <h1>Deep<span>Scan</span></h1>
+                <small>AI-Powered MGL Data Leak Tool</small>
             </div>
         </div>
-        <div class="badge">
-            <span class="dot"></span>
-            <span>Emergency Backup</span>
+        <div class="badge-ai">
+            <span class="pulse"></span>
+            <span><i class="fas fa-robot"></i> DeepSeek AI</span>
         </div>
     </div>
 
+    <!-- ─── MAIN CARD ─── -->
     <div class="card">
         <div class="card-header">
-            <h2><i class="fas fa-search" style="color:#f59e0b;"></i> BP Range Backup</h2>
-            <span style="color:#64748b;font-size:12px;">Scans range & exports ALL customer data to CSV</span>
+            <h2><i class="fas fa-search" style="color:#8b5cf6;"></i> AI Data Leak Scanner</h2>
+            <span style="color:#64748b;font-size:12px;">Powered by DeepSeek AI — batch scan & backup</span>
         </div>
         <div class="card-body">
 
-            <div class="warning-box">
-                <strong>⚠️ Emergency Backup:</strong> This tool will fetch ALL customer data (mobile, address, name) for the given BP range.
-                Use this to create a backup before shutting down the vulnerable website.
-            </div>
-
+            <!-- ─── BATCH SCAN ─── -->
             <div class="input-group">
                 <div class="field">
                     <i class="fas fa-play"></i>
@@ -359,10 +424,10 @@
                 </div>
                 <div class="field">
                     <i class="fas fa-stop"></i>
-                    <input type="text" id="endBP" placeholder="End BP (e.g. 1100082000)" value="1100082000" />
+                    <input type="text" id="endBP" placeholder="End BP (e.g. 1100081200)" value="1100081200" />
                 </div>
-                <button class="btn btn-warning" id="scanBtn" style="flex:1;">
-                    <i class="fas fa-download"></i> Backup All Data
+                <button class="btn btn-ai" id="scanBtn" style="flex:1;">
+                    <i class="fas fa-robot"></i> AI Batch Scan
                 </button>
                 <button class="btn btn-secondary" onclick="clearAll()">
                     <i class="fas fa-times"></i> Clear
@@ -370,12 +435,12 @@
             </div>
 
             <div class="quick-ranges">
-                <span style="color:#64748b;font-size:12px;margin-right:6px;">Quick Ranges:</span>
-                <button onclick="setRange('1100081000','1100081200')">1000-1200</button>
-                <button onclick="setRange('1100081200','1100081400')">1200-1400</button>
-                <button onclick="setRange('1100081400','1100081600')">1400-1600</button>
-                <button onclick="setRange('1100081600','1100081800')">1600-1800</button>
-                <button onclick="setRange('1100081000','1100082000')">1000-2000 (Full)</button>
+                <span style="color:#64748b;font-size:12px;margin-right:6px;">AI Quick Scan:</span>
+                <button onclick="setRange('1100081000','1100081050')">1000-1050</button>
+                <button onclick="setRange('1100081050','1100081100')">1050-1100</button>
+                <button onclick="setRange('1100081100','1100081150')">1100-1150</button>
+                <button onclick="setRange('1100081150','1100081200')">1150-1200</button>
+                <button onclick="setRange('1100081000','1100081200')">Full 1000-1200</button>
             </div>
 
             <div id="status"></div>
@@ -389,19 +454,18 @@
             </div>
 
             <div class="stat-box" id="statBox">
-                <div class="stat-item"><div class="num yellow" id="statTotal">0</div><div class="label">Total Scanned</div></div>
-                <div class="stat-item"><div class="num green" id="statFound">0</div><div class="label">Records Found</div></div>
-                <div class="stat-item"><div class="num red" id="statErrors">0</div><div class="label">Errors</div></div>
+                <div class="stat-item"><div class="num total" id="statTotal">0</div><div class="label">Total Scanned</div></div>
+                <div class="stat-item"><div class="num leak" id="statLeaks">0</div><div class="label">Leaks Found</div></div>
+                <div class="stat-item"><div class="num secure" id="statSecure">0</div><div class="label">Secure</div></div>
             </div>
 
+            <div id="result"></div>
+
             <div class="download-section" id="downloadSection">
-                <div class="big"><i class="fas fa-check-circle"></i> Backup Complete!</div>
-                <div class="sub" id="downloadInfo">0 records exported</div>
+                <div class="big"><i class="fas fa-check-circle"></i> AI Scan Complete!</div>
+                <div class="sub" id="downloadInfo">0 leaks found</div>
                 <button class="btn btn-success" id="downloadBtn" style="margin-top:12px;display:inline-flex;">
                     <i class="fas fa-file-csv"></i> Download CSV Backup
-                </button>
-                <button class="btn btn-danger" id="downloadBtnSmall" style="margin-top:12px;display:inline-flex;margin-left:10px;">
-                    <i class="fas fa-file-excel"></i> Download Excel Format
                 </button>
             </div>
 
@@ -411,39 +475,41 @@
     </div>
 
     <div class="footer">
-        <span><span class="warn">⚠️</span> Exports ALL customer data for the selected BP range</span>
-        <span>For authorized backup only</span>
+        <span><span class="warn">⚠️</span> AI-powered scan — detects mobile, address, name leaks</span>
+        <span><span class="ai-tag"><i class="fas fa-brain"></i> Powered by DeepSeek AI</span></span>
     </div>
 </div>
 
-<div class="toast" id="toast">✅ Backup Downloaded!</div>
+<div class="toast" id="toast">✅ CSV Downloaded!</div>
 
 <script>
+    // ─── DOM ───
     const startBP = document.getElementById('startBP');
     const endBP = document.getElementById('endBP');
     const scanBtn = document.getElementById('scanBtn');
     const statusDiv = document.getElementById('status');
     const logArea = document.getElementById('logArea');
+    const resultDiv = document.getElementById('result');
     const progressWrap = document.getElementById('progressWrap');
     const progressFill = document.getElementById('progressFill');
     const progressLabel = document.getElementById('progressLabel');
     const progressPercent = document.getElementById('progressPercent');
     const statBox = document.getElementById('statBox');
     const statTotal = document.getElementById('statTotal');
-    const statFound = document.getElementById('statFound');
-    const statErrors = document.getElementById('statErrors');
+    const statLeaks = document.getElementById('statLeaks');
+    const statSecure = document.getElementById('statSecure');
     const downloadSection = document.getElementById('downloadSection');
     const downloadBtn = document.getElementById('downloadBtn');
-    const downloadBtnSmall = document.getElementById('downloadBtnSmall');
     const downloadInfo = document.getElementById('downloadInfo');
 
-    let backupData = [];
+    let leakedData = [];
     let isRunning = false;
 
     function setRange(start, end) {
         startBP.value = start;
         endBP.value = end;
         clearAll();
+        setTimeout(() => scanBtn.click(), 300);
     }
 
     function log(msg, type = 'info') {
@@ -464,11 +530,13 @@
     function clearAll() {
         logArea.innerHTML = '';
         logArea.style.display = 'none';
+        resultDiv.innerHTML = '';
+        resultDiv.style.display = 'none';
         downloadSection.style.display = 'none';
         statBox.style.display = 'none';
         progressWrap.style.display = 'none';
         statusDiv.style.display = 'none';
-        backupData = [];
+        leakedData = [];
     }
 
     function escapeHtml(str) {
@@ -478,26 +546,113 @@
         return div.innerHTML;
     }
 
+    function detectLeak(text) {
+        const leaks = [];
+        const patterns = [
+            { type: '📱 Mobile', regex: /[6-9][0-9]{9}/g },
+            { type: '📧 Email', regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g },
+            { type: '📍 Address', regex: /(?:maharashtra|mumbai|pune|delhi|bangalore|chennai|kolkata|hyderabad|road|street|building|flat|society|colony|nagar|chowk)/gi },
+            { type: '👤 Name', regex: /(?:mr\.|ms\.|mrs\.|dr\.|shri|smt)\.?\s+[a-z]{2,}/gi },
+            { type: '🆔 Aadhar', regex: /[2-9][0-9]{11}/g },
+            { type: '📄 PAN', regex: /[A-Z]{5}[0-9]{4}[A-Z]{1}/g },
+            { type: '🏠 PIN', regex: /\b[1-9][0-9]{5}\b/g }
+        ];
+        for (const p of patterns) {
+            let match;
+            while ((match = p.regex.exec(text)) !== null) {
+                if (match[0]) {
+                    leaks.push({ type: p.type, value: match[0] });
+                }
+            }
+        }
+        const unique = [];
+        const seen = new Set();
+        for (const l of leaks) {
+            const key = l.type + l.value;
+            if (!seen.has(key)) { seen.add(key); unique.push(l); }
+        }
+        return unique;
+    }
+
     function extractData(json, bp) {
         const d = json.response || json;
         return {
             bp_number: d.bp_number || bp,
             full_name: d.full_name || 'N/A',
             mobile: d.mobile || 'N/A',
-            email: d.email || 'N/A',
             city: d.city || 'N/A',
             district: d.district || 'N/A',
             postal_code: d.postal_code || 'N/A',
-            street: d.street || 'N/A',
             house_number: d.house_number || 'N/A',
             location: d.location || 'N/A',
             bill_number: d.bill_number || 'N/A',
-            document_date: d.document_date || 'N/A',
             due_date: d.due_date || 'N/A',
             total_bil_amount: d.total_bil_amount || '0.00',
-            amount_to_be_paid: d.amount_to_be_paid || '0.00',
-            consumption: d.consumption || '0.00'
+            amount_to_be_paid: d.amount_to_be_paid || '0.00'
         };
+    }
+
+    function buildResult(data, leaks) {
+        if (!data || data.length === 0) {
+            return `<div class="result-card"><div class="result-body"><div style="color:#64748b;text-align:center;padding:20px;">No data found in this range.</div></div></div>`;
+        }
+
+        const hasLeak = leaks.length > 0;
+
+        let itemsHTML = data.map(item => {
+            const d = item;
+            const fields = [
+                { label: 'BP Number', key: 'bp_number', value: d.bp_number },
+                { label: 'Customer Name', key: 'full_name', value: d.full_name },
+                { label: 'Mobile', key: 'mobile', value: d.mobile },
+                { label: 'City', key: 'city', value: d.city },
+                { label: 'District', key: 'district', value: d.district },
+                { label: 'Postal Code', key: 'postal_code', value: d.postal_code },
+                { label: 'House Number', key: 'house_number', value: d.house_number },
+                { label: 'Location', key: 'location', value: d.location },
+                { label: 'Bill Number', key: 'bill_number', value: d.bill_number },
+                { label: 'Due Date', key: 'due_date', value: d.due_date },
+                { label: 'Total Bill (₹)', key: 'total_bil_amount', value: d.total_bil_amount },
+                { label: 'Amount to Pay (₹)', key: 'amount_to_be_paid', value: d.amount_to_be_paid }
+            ];
+
+            return `<div style="border:1px solid #1a2744;border-radius:8px;padding:12px 16px;margin-bottom:8px;">
+                        ${fields.filter(f => f.value).map(f => `
+                            <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #0d1520;">
+                                <span style="color:#8b949e;font-size:12px;">${f.label}</span>
+                                <span style="color:#eef2ff;font-size:13px;font-weight:600;">${escapeHtml(f.value)}</span>
+                            </div>
+                        `).join('')}
+                    </div>`;
+        }).join('');
+
+        let leakHTML = '';
+        if (hasLeak) {
+            leakHTML = `
+                <div style="background:#1c0d0d;border:1px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:16px;">
+                    <strong style="color:#ef4444;">🔴 ${leaks.length} Data Leak${leaks.length > 1 ? 's' : ''} Detected!</strong>
+                    <div style="color:#8b949e;font-size:13px;margin-top:4px;">
+                        ${leaks.map(l => `${l.type}: ${escapeHtml(l.value)}`).join(' | ')}
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="title">
+                        <i class="fas fa-user-circle"></i>
+                        ${hasLeak ? '🔴 Data Leak Found!' : '✅ No Data Leak'}
+                    </div>
+                    <span class="badge-risk">${hasLeak ? '⚠️ LEAK' : '🔒 SECURE'}</span>
+                </div>
+                <div class="result-body">
+                    ${leakHTML}
+                    ${itemsHTML}
+                </div>
+            </div>
+        `;
     }
 
     document.getElementById('scanBtn').addEventListener('click', async function() {
@@ -511,26 +666,25 @@
             return;
         }
 
-        const total = end - start + 1;
-        if (total > 1000) {
-            if (!confirm(`⚠️ This will scan ${total} BP numbers. May take 5-10 minutes. Continue?`)) {
+        if (end - start > 500) {
+            if (!confirm(`⚠️ AI will scan ${end - start + 1} BP numbers. May take 2-3 minutes. Continue?`)) {
                 return;
             }
         }
 
         isRunning = true;
         this.disabled = true;
-        this.innerHTML = `<span class="spinner"></span> Backing up...`;
+        this.innerHTML = `<span class="spinner"></span> AI Scanning...`;
         clearAll();
 
+        const total = end - start + 1;
         let scanned = 0;
-        let found = 0;
-        let errors = 0;
-        backupData = [];
+        let leaksFound = 0;
+        let secureCount = 0;
+        leakedData = [];
 
-        setStatus(`⏳ Backing up ${total} BP numbers...`, 'info');
-        log(`🚀 Starting backup: ${start} to ${end} (${total} numbers)`, 'info');
-        log(`⚠️ This may take a few minutes. Please wait.`, 'warning');
+        setStatus(`🤖 AI scanning ${total} BP numbers...`, 'info');
+        log(`🤖 DeepSeek AI scanning: ${start} to ${end} (${total} numbers)`, 'ai');
 
         progressWrap.style.display = 'block';
         statBox.style.display = 'grid';
@@ -565,16 +719,24 @@
                 }
 
                 if (json && json.response) {
-                    const data = extractData(json, bp);
-                    backupData.push(data);
-                    found++;
-                    log(`✅ ${bp} - ${data.full_name}`, 'success');
+                    const leaks = detectLeak(responseText);
+                    if (leaks.length > 0) {
+                        leaksFound++;
+                        const data = extractData(json, bp);
+                        data.leaks = leaks.map(l => l.type + ': ' + l.value).join(' | ');
+                        leakedData.push(data);
+                        log(`🔴 ${bp} - LEAK FOUND! (${leaks.length} items)`, 'error');
+                    } else {
+                        secureCount++;
+                        log(`🟢 ${bp} - SECURE`, 'success');
+                    }
                 } else {
-                    log(`🟢 ${bp} - No data`, 'info');
+                    secureCount++;
+                    log(`🟢 ${bp} - No data`, 'success');
                 }
             } catch (error) {
-                errors++;
-                log(`❌ ${bp} - Error: ${error.message}`, 'error');
+                secureCount++;
+                log(`⚠️ ${bp} - Error: ${error.message}`, 'warning');
             }
 
             scanned++;
@@ -584,43 +746,58 @@
             progressPercent.textContent = pct + '%';
 
             statTotal.textContent = scanned;
-            statFound.textContent = found;
-            statErrors.textContent = errors;
+            statLeaks.textContent = leaksFound;
+            statSecure.textContent = secureCount;
 
-            await new Promise(r => setTimeout(r, 150));
+            await new Promise(r => setTimeout(r, 200));
         }
 
         progressFill.style.width = '100%';
         progressPercent.textContent = '100%';
 
+        // ─── DISPLAY RESULT ───
+        resultDiv.innerHTML = buildResult(leakedData, leakedData.flatMap(d => {
+            const leaks = [];
+            const patterns = [
+                { type: '📱 Mobile', regex: /[6-9][0-9]{9}/g },
+                { type: '📧 Email', regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g },
+                { type: '📍 Address', regex: /(?:maharashtra|mumbai|pune|delhi|bangalore|chennai|kolkata|hyderabad|road|street|building|flat|society|colony|nagar|chowk)/gi },
+                { type: '👤 Name', regex: /(?:mr\.|ms\.|mrs\.|dr\.|shri|smt)\.?\s+[a-z]{2,}/gi }
+            ];
+            for (const p of patterns) {
+                const match = Object.values(d).join(' ').match(p.regex);
+                if (match) {
+                    leaks.push({ type: p.type, value: match[0] });
+                }
+            }
+            return leaks;
+        }));
+        resultDiv.style.display = 'block';
+
         setStatus(
-            found > 0 ?
-            `✅ Backup complete! ${found} records found.` :
-            '⚠️ No records found in this range',
-            found > 0 ? 'success' : 'warning'
+            leaksFound > 0 ?
+            `🔴 AI found ${leaksFound} BP numbers with DATA LEAK!` :
+            '✅ AI scan complete — No leaks found',
+            leaksFound > 0 ? 'error' : 'success'
         );
 
-        if (backupData.length > 0) {
+        if (leakedData.length > 0) {
             downloadSection.style.display = 'block';
-            downloadInfo.textContent = `${backupData.length} customer records exported`;
+            downloadInfo.textContent = `${leakedData.length} BP numbers with data leaks found`;
             downloadBtn.onclick = function() {
-                downloadCSV(backupData);
-            };
-            downloadBtnSmall.onclick = function() {
-                downloadExcel(backupData);
+                downloadCSV(leakedData);
             };
         } else {
             downloadSection.style.display = 'block';
-            downloadInfo.textContent = 'No data found in this range';
+            downloadInfo.textContent = 'No leaks found in this range';
             downloadBtn.style.display = 'none';
-            downloadBtnSmall.style.display = 'none';
         }
 
-        log(`🏁 Backup complete! ${found} records found.`, 'success');
+        log(`🏁 AI scan complete! ${leaksFound} leaks found.`, 'success');
 
         isRunning = false;
         this.disabled = false;
-        this.innerHTML = '<i class="fas fa-download"></i> Backup All Data';
+        this.innerHTML = '<i class="fas fa-robot"></i> AI Batch Scan';
     });
 
     function downloadCSV(data) {
@@ -630,9 +807,10 @@
         }
 
         const headers = [
-            'BP Number', 'Customer Name', 'Mobile', 'Email', 'City', 'District',
-            'Postal Code', 'Street', 'House Number', 'Location',
-            'Bill Number', 'Bill Date', 'Due Date', 'Total Bill (₹)', 'Amount to Pay (₹)', 'Consumption'
+            'BP Number', 'Customer Name', 'Mobile', 'City', 'District',
+            'Postal Code', 'House Number', 'Location',
+            'Bill Number', 'Due Date', 'Total Bill (₹)', 'Amount to Pay (₹)',
+            'Leaked Data'
         ];
 
         let csv = headers.join(',') + '\n';
@@ -640,7 +818,13 @@
         data.forEach(row => {
             const values = headers.map(h => {
                 const key = h.toLowerCase().replace(/[\(\)₹]/g, '').replace(/ /g, '_');
-                let val = row[key] || '';
+                let val = '';
+                if (h === 'Leaked Data') {
+                    val = row.leaks || '';
+                } else {
+                    const k = key.replace(/[^a-z0-9_]/g, '');
+                    val = row[k] || '';
+                }
                 if (typeof val === 'string' && (val.includes(',') || val.includes('"') || val.includes('\n'))) {
                     val = '"' + val.replace(/"/g, '""') + '"';
                 }
@@ -653,56 +837,15 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `customer_backup_${new Date().toISOString().slice(0,10)}.csv`;
+        a.download = `ai_leaked_data_${new Date().toISOString().slice(0,10)}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
 
-        showToast('✅ CSV Backup Downloaded!');
-    }
-
-    function downloadExcel(data) {
-        if (!data || data.length === 0) {
-            alert('No data to download!');
-            return;
-        }
-
-        // Excel uses CSV but with different encoding
-        const headers = [
-            'BP Number', 'Customer Name', 'Mobile', 'Email', 'City', 'District',
-            'Postal Code', 'Street', 'House Number', 'Location',
-            'Bill Number', 'Bill Date', 'Due Date', 'Total Bill (₹)', 'Amount to Pay (₹)', 'Consumption'
-        ];
-
-        let csv = headers.join('\t') + '\n'; // Tab separated for Excel
-
-        data.forEach(row => {
-            const values = headers.map(h => {
-                const key = h.toLowerCase().replace(/[\(\)₹]/g, '').replace(/ /g, '_');
-                return row[key] || '';
-            });
-            csv += values.join('\t') + '\n';
-        });
-
-        const blob = new Blob(['\uFEFF' + csv], { type: 'text/tab-separated-values;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `customer_backup_excel_${new Date().toISOString().slice(0,10)}.xls`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        showToast('✅ Excel Backup Downloaded!');
-    }
-
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg || '✅ Downloaded!';
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3000);
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
     }
 </script>
 </body>
