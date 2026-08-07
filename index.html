@@ -593,19 +593,12 @@
         log(`🚀 Fetching data for BP: ${bp}`, 'info');
 
         try {
-            // ─── FORM DATA ───
-            const params = new URLSearchParams();
-            params.append('bpNumber', bp);
-            params.append('bp', bp);
-            params.append('bp_number', bp);
-
-            // ─── VERCEL PROXY CALL ───
-            const response = await fetch(proxy, {
-                method: 'POST',
+            // ─── GET REQUEST (VERCEL PROXY) ───
+            const response = await fetch(`${proxy}?bpNumber=${bp}`, {
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json, text/plain, */*',
                 },
-                body: params.toString(),
             });
 
             const responseText = await response.text();
