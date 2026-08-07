@@ -433,7 +433,7 @@
     const logArea = document.getElementById('logArea');
     const resultDiv = document.getElementById('result');
 
-    // ─── VERCEL PROXY URL (YAHI SET HAI) ───
+    // ─── VERCEL PROXY URL ───
     const proxy = 'https://mglcheckernee.vercel.app/api/proxy';
 
     // ─── SET BP ───
@@ -593,6 +593,7 @@
         log(`🚀 Fetching data for BP: ${bp}`, 'info');
 
         try {
+            // ─── FORM DATA ───
             const params = new URLSearchParams();
             params.append('bpNumber', bp);
             params.append('bp', bp);
@@ -607,13 +608,14 @@
                 body: params.toString(),
             });
 
-            let responseText = await response.text();
+            const responseText = await response.text();
 
             // ─── PARSE JSON ───
             let json = null;
             try {
                 json = JSON.parse(responseText);
             } catch (e) {
+                // Try to extract JSON from response
                 const match = responseText.match(/\{.*\}/s);
                 if (match) {
                     try {
@@ -622,9 +624,11 @@
                 }
             }
 
+            // ─── CHECK RESPONSE ───
             if (!json || !json.response) {
                 setStatus(`❌ No data found for BP: ${bp}`, 'error');
                 log(`❌ No data found for BP: ${bp}`, 'error');
+                log(`📄 Raw response: ${responseText.substring(0, 200)}`, 'warning');
                 this.disabled = false;
                 this.innerHTML = '<i class="fas fa-download"></i> Fetch Data';
                 return;
