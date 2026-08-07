@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🔍 Advanced Universal API Scanner</title>
+    <title>🎯 Smart Targeted Data Leak Scanner</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -18,9 +18,9 @@
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #0d1520; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+        ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1300px; margin: 0 auto; }
 
         .header {
             display: flex;
@@ -35,16 +35,16 @@
         .brand { display: flex; align-items: center; gap: 14px; }
         .brand-icon {
             width: 44px; height: 44px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 0 0 30px rgba(245,158,11,0.15);
+            box-shadow: 0 0 30px rgba(34,197,94,0.15);
         }
         .brand h1 { font-size: 20px; font-weight: 800; }
-        .brand h1 span { color: #f59e0b; }
+        .brand h1 span { color: #22c55e; }
         .brand small { display: block; font-size: 11px; color: #64748b; }
 
         .badge {
@@ -97,10 +97,10 @@
 
         .input-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 12px;
         }
-        @media (max-width: 900px) { .input-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 1000px) { .input-grid { grid-template-columns: 1fr 1fr; } }
         @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
 
         .field { position: relative; }
@@ -124,8 +124,8 @@
             transition: all 0.3s;
         }
         .field input:focus, .field select:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
+            border-color: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.12);
         }
         .field select option { background: #0f172a; }
 
@@ -145,13 +145,13 @@
             white-space: nowrap;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(245,158,11,0.18);
+            box-shadow: 0 4px 20px rgba(34,197,94,0.18);
         }
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(245,158,11,0.25);
+            box-shadow: 0 8px 30px rgba(34,197,94,0.25);
         }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-secondary {
@@ -164,7 +164,6 @@
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: #fff;
         }
-        .btn-danger:hover:not(:disabled) { transform: translateY(-2px); }
 
         .flex-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
 
@@ -180,7 +179,6 @@
         #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
         #status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; display: block; }
 
-        /* ─── STATS ─── */
         .stat-box {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -195,17 +193,12 @@
             padding: 10px 14px;
             text-align: center;
         }
-        .stat-item .num {
-            font-size: 22px;
-            font-weight: 800;
-        }
+        .stat-item .num { font-size: 22px; font-weight: 800; }
         .stat-item .label { font-size: 11px; color: #64748b; }
-        .stat-item .num.leak { color: #ef4444; }
-        .stat-item .num.secure { color: #22c55e; }
+        .stat-item .num.found { color: #22c55e; }
         .stat-item .num.total { color: #f59e0b; }
-        .stat-item .num.error { color: #eab308; }
+        .stat-item .num.matched { color: #ef4444; }
 
-        /* ─── PROGRESS ─── */
         .progress-wrap { display: none; margin: 12px 0; }
         .progress-bar {
             width: 100%;
@@ -229,39 +222,35 @@
             margin-top: 4px;
         }
 
-        /* ─── API LIST ─── */
-        .api-list {
+        /* ─── MATCH RESULTS ─── */
+        .match-results {
             display: none;
             margin-top: 16px;
-            max-height: 600px;
-            overflow-y: auto;
         }
-        .api-item {
+        .match-item {
             background: #0d1520;
             border: 1px solid #1a2744;
             border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            transition: all 0.3s;
-            cursor: pointer;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-left: 4px solid #22c55e;
         }
-        .api-item:hover { border-color: #1e2d4a; }
-        .api-item .api-header {
+        .match-item .match-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
         }
-        .api-item .api-method {
+        .match-item .match-method {
             font-size: 11px;
             font-weight: 700;
             padding: 2px 10px;
             border-radius: 50px;
         }
-        .api-item .api-method.get { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
-        .api-item .api-method.post { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; }
-        .api-item .api-url {
+        .match-item .match-method.get { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
+        .match-item .match-method.post { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; }
+        .match-item .match-url {
             font-family: 'Courier New', monospace;
             font-size: 13px;
             color: #94a3b8;
@@ -269,26 +258,41 @@
             padding: 0 10px;
             word-break: break-all;
         }
-        .api-item .api-status {
+        .match-item .match-badge {
             font-size: 11px;
             padding: 2px 12px;
             border-radius: 50px;
+            background: #1c0d0d;
+            color: #ef4444;
+            border: 1px solid #ef4444;
         }
-        .api-item .api-status.pending { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
-        .api-item .api-status.scanning { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; animation: pulse 1s infinite; }
-        .api-item .api-status.leak { background: #1c0d0d; color: #ef4444; border: 1px solid #ef4444; }
-        .api-item .api-status.secure { background: #0d1c0d; color: #22c55e; border: 1px solid #22c55e; }
-        .api-item .api-status.error { background: #1c0d0d; color: #ef4444; border: 1px solid #ef4444; }
 
-        .api-item .api-details {
-            display: none;
+        .match-item .match-details {
             margin-top: 12px;
             padding-top: 12px;
             border-top: 1px solid #1a2744;
         }
-        .api-item .api-details.show { display: block; }
 
-        .api-item .api-response {
+        .match-item .match-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        @media (max-width: 600px) { .match-item .match-fields { grid-template-columns: 1fr; } }
+
+        .match-item .field-box {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 12px;
+            background: #060b18;
+            border-radius: 6px;
+            border: 1px solid #0d1520;
+        }
+        .match-item .field-box .label { color: #64748b; font-size: 12px; }
+        .match-item .field-box .value { color: #22c55e; font-weight: 600; font-size: 13px; }
+
+        .match-item .response-box {
             background: #060b18;
             border-radius: 6px;
             padding: 12px;
@@ -297,33 +301,19 @@
             color: #94a3b8;
             white-space: pre-wrap;
             word-break: break-all;
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
             border: 1px solid #0d1520;
+            margin-top: 8px;
         }
-        .api-item .api-response .leak-highlight {
+        .match-item .response-box .highlight {
             background: #1c0d0d;
             color: #ef4444;
             padding: 1px 4px;
             border-radius: 3px;
             border: 1px solid #ef4444;
         }
-        .api-item .api-leaks {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        .api-item .api-leaks .leak-tag {
-            background: #1c0d0d;
-            color: #ef4444;
-            padding: 2px 10px;
-            border-radius: 50px;
-            font-size: 11px;
-            border: 1px solid #ef4444;
-        }
 
-        /* ─── LOG ─── */
         .log-area {
             background: #060b18;
             border-radius: 10px;
@@ -349,7 +339,7 @@
             width: 18px;
             height: 18px;
             border: 2px solid #1a2744;
-            border-top-color: #f59e0b;
+            border-top-color: #22c55e;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
@@ -386,7 +376,7 @@
             transition: all 0.2s;
         }
         .preset-buttons button:hover {
-            border-color: #f59e0b;
+            border-color: #22c55e;
             color: #eef2ff;
         }
 
@@ -407,6 +397,14 @@
             pointer-events: none;
         }
         .toast.show { opacity: 1; transform: translateY(0); }
+
+        .no-match {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+        .no-match i { font-size: 48px; display: block; margin-bottom: 12px; color: #1a2744; }
+        .no-match h3 { color: #94a3b8; font-weight: 400; }
     </style>
 </head>
 <body>
@@ -416,23 +414,23 @@
     <!-- ─── HEADER ─── -->
     <div class="header">
         <div class="brand">
-            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+            <div class="brand-icon"><i class="fas fa-bullseye"></i></div>
             <div>
-                <h1>API<span>Scanner</span></h1>
-                <small>Full API Discovery + Leak Test</small>
+                <h1>Target<span>Scan</span></h1>
+                <small>Exact Match Data Leak Finder</small>
             </div>
         </div>
         <div class="badge">
             <span class="dot"></span>
-            <span>Ready</span>
+            <span>Smart Matching</span>
         </div>
     </div>
 
     <!-- ─── MAIN CARD ─── -->
     <div class="card">
         <div class="card-header">
-            <h2><i class="fas fa-search" style="color:#f59e0b;"></i> Enter Website Details</h2>
-            <span style="color:#64748b;font-size:12px;">Scans ALL APIs with your test data</span>
+            <h2><i class="fas fa-search" style="color:#22c55e;"></i> Enter Website + Target Data</h2>
+            <span style="color:#64748b;font-size:12px;">Scans ALL APIs and shows only matching results</span>
         </div>
         <div class="card-body">
 
@@ -440,29 +438,32 @@
             <div class="input-grid">
                 <div class="field">
                     <i class="fas fa-globe"></i>
-                    <input type="text" id="targetUrl" placeholder="Website URL" value="https://www.mahanagargas.com" />
+                    <input type="text" id="targetUrl" placeholder="Website URL" value="https://paynearby.in" />
                 </div>
                 <div class="field">
                     <i class="fas fa-hashtag"></i>
-                    <input type="text" id="testParam" placeholder="Parameter (e.g. bpNumber)" value="bpNumber" />
+                    <input type="text" id="testParam" placeholder="Parameter (e.g. mobile)" value="mobile" />
                 </div>
                 <div class="field">
-                    <i class="fas fa-user-secret"></i>
-                    <input type="text" id="testValue" placeholder="Test Value" value="50246713" />
+                    <i class="fas fa-phone"></i>
+                    <input type="text" id="searchMobile" placeholder="Mobile Number to find" value="8809559017" />
+                </div>
+                <div class="field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="searchName" placeholder="Name to find (optional)" value="" />
                 </div>
             </div>
 
             <div class="preset-buttons">
                 <span style="color:#64748b;font-size:12px;margin-right:6px;">Presets:</span>
-                <button onclick="setPreset('mgl')">MGL (BP)</button>
-                <button onclick="setPreset('mglCa')">MGL (CA)</button>
-                <button onclick="setPreset('mobile')">Mobile</button>
-                <button onclick="setPreset('email')">Email</button>
+                <button onclick="setPreset('paynearby')">PayNearby</button>
+                <button onclick="setPreset('mgl')">MGL</button>
+                <button onclick="setPreset('mobile')">Mobile Only</button>
             </div>
 
             <div class="flex-row">
                 <button class="btn btn-primary" id="scanBtn" style="flex:1;">
-                    <i class="fas fa-radar"></i> Scan All APIs
+                    <i class="fas fa-radar"></i> Find Data Leaks
                 </button>
                 <button class="btn btn-secondary" onclick="clearAll()">
                     <i class="fas fa-times"></i> Clear
@@ -481,19 +482,18 @@
 
             <div class="stat-box" id="statBox">
                 <div class="stat-item"><div class="num total" id="statTotal">0</div><div class="label">Total APIs</div></div>
-                <div class="stat-item"><div class="num leak" id="statLeak">0</div><div class="label">Leaks</div></div>
-                <div class="stat-item"><div class="num secure" id="statSecure">0</div><div class="label">Secure</div></div>
-                <div class="stat-item"><div class="num error" id="statError">0</div><div class="label">Errors</div></div>
+                <div class="stat-item"><div class="num found" id="statFound">0</div><div class="label">Data Leaks</div></div>
+                <div class="stat-item"><div class="num matched" id="statMatched">0</div><div class="label">Matches Found</div></div>
             </div>
 
-            <div class="api-list" id="apiList"></div>
+            <div class="match-results" id="matchResults"></div>
             <div class="log-area" id="logArea"></div>
 
         </div>
     </div>
 
     <div class="footer">
-        <span><span class="warn">⚠️</span> Detects: Mobile, Email, Address, Name, Aadhar, PAN</span>
+        <span><span class="warn">⚠️</span> Shows only APIs where your search data matches</span>
         <span>For authorized security testing only</span>
     </div>
 </div>
@@ -504,42 +504,41 @@
     // ─── DOM ───
     const targetUrl = document.getElementById('targetUrl');
     const testParam = document.getElementById('testParam');
-    const testValue = document.getElementById('testValue');
+    const searchMobile = document.getElementById('searchMobile');
+    const searchName = document.getElementById('searchName');
     const scanBtn = document.getElementById('scanBtn');
     const statusDiv = document.getElementById('status');
     const logArea = document.getElementById('logArea');
-    const apiList = document.getElementById('apiList');
+    const matchResults = document.getElementById('matchResults');
     const progressWrap = document.getElementById('progressWrap');
     const progressFill = document.getElementById('progressFill');
     const progressLabel = document.getElementById('progressLabel');
     const progressPercent = document.getElementById('progressPercent');
     const statBox = document.getElementById('statBox');
     const statTotal = document.getElementById('statTotal');
-    const statLeak = document.getElementById('statLeak');
-    const statSecure = document.getElementById('statSecure');
-    const statError = document.getElementById('statError');
+    const statFound = document.getElementById('statFound');
+    const statMatched = document.getElementById('statMatched');
 
     let discoveredApis = [];
     let isRunning = false;
 
     // ─── PRESETS ───
     function setPreset(type) {
-        if (type === 'mgl') {
+        if (type === 'paynearby') {
+            targetUrl.value = 'https://paynearby.in';
+            testParam.value = 'mobile';
+            searchMobile.value = '8809559017';
+            searchName.value = '';
+        } else if (type === 'mgl') {
             targetUrl.value = 'https://www.mahanagargas.com';
             testParam.value = 'bpNumber';
-            testValue.value = '50246713';
-        } else if (type === 'mglCa') {
-            targetUrl.value = 'https://www.mahanagargas.com';
-            testParam.value = 'caNumber';
-            testValue.value = '210000334310';
+            searchMobile.value = '7505757889';
+            searchName.value = 'SHAMA PATHAK';
         } else if (type === 'mobile') {
             targetUrl.value = 'https://www.mahanagargas.com';
             testParam.value = 'mobile';
-            testValue.value = '7505757889';
-        } else if (type === 'email') {
-            targetUrl.value = 'https://www.mahanagargas.com';
-            testParam.value = 'email';
-            testValue.value = 'test@example.com';
+            searchMobile.value = '7505757889';
+            searchName.value = '';
         }
         clearAll();
     }
@@ -563,8 +562,8 @@
     function clearAll() {
         logArea.innerHTML = '';
         logArea.style.display = 'none';
-        apiList.innerHTML = '';
-        apiList.style.display = 'none';
+        matchResults.innerHTML = '';
+        matchResults.style.display = 'none';
         statBox.style.display = 'none';
         progressWrap.style.display = 'none';
         statusDiv.style.display = 'none';
@@ -578,33 +577,12 @@
         setTimeout(() => t.classList.remove('show'), 2000);
     }
 
-    // ─── DETECT LEAK ───
-    function detectLeak(text) {
-        const leaks = [];
-        const patterns = [
-            { type: '📱 Mobile', regex: /[6-9][0-9]{9}/g },
-            { type: '📧 Email', regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g },
-            { type: '📍 Address', regex: /(?:maharashtra|mumbai|pune|delhi|bangalore|chennai|kolkata|hyderabad|road|street|building|flat|society|colony|nagar|chowk)/gi },
-            { type: '👤 Name', regex: /(?:mr\.|ms\.|mrs\.|dr\.|shri|smt)\.?\s+[a-z]{2,}/gi },
-            { type: '🆔 Aadhar', regex: /[2-9][0-9]{11}/g },
-            { type: '📄 PAN', regex: /[A-Z]{5}[0-9]{4}[A-Z]{1}/g },
-            { type: '🏠 PIN', regex: /\b[1-9][0-9]{5}\b/g }
-        ];
-        for (const p of patterns) {
-            let match;
-            while ((match = p.regex.exec(text)) !== null) {
-                if (match[0]) {
-                    leaks.push({ type: p.type, value: match[0] });
-                }
-            }
-        }
-        const unique = [];
-        const seen = new Set();
-        for (const l of leaks) {
-            const key = l.type + l.value;
-            if (!seen.has(key)) { seen.add(key); unique.push(l); }
-        }
-        return unique;
+    // ─── ESCAPE ───
+    function escapeHtml(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
     }
 
     // ─── DISCOVER APIS ───
@@ -613,13 +591,14 @@
         const paths = [
             '', '/api', '/api/v1', '/api/v2', '/api/v3',
             '/ajax', '/ajax/get', '/ajax/post', '/ajax/details',
-            '/rest', '/rest/v1', '/rest/v2',
+            '/rest', '/rest/v1',
             '/get', '/post', '/details', '/info', '/data',
             '/customer', '/user', '/order', '/bill', '/payment',
             '/mobile', '/email', '/profile', '/account',
             '/service', '/services', '/product', '/products',
             '/invoice', '/usage', '/history', '/statement',
-            '/view', '/show', '/fetch', '/retrieve'
+            '/view', '/show', '/fetch', '/retrieve',
+            '/v1', '/v2', '/v3'
         ];
         const methods = ['GET', 'POST'];
 
@@ -653,7 +632,6 @@
                                 url: fullUrl,
                                 method: method,
                                 status: 'pending',
-                                leaks: [],
                                 response: text.substring(0, 500),
                                 fullResponse: text
                             });
@@ -694,118 +672,24 @@
                 });
             }
             const text = await response.text();
-            const leaks = detectLeak(text);
-            return { status: response.status, response: text, leaks };
+            return { status: response.status, response: text };
         } catch (e) {
-            return { status: 0, response: `Error: ${e.message}`, leaks: [] };
+            return { status: 0, response: `Error: ${e.message}` };
         }
     }
 
-    // ─── RENDER API LIST ───
-    function renderApiList() {
-        apiList.innerHTML = '';
-        discoveredApis.forEach((api, index) => {
-            const div = document.createElement('div');
-            div.className = 'api-item';
-            div.id = 'api-item-' + index;
-
-            const statusMap = {
-                'pending': '⏳ Pending',
-                'scanning': '🔄 Scanning...',
-                'leak': '🔴 LEAK!',
-                'secure': '🟢 Secure',
-                'error': '❌ Error'
-            };
-
-            div.innerHTML = `
-                <div class="api-header" onclick="toggleDetails(${index})">
-                    <span class="api-method ${api.method.toLowerCase()}">${api.method}</span>
-                    <span class="api-url">${escapeHtml(api.url)}</span>
-                    <span class="api-status ${api.status}">${statusMap[api.status]}</span>
-                </div>
-                <div class="api-details" id="details-${index}">
-                    <div style="color:#8b949e;font-size:12px;margin-bottom:8px;">
-                        <i class="fas fa-code"></i> Response:
-                    </div>
-                    <div class="api-response" id="response-${index}">${escapeHtml(api.fullResponse || 'No response')}</div>
-                    <div class="api-leaks" id="leaks-${index}"></div>
-                </div>
-            `;
-            apiList.appendChild(div);
-        });
-        apiList.style.display = 'block';
-    }
-
-    // ─── UPDATE API ITEM ───
-    function updateApiItem(index) {
-        const api = discoveredApis[index];
-        const div = document.getElementById('api-item-' + index);
-        if (!div) return;
-
-        const statusMap = {
-            'pending': '⏳ Pending',
-            'scanning': '🔄 Scanning...',
-            'leak': '🔴 LEAK!',
-            'secure': '🟢 Secure',
-            'error': '❌ Error'
-        };
-
-        const badge = div.querySelector('.api-status');
-        if (badge) {
-            badge.className = 'api-status ' + api.status;
-            badge.textContent = statusMap[api.status];
+    // ─── CHECK MATCH ───
+    function checkMatch(response, mobile, name) {
+        const matches = [];
+        // Check mobile
+        if (mobile && response.includes(mobile)) {
+            matches.push({ type: '📱 Mobile', value: mobile });
         }
-
-        // Update response
-        const respDiv = document.getElementById('response-' + index);
-        if (respDiv) {
-            let displayText = api.fullResponse || 'No response';
-            if (api.leaks && api.leaks.length > 0) {
-                let escaped = escapeHtml(displayText);
-                api.leaks.forEach(leak => {
-                    const regex = new RegExp(leak.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-                    escaped = escaped.replace(regex, match => `<span class="leak-highlight">${match}</span>`);
-                });
-                respDiv.innerHTML = escaped;
-            } else {
-                respDiv.textContent = displayText;
-            }
+        // Check name
+        if (name && name.trim() && response.toLowerCase().includes(name.toLowerCase().trim())) {
+            matches.push({ type: '👤 Name', value: name });
         }
-
-        // Update leaks tags
-        const leaksDiv = document.getElementById('leaks-' + index);
-        if (leaksDiv && api.leaks && api.leaks.length > 0) {
-            leaksDiv.innerHTML = api.leaks.map(l => `<span class="leak-tag">${l.type}: ${escapeHtml(l.value)}</span>`).join('');
-        }
-    }
-
-    // ─── TOGGLE DETAILS ───
-    function toggleDetails(index) {
-        const details = document.getElementById('details-' + index);
-        if (details) {
-            details.classList.toggle('show');
-        }
-    }
-
-    // ─── UPDATE STATS ───
-    function updateStats() {
-        const total = discoveredApis.length;
-        const leaks = discoveredApis.filter(a => a.status === 'leak').length;
-        const secure = discoveredApis.filter(a => a.status === 'secure').length;
-        const errors = discoveredApis.filter(a => a.status === 'error').length;
-        statTotal.textContent = total;
-        statLeak.textContent = leaks;
-        statSecure.textContent = secure;
-        statError.textContent = errors;
-        statBox.style.display = 'grid';
-    }
-
-    // ─── ESCAPE HTML ───
-    function escapeHtml(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
+        return matches;
     }
 
     // ─── MAIN SCAN ───
@@ -814,11 +698,12 @@
 
         const url = targetUrl.value.trim();
         const param = testParam.value.trim();
-        const value = testValue.value.trim();
+        const mobile = searchMobile.value.trim();
+        const name = searchName.value.trim();
 
         if (!url) { setStatus('⚠️ Please enter a URL', 'warning'); return; }
         if (!param) { setStatus('⚠️ Please enter a parameter', 'warning'); return; }
-        if (!value) { setStatus('⚠️ Please enter a test value', 'warning'); return; }
+        if (!mobile && !name) { setStatus('⚠️ Please enter a mobile number or name to search', 'warning'); return; }
 
         let cleanUrl = url;
         if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
@@ -828,15 +713,16 @@
 
         isRunning = true;
         this.disabled = true;
-        this.innerHTML = `<span class="spinner"></span> Scanning...`;
+        this.innerHTML = `<span class="spinner"></span> Searching...`;
         clearAll();
 
-        setStatus(`⏳ Discovering & scanning APIs on ${cleanUrl}...`, 'info');
-        log(`🚀 Starting full API scan on: ${cleanUrl}`, 'info');
-        log(`📌 Test: ${param}=${value}`, 'info');
+        const searchDesc = `${mobile || ''}${mobile && name ? ' & ' : ''}${name || ''}`;
+        setStatus(`⏳ Searching for "${searchDesc}" in all APIs on ${cleanUrl}...`, 'info');
+        log(`🚀 Starting targeted scan on: ${cleanUrl}`, 'info');
+        log(`📌 Searching for: ${searchDesc}`, 'info');
 
         try {
-            // ─── DISCOVER APIS ───
+            // ─── DISCOVER ───
             discoveredApis = await discoverApis(cleanUrl);
             log(`✅ Discovered ${discoveredApis.length} APIs`, 'success');
 
@@ -844,50 +730,97 @@
                 setStatus('⚠️ No APIs discovered. Try a different URL.', 'warning');
                 isRunning = false;
                 this.disabled = false;
-                this.innerHTML = '<i class="fas fa-radar"></i> Scan All APIs';
+                this.innerHTML = '<i class="fas fa-radar"></i> Find Data Leaks';
                 return;
             }
 
-            renderApiList();
-            updateStats();
             progressWrap.style.display = 'block';
+            statBox.style.display = 'grid';
+            statTotal.textContent = discoveredApis.length;
+
+            let matchCount = 0;
+            let foundLeaks = 0;
+            const matchedResults = [];
 
             // ─── TEST EACH API ───
             for (let i = 0; i < discoveredApis.length; i++) {
                 const api = discoveredApis[i];
-                api.status = 'scanning';
-                updateApiItem(i);
-                updateStats();
-
-                const result = await testApi(api, param, value);
+                const result = await testApi(api, param, mobile || 'test');
                 api.fullResponse = result.response;
-                api.leaks = result.leaks;
 
-                if (result.leaks.length > 0) {
-                    api.status = 'leak';
-                    log(`🔴 LEAK: ${api.method} ${api.url} (${result.leaks.length} items)`, 'error');
+                const matches = checkMatch(result.response, mobile, name);
+
+                if (matches.length > 0) {
+                    matchCount++;
+                    foundLeaks += matches.length;
+                    matchedResults.push({
+                        api: api,
+                        matches: matches,
+                        response: result.response
+                    });
+                    log(`🔴 MATCH FOUND: ${api.method} ${api.url} (${matches.length} matches)`, 'error');
                 } else {
-                    api.status = 'secure';
-                    log(`🟢 SECURE: ${api.method} ${api.url}`, 'success');
+                    log(`🟢 No match: ${api.method} ${api.url}`, 'success');
                 }
-
-                updateApiItem(i);
-                updateStats();
 
                 const pct = Math.round(((i + 1) / discoveredApis.length) * 100);
                 progressFill.style.width = pct + '%';
                 progressLabel.textContent = `${i + 1} / ${discoveredApis.length}`;
                 progressPercent.textContent = pct + '%';
+
+                statFound.textContent = foundLeaks;
+                statMatched.textContent = matchCount;
             }
 
-            const leakCount = discoveredApis.filter(a => a.status === 'leak').length;
-            if (leakCount > 0) {
-                setStatus(`🔴 ${leakCount} APIs found with DATA LEAK!`, 'error');
+            // ─── DISPLAY MATCH RESULTS ───
+            if (matchedResults.length > 0) {
+                let html = '';
+                matchedResults.forEach((item, idx) => {
+                    const api = item.api;
+                    const matches = item.matches;
+                    const response = item.response;
+
+                    html += `
+                        <div class="match-item">
+                            <div class="match-header">
+                                <span class="match-method ${api.method.toLowerCase()}">${api.method}</span>
+                                <span class="match-url">${escapeHtml(api.url)}</span>
+                                <span class="match-badge">${matches.length} Match${matches.length > 1 ? 'es' : ''}</span>
+                            </div>
+                            <div class="match-details">
+                                <div class="match-fields">
+                                    ${matches.map(m => `
+                                        <div class="field-box">
+                                            <span class="label">${m.type}</span>
+                                            <span class="value">${escapeHtml(m.value)}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div class="response-box">${escapeHtml(response)}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                matchResults.innerHTML = html;
+                matchResults.style.display = 'block';
+
+                setStatus(`🔴 ${matchCount} API${matchCount > 1 ? 's' : ''} found with matching data!`, 'error');
             } else {
-                setStatus(`✅ All ${discoveredApis.length} APIs are SECURE`, 'success');
+                matchResults.innerHTML = `
+                    <div class="no-match">
+                        <i class="fas fa-search"></i>
+                        <h3>No matching data found</h3>
+                        <p style="color:#64748b;font-size:14px;margin-top:6px;">
+                            Searched for "${searchDesc}" in ${discoveredApis.length} APIs
+                        </p>
+                    </div>
+                `;
+                matchResults.style.display = 'block';
+                setStatus(`✅ No matches found for "${searchDesc}"`, 'success');
             }
 
-            log(`🏁 Scan complete!`, 'success');
+            log(`🏁 Scan complete! ${matchCount} matches found.`, 'success');
 
         } catch (error) {
             setStatus(`❌ Error: ${error.message}`, 'error');
@@ -895,7 +828,7 @@
         } finally {
             isRunning = false;
             this.disabled = false;
-            this.innerHTML = '<i class="fas fa-radar"></i> Scan All APIs';
+            this.innerHTML = '<i class="fas fa-radar"></i> Find Data Leaks';
         }
     });
 </script>
