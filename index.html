@@ -165,7 +165,6 @@
 
         .flex-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
 
-        /* ─── QUICK SAMPLES ─── */
         .quick-samples {
             display: flex;
             gap: 8px;
@@ -193,7 +192,6 @@
             color: #eef2ff;
         }
 
-        /* ─── STATUS ─── */
         #status {
             padding: 12px 16px;
             border-radius: 10px;
@@ -206,7 +204,6 @@
         #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
         #status.warning { background: #1c1a0d; border: 1px solid #f59e0b; color: #f59e0b; display: block; }
 
-        /* ─── RESULT ─── */
         #result {
             display: none;
             margin-top: 16px;
@@ -436,6 +433,9 @@
     const logArea = document.getElementById('logArea');
     const resultDiv = document.getElementById('result');
 
+    // ─── VERCEL PROXY URL (YAHI SET HAI) ───
+    const proxy = 'https://mglcheckernee.vercel.app/api/proxy';
+
     // ─── SET BP ───
     function setBP(val) {
         bpInput.value = val;
@@ -479,12 +479,6 @@
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
-    }
-
-    // ─── FORMAT CURRENCY ───
-    function fmt(num) {
-        if (!num) return '0.00';
-        return parseFloat(num).toFixed(2);
     }
 
     // ─── DETECT LEAK ───
@@ -599,29 +593,27 @@
         log(`🚀 Fetching data for BP: ${bp}`, 'info');
 
         try {
-            // ─── MGL API ENDPOINT ───
-            const proxy = 'https://corsproxy.io/?';
-            const targetUrl = 'https://www.mahanagargas.com/ajax/get-billing-details';
-
             const params = new URLSearchParams();
             params.append('bpNumber', bp);
             params.append('bp', bp);
             params.append('bp_number', bp);
 
-            const response = await fetch(proxy + encodeURIComponent(targetUrl), {
+            // ─── VERCEL PROXY CALL ───
+            const response = await fetch(proxy, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
                 body: params.toString(),
-                signal: AbortSignal.timeout(10000)
             });
 
             let responseText = await response.text();
-            let json = null;
 
+            // ─── PARSE JSON ───
+            let json = null;
             try {
                 json = JSON.parse(responseText);
             } catch (e) {
-                // Try to extract JSON from response
                 const match = responseText.match(/\{.*\}/s);
                 if (match) {
                     try {
