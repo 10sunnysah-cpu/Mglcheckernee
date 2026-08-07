@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🔍 Universal Data Leak Scanner</title>
+    <title>🔍 Advanced Universal API Scanner</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -18,9 +18,9 @@
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #0d1520; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
-        .container { max-width: 1300px; margin: 0 auto; }
+        .container { max-width: 1400px; margin: 0 auto; }
 
         .header {
             display: flex;
@@ -35,16 +35,16 @@
         .brand { display: flex; align-items: center; gap: 14px; }
         .brand-icon {
             width: 44px; height: 44px;
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 0 0 30px rgba(139,92,246,0.15);
+            box-shadow: 0 0 30px rgba(245,158,11,0.15);
         }
         .brand h1 { font-size: 20px; font-weight: 800; }
-        .brand h1 span { color: #8b5cf6; }
+        .brand h1 span { color: #f59e0b; }
         .brand small { display: block; font-size: 11px; color: #64748b; }
 
         .badge {
@@ -97,10 +97,11 @@
 
         .input-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 12px;
         }
-        @media (max-width: 768px) { .input-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .input-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
 
         .field { position: relative; }
         .field i {
@@ -123,8 +124,8 @@
             transition: all 0.3s;
         }
         .field input:focus, .field select:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 4px rgba(139,92,246,0.12);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
         }
         .field select option { background: #0f172a; }
 
@@ -144,13 +145,13 @@
             white-space: nowrap;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(139,92,246,0.18);
+            box-shadow: 0 4px 20px rgba(245,158,11,0.18);
         }
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(139,92,246,0.25);
+            box-shadow: 0 8px 30px rgba(245,158,11,0.25);
         }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-secondary {
@@ -159,10 +160,11 @@
             border: 1px solid #1e2d4a;
         }
         .btn-secondary:hover { background: #1e2d4a; color: #eef2ff; }
-        .btn-success {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
             color: #fff;
         }
+        .btn-danger:hover:not(:disabled) { transform: translateY(-2px); }
 
         .flex-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
 
@@ -178,6 +180,150 @@
         #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
         #status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; display: block; }
 
+        /* ─── STATS ─── */
+        .stat-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 12px 0;
+            display: none;
+        }
+        .stat-item {
+            background: #0d1520;
+            border: 1px solid #1a2744;
+            border-radius: 8px;
+            padding: 10px 14px;
+            text-align: center;
+        }
+        .stat-item .num {
+            font-size: 22px;
+            font-weight: 800;
+        }
+        .stat-item .label { font-size: 11px; color: #64748b; }
+        .stat-item .num.leak { color: #ef4444; }
+        .stat-item .num.secure { color: #22c55e; }
+        .stat-item .num.total { color: #f59e0b; }
+        .stat-item .num.error { color: #eab308; }
+
+        /* ─── PROGRESS ─── */
+        .progress-wrap { display: none; margin: 12px 0; }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #0d1520;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f59e0b, #22c55e);
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        /* ─── API LIST ─── */
+        .api-list {
+            display: none;
+            margin-top: 16px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .api-item {
+            background: #0d1520;
+            border: 1px solid #1a2744;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .api-item:hover { border-color: #1e2d4a; }
+        .api-item .api-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .api-item .api-method {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 50px;
+        }
+        .api-item .api-method.get { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
+        .api-item .api-method.post { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; }
+        .api-item .api-url {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #94a3b8;
+            flex: 1;
+            padding: 0 10px;
+            word-break: break-all;
+        }
+        .api-item .api-status {
+            font-size: 11px;
+            padding: 2px 12px;
+            border-radius: 50px;
+        }
+        .api-item .api-status.pending { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
+        .api-item .api-status.scanning { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; animation: pulse 1s infinite; }
+        .api-item .api-status.leak { background: #1c0d0d; color: #ef4444; border: 1px solid #ef4444; }
+        .api-item .api-status.secure { background: #0d1c0d; color: #22c55e; border: 1px solid #22c55e; }
+        .api-item .api-status.error { background: #1c0d0d; color: #ef4444; border: 1px solid #ef4444; }
+
+        .api-item .api-details {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #1a2744;
+        }
+        .api-item .api-details.show { display: block; }
+
+        .api-item .api-response {
+            background: #060b18;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #0d1520;
+        }
+        .api-item .api-response .leak-highlight {
+            background: #1c0d0d;
+            color: #ef4444;
+            padding: 1px 4px;
+            border-radius: 3px;
+            border: 1px solid #ef4444;
+        }
+        .api-item .api-leaks {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .api-item .api-leaks .leak-tag {
+            background: #1c0d0d;
+            color: #ef4444;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            border: 1px solid #ef4444;
+        }
+
+        /* ─── LOG ─── */
         .log-area {
             background: #060b18;
             border-radius: 10px;
@@ -203,163 +349,24 @@
             width: 18px;
             height: 18px;
             border: 2px solid #1a2744;
-            border-top-color: #8b5cf6;
+            border-top-color: #f59e0b;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ─── DEVTOOLS RESULT ─── */
-        #result { display: none; margin-top: 16px; }
-
-        .devtools-container {
-            background: #0d1117;
-            border-radius: 12px;
-            border: 1px solid #1a2744;
-            overflow: hidden;
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-        }
-
-        .devtools-tabs {
-            display: flex;
-            background: #161b22;
-            border-bottom: 1px solid #1a2744;
-            padding: 0 16px;
-            gap: 4px;
-            overflow-x: auto;
-        }
-        .devtools-tabs button {
-            padding: 10px 18px;
-            background: transparent;
-            border: none;
-            color: #8b949e;
-            font-size: 12px;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .devtools-tabs button:hover { color: #e6edf3; }
-        .devtools-tabs button.active {
-            color: #e6edf3;
-            border-bottom-color: #8b5cf6;
-        }
-        .devtools-tabs button .badge-count {
-            background: #1c0d0d;
-            color: #ef4444;
-            padding: 1px 8px;
-            border-radius: 50px;
-            font-size: 10px;
-            margin-left: 6px;
-        }
-
-        .devtools-content { padding: 0; max-height: 600px; overflow-y: auto; }
-        .devtools-panel { display: none; padding: 16px 20px; }
-        .devtools-panel.active { display: block; }
-
-        .request-url {
-            background: #0d1520;
-            padding: 10px 16px;
-            border-bottom: 1px solid #1a2744;
+        .footer {
+            margin-top: 28px;
+            padding: 16px 0;
+            border-top: 1px solid #1a2744;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 8px;
-        }
-        .request-url .method {
-            font-weight: 700;
-            padding: 2px 12px;
-            border-radius: 50px;
+            gap: 12px;
             font-size: 12px;
+            color: #475569;
         }
-        .request-url .method.get { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
-        .request-url .method.post { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; }
-        .request-url .url {
-            color: #8b949e;
-            font-size: 13px;
-            word-break: break-all;
-            flex: 1;
-            padding: 0 12px;
-        }
-        .request-url .status-code { font-weight: 700; font-size: 13px; }
-        .request-url .status-code.success { color: #22c55e; }
-        .request-url .status-code.error { color: #ef4444; }
-
-        .leak-summary {
-            background: #1c0d0d;
-            border-left: 4px solid #ef4444;
-            padding: 14px 18px;
-            margin: 12px 16px;
-            border-radius: 6px;
-        }
-        .leak-summary .title {
-            color: #ef4444;
-            font-weight: 700;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .leak-summary .sub { color: #8b949e; font-size: 13px; margin-top: 4px; }
-        .leak-summary .sub code { color: #eab308; background: #0d1520; padding: 1px 8px; border-radius: 4px; }
-
-        .leak-items-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin-top: 12px;
-        }
-        @media (max-width: 600px) { .leak-items-grid { grid-template-columns: 1fr; } }
-        .leak-item-box {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 14px;
-            background: #0d1520;
-            border-radius: 6px;
-            border: 1px solid #1a2744;
-            align-items: center;
-        }
-        .leak-item-box .label { color: #8b949e; font-size: 12px; font-family: 'Inter', sans-serif; }
-        .leak-item-box .value { color: #ef4444; font-weight: 600; font-size: 14px; }
-
-        .headers-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 4px 20px;
-            font-size: 13px;
-        }
-        .headers-grid .key { color: #8b949e; font-weight: 500; padding: 4px 0; border-bottom: 1px solid #0d1520; }
-        .headers-grid .value { color: #e6edf3; padding: 4px 0; border-bottom: 1px solid #0d1520; word-break: break-all; }
-
-        .response-view {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 12px;
-            color: #e6edf3;
-            white-space: pre-wrap;
-            word-break: break-all;
-            background: #060b18;
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid #0d1520;
-            max-height: 450px;
-            overflow-y: auto;
-            line-height: 1.6;
-        }
-        .response-view .leak-highlight {
-            background: #1c0d0d;
-            color: #ef4444;
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid #ef4444;
-            font-weight: 600;
-        }
-        .response-view .json-key { color: #58a6ff; }
-        .response-view .json-string { color: #a5d6ff; }
-        .response-view .json-number { color: #f0883e; }
-        .response-view .json-boolean { color: #f0883e; }
-        .response-view .json-null { color: #8b949e; }
+        .footer .warn { color: #ef4444; }
 
         .preset-buttons {
             display: flex;
@@ -379,22 +386,9 @@
             transition: all 0.2s;
         }
         .preset-buttons button:hover {
-            border-color: #8b5cf6;
+            border-color: #f59e0b;
             color: #eef2ff;
         }
-
-        .footer {
-            margin-top: 28px;
-            padding: 16px 0;
-            border-top: 1px solid #1a2744;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            font-size: 12px;
-            color: #475569;
-        }
-        .footer .warn { color: #ef4444; }
 
         .toast {
             position: fixed;
@@ -422,10 +416,10 @@
     <!-- ─── HEADER ─── -->
     <div class="header">
         <div class="brand">
-            <div class="brand-icon"><i class="fas fa-shield-halved"></i></div>
+            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
             <div>
-                <h1>Leak<span>Scanner</span></h1>
-                <small>Universal API Security Tester</small>
+                <h1>API<span>Scanner</span></h1>
+                <small>Full API Discovery + Leak Test</small>
             </div>
         </div>
         <div class="badge">
@@ -437,8 +431,8 @@
     <!-- ─── MAIN CARD ─── -->
     <div class="card">
         <div class="card-header">
-            <h2><i class="fas fa-search" style="color:#8b5cf6;"></i> Enter Website Details</h2>
-            <span style="color:#64748b;font-size:12px;">Works with any website</span>
+            <h2><i class="fas fa-search" style="color:#f59e0b;"></i> Enter Website Details</h2>
+            <span style="color:#64748b;font-size:12px;">Scans ALL APIs with your test data</span>
         </div>
         <div class="card-body">
 
@@ -446,64 +440,62 @@
             <div class="input-grid">
                 <div class="field">
                     <i class="fas fa-globe"></i>
-                    <input type="text" id="targetUrl" placeholder="Website URL (e.g. https://example.com)" value="https://www.mahanagargas.com" />
-                </div>
-                <div class="field">
-                    <i class="fas fa-code"></i>
-                    <select id="methodType">
-                        <option value="both">Both (GET + POST)</option>
-                        <option value="GET">GET Only</option>
-                        <option value="POST">POST Only</option>
-                    </select>
+                    <input type="text" id="targetUrl" placeholder="Website URL" value="https://www.mahanagargas.com" />
                 </div>
                 <div class="field">
                     <i class="fas fa-hashtag"></i>
-                    <input type="text" id="testParam" placeholder="Parameter (e.g. bpNumber, mobile, email)" value="bpNumber" />
+                    <input type="text" id="testParam" placeholder="Parameter (e.g. bpNumber)" value="bpNumber" />
                 </div>
                 <div class="field">
                     <i class="fas fa-user-secret"></i>
-                    <input type="text" id="testValue" placeholder="Test Value (e.g. 50246713)" value="50246713" />
+                    <input type="text" id="testValue" placeholder="Test Value" value="50246713" />
                 </div>
             </div>
 
-            <!-- ─── PRESETS ─── -->
             <div class="preset-buttons">
-                <span style="color:#64748b;font-size:12px;margin-right:6px;">Quick Test:</span>
+                <span style="color:#64748b;font-size:12px;margin-right:6px;">Presets:</span>
                 <button onclick="setPreset('mgl')">MGL (BP)</button>
                 <button onclick="setPreset('mglCa')">MGL (CA)</button>
                 <button onclick="setPreset('mobile')">Mobile</button>
                 <button onclick="setPreset('email')">Email</button>
-                <button onclick="setPreset('custom')">Custom</button>
             </div>
 
-            <!-- ─── BUTTONS ─── -->
             <div class="flex-row">
                 <button class="btn btn-primary" id="scanBtn" style="flex:1;">
-                    <i class="fas fa-radar"></i> Scan for Leaks
+                    <i class="fas fa-radar"></i> Scan All APIs
                 </button>
                 <button class="btn btn-secondary" onclick="clearAll()">
                     <i class="fas fa-times"></i> Clear
                 </button>
             </div>
 
-            <!-- ─── STATUS ─── -->
             <div id="status"></div>
 
-            <!-- ─── RESULT ─── -->
-            <div id="result"></div>
+            <div class="progress-wrap" id="progressWrap">
+                <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+                <div class="progress-text">
+                    <span id="progressLabel">0 / 0</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+            </div>
 
-            <!-- ─── LOG ─── -->
+            <div class="stat-box" id="statBox">
+                <div class="stat-item"><div class="num total" id="statTotal">0</div><div class="label">Total APIs</div></div>
+                <div class="stat-item"><div class="num leak" id="statLeak">0</div><div class="label">Leaks</div></div>
+                <div class="stat-item"><div class="num secure" id="statSecure">0</div><div class="label">Secure</div></div>
+                <div class="stat-item"><div class="num error" id="statError">0</div><div class="label">Errors</div></div>
+            </div>
+
+            <div class="api-list" id="apiList"></div>
             <div class="log-area" id="logArea"></div>
 
         </div>
     </div>
 
-    <!-- ─── FOOTER ─── -->
     <div class="footer">
         <span><span class="warn">⚠️</span> Detects: Mobile, Email, Address, Name, Aadhar, PAN</span>
         <span>For authorized security testing only</span>
     </div>
-
 </div>
 
 <div class="toast" id="toast">✅ Copied!</div>
@@ -511,16 +503,24 @@
 <script>
     // ─── DOM ───
     const targetUrl = document.getElementById('targetUrl');
-    const methodType = document.getElementById('methodType');
     const testParam = document.getElementById('testParam');
     const testValue = document.getElementById('testValue');
     const scanBtn = document.getElementById('scanBtn');
     const statusDiv = document.getElementById('status');
     const logArea = document.getElementById('logArea');
-    const resultDiv = document.getElementById('result');
+    const apiList = document.getElementById('apiList');
+    const progressWrap = document.getElementById('progressWrap');
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressPercent = document.getElementById('progressPercent');
+    const statBox = document.getElementById('statBox');
+    const statTotal = document.getElementById('statTotal');
+    const statLeak = document.getElementById('statLeak');
+    const statSecure = document.getElementById('statSecure');
+    const statError = document.getElementById('statError');
 
+    let discoveredApis = [];
     let isRunning = false;
-    let lastResult = null;
 
     // ─── PRESETS ───
     function setPreset(type) {
@@ -528,27 +528,18 @@
             targetUrl.value = 'https://www.mahanagargas.com';
             testParam.value = 'bpNumber';
             testValue.value = '50246713';
-            methodType.value = 'both';
         } else if (type === 'mglCa') {
             targetUrl.value = 'https://www.mahanagargas.com';
             testParam.value = 'caNumber';
             testValue.value = '210000334310';
-            methodType.value = 'both';
         } else if (type === 'mobile') {
             targetUrl.value = 'https://www.mahanagargas.com';
             testParam.value = 'mobile';
             testValue.value = '7505757889';
-            methodType.value = 'both';
         } else if (type === 'email') {
             targetUrl.value = 'https://www.mahanagargas.com';
             testParam.value = 'email';
             testValue.value = 'test@example.com';
-            methodType.value = 'both';
-        } else {
-            targetUrl.value = '';
-            testParam.value = 'id';
-            testValue.value = '1';
-            methodType.value = 'both';
         }
         clearAll();
     }
@@ -572,10 +563,12 @@
     function clearAll() {
         logArea.innerHTML = '';
         logArea.style.display = 'none';
-        resultDiv.innerHTML = '';
-        resultDiv.style.display = 'none';
+        apiList.innerHTML = '';
+        apiList.style.display = 'none';
+        statBox.style.display = 'none';
+        progressWrap.style.display = 'none';
         statusDiv.style.display = 'none';
-        lastResult = null;
+        discoveredApis = [];
     }
 
     function showToast(msg) {
@@ -614,124 +607,197 @@
         return unique;
     }
 
-    // ─── SYNTAX HIGHLIGHT ───
-    function highlightJSON(json) {
-        if (typeof json !== 'string') json = JSON.stringify(json, null, 2);
-        return json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            .replace(/("(?:[^"\\]|\\.)*")(?=\s*:)?/g, '<span class="json-string">$1</span>')
-            .replace(/(\b\d+\.?\d*\b)(?=\s*[,}\]])/g, '<span class="json-number">$1</span>')
-            .replace(/\b(true|false)\b/g, '<span class="json-boolean">$1</span>')
-            .replace(/\b(null)\b/g, '<span class="json-null">$1</span>')
-            .replace(/"([^"]+)":/g, '"<span class="json-key">$1</span>":');
+    // ─── DISCOVER APIS ───
+    async function discoverApis(url) {
+        const apis = [];
+        const paths = [
+            '', '/api', '/api/v1', '/api/v2', '/api/v3',
+            '/ajax', '/ajax/get', '/ajax/post', '/ajax/details',
+            '/rest', '/rest/v1', '/rest/v2',
+            '/get', '/post', '/details', '/info', '/data',
+            '/customer', '/user', '/order', '/bill', '/payment',
+            '/mobile', '/email', '/profile', '/account',
+            '/service', '/services', '/product', '/products',
+            '/invoice', '/usage', '/history', '/statement',
+            '/view', '/show', '/fetch', '/retrieve'
+        ];
+        const methods = ['GET', 'POST'];
+
+        log(`🔍 Discovering APIs on: ${url}`, 'info');
+
+        for (const path of paths) {
+            for (const method of methods) {
+                const fullUrl = url + path;
+                try {
+                    const proxy = 'https://corsproxy.io/?';
+                    const test = 'test_' + Date.now();
+                    let response;
+                    if (method === 'GET') {
+                        response = await fetch(proxy + encodeURIComponent(fullUrl + '?test=' + test), { signal: AbortSignal.timeout(3000) });
+                    } else {
+                        const fd = new URLSearchParams();
+                        fd.append('test', test);
+                        response = await fetch(proxy + encodeURIComponent(fullUrl), {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: fd.toString(),
+                            signal: AbortSignal.timeout(3000)
+                        });
+                    }
+                    if (response.status === 200 || response.status === 404) {
+                        const text = await response.text();
+                        const isJson = text.trim().startsWith('{') || text.trim().startsWith('[');
+                        const hasData = text.length > 30 && (text.includes('{') || text.includes('[') || text.includes('html'));
+                        if (isJson || hasData) {
+                            apis.push({
+                                url: fullUrl,
+                                method: method,
+                                status: 'pending',
+                                leaks: [],
+                                response: text.substring(0, 500),
+                                fullResponse: text
+                            });
+                            log(`✅ Found: ${method} ${fullUrl}`, 'success');
+                        }
+                    }
+                } catch (e) { /* Silent */ }
+            }
+        }
+
+        const unique = [];
+        const seen = new Set();
+        for (const api of apis) {
+            const key = api.url + api.method;
+            if (!seen.has(key)) { seen.add(key); unique.push(api); }
+        }
+        return unique;
     }
 
-    // ─── BUILD REPORT ───
-    function buildReport(url, method, status, headers, responseText, leaks, testParam, testValue) {
-        const hasLeak = leaks.length > 0;
-        const statusClass = status >= 200 && status < 300 ? 'success' : 'error';
-        const isJSON = responseText.trim().startsWith('{') || responseText.trim().startsWith('[');
-
-        let leakHTML = '';
-        if (hasLeak) {
-            leakHTML = `
-                <div class="leak-summary">
-                    <div class="title"><i class="fas fa-triangle-exclamation"></i> ${leaks.length} Data Leak${leaks.length > 1 ? 's' : ''} Detected!</div>
-                    <div class="sub">
-                        Found <strong style="color:#ef4444;">${leaks.length}</strong> personal data items.
-                        Tested with: <code>${testParam}=${testValue}</code>
-                    </div>
-                    <div class="leak-items-grid">
-                        ${leaks.map(l => `
-                            <div class="leak-item-box">
-                                <span class="label">${l.type}</span>
-                                <span class="value">${escapeHtml(l.value)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        } else {
-            leakHTML = `
-                <div class="leak-summary" style="border-left-color:#22c55e;background:#0d1c0d;">
-                    <div class="title" style="color:#22c55e;"><i class="fas fa-check-circle"></i> No Data Leak Detected</div>
-                    <div class="sub">
-                        No personal data found in response.
-                        Tested with: <code>${testParam}=${testValue}</code>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Headers
-        let headersHTML = '';
-        if (headers) {
-            const entries = Object.entries(headers);
-            if (entries.length > 0) {
-                headersHTML = `<div class="headers-grid">`;
-                entries.forEach(([k, v]) => {
-                    headersHTML += `<div class="key">${escapeHtml(k)}</div><div class="value">${escapeHtml(v)}</div>`;
+    // ─── TEST API ───
+    async function testApi(api, param, value) {
+        try {
+            const proxy = 'https://corsproxy.io/?';
+            let response;
+            if (api.method === 'GET') {
+                const sep = api.url.includes('?') ? '&' : '?';
+                response = await fetch(proxy + encodeURIComponent(api.url + sep + param + '=' + value), {
+                    signal: AbortSignal.timeout(5000)
                 });
-                headersHTML += `</div>`;
             } else {
-                headersHTML = `<div style="color:#8b949e;font-size:13px;">No headers available</div>`;
+                const fd = new URLSearchParams();
+                fd.append(param, value);
+                response = await fetch(proxy + encodeURIComponent(api.url), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: fd.toString(),
+                    signal: AbortSignal.timeout(5000)
+                });
             }
+            const text = await response.text();
+            const leaks = detectLeak(text);
+            return { status: response.status, response: text, leaks };
+        } catch (e) {
+            return { status: 0, response: `Error: ${e.message}`, leaks: [] };
+        }
+    }
+
+    // ─── RENDER API LIST ───
+    function renderApiList() {
+        apiList.innerHTML = '';
+        discoveredApis.forEach((api, index) => {
+            const div = document.createElement('div');
+            div.className = 'api-item';
+            div.id = 'api-item-' + index;
+
+            const statusMap = {
+                'pending': '⏳ Pending',
+                'scanning': '🔄 Scanning...',
+                'leak': '🔴 LEAK!',
+                'secure': '🟢 Secure',
+                'error': '❌ Error'
+            };
+
+            div.innerHTML = `
+                <div class="api-header" onclick="toggleDetails(${index})">
+                    <span class="api-method ${api.method.toLowerCase()}">${api.method}</span>
+                    <span class="api-url">${escapeHtml(api.url)}</span>
+                    <span class="api-status ${api.status}">${statusMap[api.status]}</span>
+                </div>
+                <div class="api-details" id="details-${index}">
+                    <div style="color:#8b949e;font-size:12px;margin-bottom:8px;">
+                        <i class="fas fa-code"></i> Response:
+                    </div>
+                    <div class="api-response" id="response-${index}">${escapeHtml(api.fullResponse || 'No response')}</div>
+                    <div class="api-leaks" id="leaks-${index}"></div>
+                </div>
+            `;
+            apiList.appendChild(div);
+        });
+        apiList.style.display = 'block';
+    }
+
+    // ─── UPDATE API ITEM ───
+    function updateApiItem(index) {
+        const api = discoveredApis[index];
+        const div = document.getElementById('api-item-' + index);
+        if (!div) return;
+
+        const statusMap = {
+            'pending': '⏳ Pending',
+            'scanning': '🔄 Scanning...',
+            'leak': '🔴 LEAK!',
+            'secure': '🟢 Secure',
+            'error': '❌ Error'
+        };
+
+        const badge = div.querySelector('.api-status');
+        if (badge) {
+            badge.className = 'api-status ' + api.status;
+            badge.textContent = statusMap[api.status];
         }
 
-        // Response
-        let responseHTML = '';
-        let displayText = responseText || 'No response body';
-        if (isJSON) {
-            try {
-                const json = JSON.parse(responseText);
-                displayText = JSON.stringify(json, null, 2);
-                responseHTML = `<div class="response-view">${highlightJSON(displayText)}</div>`;
-            } catch (e) {
-                responseHTML = `<div class="response-view">${escapeHtml(displayText)}</div>`;
-            }
-        } else {
-            let escaped = escapeHtml(displayText);
-            if (hasLeak) {
-                leaks.forEach(leak => {
+        // Update response
+        const respDiv = document.getElementById('response-' + index);
+        if (respDiv) {
+            let displayText = api.fullResponse || 'No response';
+            if (api.leaks && api.leaks.length > 0) {
+                let escaped = escapeHtml(displayText);
+                api.leaks.forEach(leak => {
                     const regex = new RegExp(leak.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
                     escaped = escaped.replace(regex, match => `<span class="leak-highlight">${match}</span>`);
                 });
+                respDiv.innerHTML = escaped;
+            } else {
+                respDiv.textContent = displayText;
             }
-            responseHTML = `<div class="response-view">${escaped}</div>`;
         }
 
-        return `
-            <div class="devtools-container">
-                <div class="request-url">
-                    <span class="method ${method.toLowerCase()}">${method}</span>
-                    <span class="url">${escapeHtml(url)}</span>
-                    <span class="status-code ${statusClass}">${status} ${status >= 200 && status < 300 ? 'OK' : 'Error'}</span>
-                </div>
-                ${leakHTML}
-                <div class="devtools-tabs">
-                    <button class="active" data-tab="headers"><i class="fas fa-list"></i> Headers</button>
-                    <button data-tab="preview"><i class="fas fa-eye"></i> Preview</button>
-                    <button data-tab="response"><i class="fas fa-code"></i> Response</button>
-                    <button data-tab="raw"><i class="fas fa-file-code"></i> Raw</button>
-                    <button style="margin-left:auto;background:transparent;border:none;color:#8b949e;cursor:pointer;" onclick="copyReport()">
-                        <i class="fas fa-copy"></i> Copy
-                    </button>
-                </div>
-                <div class="devtools-content">
-                    <div class="devtools-panel active" id="panel-headers">${headersHTML}</div>
-                    <div class="devtools-panel" id="panel-preview">
-                        <div style="color:#8b949e;font-size:13px;margin-bottom:8px;">
-                            <i class="fas fa-eye"></i> Response Preview (first 500 characters):
-                        </div>
-                        <div class="response-view" style="max-height:200px;">${escapeHtml(displayText.substring(0, 500))}${displayText.length > 500 ? '\n... (truncated)' : ''}</div>
-                        ${hasLeak ? `<div style="margin-top:12px;padding:10px 14px;background:#1c0d0d;border-radius:6px;border:1px solid #ef4444;font-size:13px;color:#94a3b8;"><strong style="color:#ef4444;">⚠️ Leak Confirmed:</strong> ${leaks.length} personal data items found.</div>` : ''}
-                    </div>
-                    <div class="devtools-panel" id="panel-response">${responseHTML}</div>
-                    <div class="devtools-panel" id="panel-raw">
-                        <pre style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8b949e;white-space:pre-wrap;word-break:break-all;background:#060b18;padding:12px;border-radius:6px;border:1px solid #0d1520;max-height:400px;overflow-y:auto;">${escapeHtml(displayText)}</pre>
-                    </div>
-                </div>
-            </div>
-        `;
+        // Update leaks tags
+        const leaksDiv = document.getElementById('leaks-' + index);
+        if (leaksDiv && api.leaks && api.leaks.length > 0) {
+            leaksDiv.innerHTML = api.leaks.map(l => `<span class="leak-tag">${l.type}: ${escapeHtml(l.value)}</span>`).join('');
+        }
+    }
+
+    // ─── TOGGLE DETAILS ───
+    function toggleDetails(index) {
+        const details = document.getElementById('details-' + index);
+        if (details) {
+            details.classList.toggle('show');
+        }
+    }
+
+    // ─── UPDATE STATS ───
+    function updateStats() {
+        const total = discoveredApis.length;
+        const leaks = discoveredApis.filter(a => a.status === 'leak').length;
+        const secure = discoveredApis.filter(a => a.status === 'secure').length;
+        const errors = discoveredApis.filter(a => a.status === 'error').length;
+        statTotal.textContent = total;
+        statLeak.textContent = leaks;
+        statSecure.textContent = secure;
+        statError.textContent = errors;
+        statBox.style.display = 'grid';
     }
 
     // ─── ESCAPE HTML ───
@@ -742,23 +808,6 @@
         return div.innerHTML;
     }
 
-    // ─── COPY REPORT ───
-    function copyReport() {
-        if (!lastResult) return;
-        const text = lastResult;
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(text).then(() => showToast('✅ Report copied!'));
-        } else {
-            const area = document.createElement('textarea');
-            area.value = text;
-            document.body.appendChild(area);
-            area.select();
-            document.execCommand('copy');
-            area.remove();
-            showToast('✅ Report copied!');
-        }
-    }
-
     // ─── MAIN SCAN ───
     document.getElementById('scanBtn').addEventListener('click', async function() {
         if (isRunning) return;
@@ -766,10 +815,9 @@
         const url = targetUrl.value.trim();
         const param = testParam.value.trim();
         const value = testValue.value.trim();
-        const method = methodType.value;
 
-        if (!url) { setStatus('⚠️ Please enter a website URL', 'warning'); return; }
-        if (!param) { setStatus('⚠️ Please enter a parameter name', 'warning'); return; }
+        if (!url) { setStatus('⚠️ Please enter a URL', 'warning'); return; }
+        if (!param) { setStatus('⚠️ Please enter a parameter', 'warning'); return; }
         if (!value) { setStatus('⚠️ Please enter a test value', 'warning'); return; }
 
         let cleanUrl = url;
@@ -783,86 +831,62 @@
         this.innerHTML = `<span class="spinner"></span> Scanning...`;
         clearAll();
 
-        setStatus(`⏳ Scanning ${cleanUrl}...`, 'info');
-        log(`🚀 Starting scan on: ${cleanUrl}`, 'info');
-        log(`📌 Method: ${method}, Parameter: ${param}=${value}`, 'info');
+        setStatus(`⏳ Discovering & scanning APIs on ${cleanUrl}...`, 'info');
+        log(`🚀 Starting full API scan on: ${cleanUrl}`, 'info');
+        log(`📌 Test: ${param}=${value}`, 'info');
 
         try {
-            const proxy = 'https://corsproxy.io/?';
-            const paths = ['', '/api', '/api/v1', '/api/v2', '/ajax', '/get', '/post', '/details', '/info', '/data', '/customer', '/user', '/order', '/bill', '/payment', '/profile', '/account'];
-            const methods = method === 'both' ? ['GET', 'POST'] : [method];
+            // ─── DISCOVER APIS ───
+            discoveredApis = await discoverApis(cleanUrl);
+            log(`✅ Discovered ${discoveredApis.length} APIs`, 'success');
 
-            let foundLeaks = [];
-            let foundUrl = '';
-            let foundMethod = '';
-            let foundStatus = 0;
-            let foundHeaders = {};
-            let foundResponse = '';
+            if (discoveredApis.length === 0) {
+                setStatus('⚠️ No APIs discovered. Try a different URL.', 'warning');
+                isRunning = false;
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-radar"></i> Scan All APIs';
+                return;
+            }
 
-            for (const path of paths) {
-                for (const m of methods) {
-                    const fullUrl = cleanUrl + path;
-                    try {
-                        let response;
-                        if (m === 'GET') {
-                            const sep = fullUrl.includes('?') ? '&' : '?';
-                            response = await fetch(proxy + encodeURIComponent(fullUrl + sep + param + '=' + value), {
-                                signal: AbortSignal.timeout(5000)
-                            });
-                        } else {
-                            const fd = new URLSearchParams();
-                            fd.append(param, value);
-                            response = await fetch(proxy + encodeURIComponent(fullUrl), {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                body: fd.toString(),
-                                signal: AbortSignal.timeout(5000)
-                            });
-                        }
+            renderApiList();
+            updateStats();
+            progressWrap.style.display = 'block';
 
-                        const text = await response.text();
-                        const headers = {};
-                        response.headers.forEach((v, k) => headers[k] = v);
+            // ─── TEST EACH API ───
+            for (let i = 0; i < discoveredApis.length; i++) {
+                const api = discoveredApis[i];
+                api.status = 'scanning';
+                updateApiItem(i);
+                updateStats();
 
-                        const leaks = detectLeak(text);
-                        if (leaks.length > 0) {
-                            foundLeaks = leaks;
-                            foundUrl = fullUrl;
-                            foundMethod = m;
-                            foundStatus = response.status;
-                            foundHeaders = headers;
-                            foundResponse = text;
-                            log(`🔴 LEAK FOUND: ${m} ${fullUrl} (${leaks.length} items)`, 'error');
-                            break;
-                        } else {
-                            log(`🟢 SECURE: ${m} ${fullUrl}`, 'success');
-                        }
-                    } catch (e) {
-                        log(`⚠️ Error: ${m} ${fullUrl} - ${e.message}`, 'warning');
-                    }
+                const result = await testApi(api, param, value);
+                api.fullResponse = result.response;
+                api.leaks = result.leaks;
+
+                if (result.leaks.length > 0) {
+                    api.status = 'leak';
+                    log(`🔴 LEAK: ${api.method} ${api.url} (${result.leaks.length} items)`, 'error');
+                } else {
+                    api.status = 'secure';
+                    log(`🟢 SECURE: ${api.method} ${api.url}`, 'success');
                 }
-                if (foundLeaks.length > 0) break;
+
+                updateApiItem(i);
+                updateStats();
+
+                const pct = Math.round(((i + 1) / discoveredApis.length) * 100);
+                progressFill.style.width = pct + '%';
+                progressLabel.textContent = `${i + 1} / ${discoveredApis.length}`;
+                progressPercent.textContent = pct + '%';
             }
 
-            if (foundLeaks.length > 0) {
-                setStatus(`🔴 ${foundLeaks.length} Data Leaks Found!`, 'error');
-                resultDiv.innerHTML = buildReport(foundUrl, foundMethod, foundStatus, foundHeaders, foundResponse, foundLeaks, param, value);
-                lastResult = `URL: ${foundUrl}\nMethod: ${foundMethod}\nStatus: ${foundStatus}\nLeaks: ${foundLeaks.length}\n${foundLeaks.map(l => `${l.type}: ${l.value}`).join('\n')}\n\nResponse:\n${foundResponse}`;
+            const leakCount = discoveredApis.filter(a => a.status === 'leak').length;
+            if (leakCount > 0) {
+                setStatus(`🔴 ${leakCount} APIs found with DATA LEAK!`, 'error');
             } else {
-                setStatus('✅ No data leaks found!', 'success');
-                resultDiv.innerHTML = `
-                    <div class="devtools-container" style="padding:20px;text-align:center;color:#22c55e;">
-                        <i class="fas fa-check-circle" style="font-size:48px;display:block;margin-bottom:12px;"></i>
-                        <h3 style="font-family:'Inter',sans-serif;">✅ No Data Leaks Detected</h3>
-                        <p style="color:#8b949e;font-family:'Inter',sans-serif;font-size:14px;margin-top:8px;">
-                            Scanned ${paths.length * methods.length} endpoints with <code>${param}=${value}</code>
-                        </p>
-                    </div>
-                `;
-                lastResult = `No leaks found. Scanned ${paths.length * methods.length} endpoints with ${param}=${value}`;
+                setStatus(`✅ All ${discoveredApis.length} APIs are SECURE`, 'success');
             }
 
-            resultDiv.style.display = 'block';
             log(`🏁 Scan complete!`, 'success');
 
         } catch (error) {
@@ -871,21 +895,7 @@
         } finally {
             isRunning = false;
             this.disabled = false;
-            this.innerHTML = '<i class="fas fa-radar"></i> Scan for Leaks';
-        }
-    });
-
-    // ─── TAB SWITCHING ───
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.devtools-tabs button')) {
-            const btn = e.target.closest('.devtools-tabs button');
-            const tab = btn.dataset.tab;
-            const container = btn.closest('.devtools-container');
-            container.querySelectorAll('.devtools-tabs button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            container.querySelectorAll('.devtools-panel').forEach(p => p.classList.remove('active'));
-            const panel = container.querySelector('#panel-' + tab);
-            if (panel) panel.classList.add('active');
+            this.innerHTML = '<i class="fas fa-radar"></i> Scan All APIs';
         }
     });
 </script>
