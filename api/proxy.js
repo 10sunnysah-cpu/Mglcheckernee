@@ -15,41 +15,28 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // MGL API endpoint
+  // ─── MGL API ENDPOINT ───
   const targetUrl = 'https://www.mahanagargas.com/ajax/get-billing-details';
 
   try {
-    // ─── VERCEL SE RAW BODY KAISE LEIN ───
-    // Vercel mein body string format mein aati hai
+    // ─── BODY KO PROPERLY HANDLE KAREIN ───
     let bodyString = '';
 
-    if (req.body) {
-      // Agar req.body object hai toh stringify karein
-      if (typeof req.body === 'object') {
-        // URLSearchParams ke liye
-        if (req.body instanceof URLSearchParams) {
-          bodyString = req.body.toString();
-        } else {
-          // Plain object ko URL encoded string mein convert karein
-          const params = new URLSearchParams();
-          for (const [key, value] of Object.entries(req.body)) {
-            params.append(key, value);
-          }
-          bodyString = params.toString();
-        }
-      } else {
-        bodyString = req.body;
+    if (typeof req.body === 'string') {
+      bodyString = req.body;
+    } else if (req.body && typeof req.body === 'object') {
+      const params = new URLSearchParams();
+      for (const [key, value] of Object.entries(req.body)) {
+        params.append(key, value);
       }
-    }
-
-    // ─── DEFAULT PARAMS (agar body empty hai) ───
-    if (!bodyString) {
-      // Default BP number daalein
-      const defaultParams = new URLSearchParams();
-      defaultParams.append('bpNumber', '1100081583');
-      defaultParams.append('bp', '1100081583');
-      defaultParams.append('bp_number', '1100081583');
-      bodyString = defaultParams.toString();
+      bodyString = params.toString();
+    } else {
+      // Default fallback
+      const params = new URLSearchParams();
+      params.append('bpNumber', '1100081583');
+      params.append('bp', '1100081583');
+      params.append('bp_number', '1100081583');
+      bodyString = params.toString();
     }
 
     console.log('Sending to MGL:', bodyString);
