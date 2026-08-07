@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>🔍 MGL - Custom API Scanner</title>
+    <title>🤖 Auto API Discovery & Leak Scanner</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <style>
@@ -18,9 +18,9 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #0d1520; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
 
-        .container { max-width: 1100px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
 
         .header {
             display: flex;
@@ -35,16 +35,16 @@
         .brand { display: flex; align-items: center; gap: 14px; }
         .brand-icon {
             width: 44px; height: 44px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 0 0 30px rgba(245,158,11,0.15);
+            box-shadow: 0 0 30px rgba(6,182,212,0.15);
         }
         .brand h1 { font-size: 20px; font-weight: 800; }
-        .brand h1 span { color: #f59e0b; }
+        .brand h1 span { color: #06b6d4; }
         .brand small { display: block; font-size: 11px; color: #64748b; }
 
         .badge {
@@ -102,7 +102,7 @@
         }
         .input-group .field {
             flex: 1;
-            min-width: 180px;
+            min-width: 200px;
             position: relative;
         }
         .input-group .field i {
@@ -125,8 +125,8 @@
             transition: all 0.3s;
         }
         .input-group .field input:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 4px rgba(6,182,212,0.12);
         }
 
         .btn {
@@ -145,15 +145,25 @@
             white-space: nowrap;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(245,158,11,0.18);
+            box-shadow: 0 4px 20px rgba(6,182,212,0.18);
         }
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(245,158,11,0.25);
+            box-shadow: 0 8px 30px rgba(6,182,212,0.25);
         }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+        }
+        .btn-danger:hover:not(:disabled) { transform: translateY(-2px); }
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+        }
+        .btn-success:hover:not(:disabled) { transform: translateY(-2px); }
         .btn-secondary {
             background: #1a2744;
             color: #94a3b8;
@@ -174,9 +184,13 @@
         #status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; display: block; }
         #status.success { background: #0d1c0d; border: 1px solid #22c55e; color: #22c55e; display: block; }
         #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
-        #status.warning { background: #1c1a0d; border: 1px solid #f59e0b; color: #f59e0b; display: block; }
+        #status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; display: block; }
 
-        .api-list { display: none; margin-top: 16px; }
+        /* ─── DISCOVERED APIS ─── */
+        .api-list {
+            display: none;
+            margin-top: 16px;
+        }
         .api-item {
             background: #0d1520;
             border: 1px solid #1a2744;
@@ -204,19 +218,20 @@
             border-radius: 50px;
         }
         .api-item .info .method.get { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
-        .api-item .info .method.post { background: #1c1a0d; color: #f59e0b; border: 1px solid #f59e0b; }
+        .api-item .info .method.post { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; }
         .api-item .info .url {
             font-family: 'Courier New', monospace;
             font-size: 13px;
             color: #94a3b8;
         }
+        .api-item .info .url .highlight { color: #06b6d4; }
         .api-item .status-badge {
             font-size: 11px;
             padding: 2px 12px;
             border-radius: 50px;
         }
         .api-item .status-badge.pending { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
-        .api-item .status-badge.scanning { background: #1c1a0d; color: #f59e0b; border: 1px solid #f59e0b; animation: pulse 1s infinite; }
+        .api-item .status-badge.scanning { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; animation: pulse 1s infinite; }
         .api-item .status-badge.leak { background: #1c0d0d; color: #ef4444; border: 1px solid #ef4444; }
         .api-item .status-badge.secure { background: #0d1c0d; color: #22c55e; border: 1px solid #22c55e; }
         .api-item .status-badge.error { background: #1c0d0d; color: #ef4444; border: 1px solid #ef4444; }
@@ -256,14 +271,15 @@
         .log-area .success { color: #22c55e; }
         .log-area .error { color: #ef4444; }
         .log-area .info { color: #3b82f6; }
-        .log-area .warning { color: #f59e0b; }
+        .log-area .warning { color: #eab308; }
+        .log-area .highlight { color: #06b6d4; }
 
         .spinner {
             display: inline-block;
             width: 18px;
             height: 18px;
             border: 2px solid #1a2744;
-            border-top-color: #f59e0b;
+            border-top-color: #06b6d4;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
@@ -296,7 +312,7 @@
         .progress-bar .fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #f59e0b, #22c55e);
+            background: linear-gradient(90deg, #06b6d4, #22c55e);
             border-radius: 10px;
             transition: width 0.3s;
         }
@@ -331,29 +347,7 @@
         }
         .stat-item .num.leak { color: #ef4444; }
         .stat-item .num.secure { color: #22c55e; }
-        .stat-item .num.total { color: #f59e0b; }
-
-        .preset-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-        .preset-buttons button {
-            padding: 6px 16px;
-            background: #0d1520;
-            border: 1px solid #1a2744;
-            border-radius: 50px;
-            color: #94a3b8;
-            font-size: 12px;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .preset-buttons button:hover {
-            border-color: #f59e0b;
-            color: #eef2ff;
-        }
+        .stat-item .num.total { color: #3b82f6; }
     </style>
 </head>
 <body>
@@ -363,57 +357,48 @@
     <!-- ─── HEADER ─── -->
     <div class="header">
         <div class="brand">
-            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+            <div class="brand-icon"><i class="fas fa-robot"></i></div>
             <div>
-                <h1>MGL<span>Scanner</span></h1>
-                <small>Mahanagar Gas - API Security Test</small>
+                <h1>API<span>Discover</span></h1>
+                <small>Auto API Discovery & Leak Scanner</small>
             </div>
         </div>
         <div class="badge">
             <span class="dot"></span>
-            <span>Custom Scan Ready</span>
+            <span>AI-Powered Discovery</span>
         </div>
     </div>
 
     <!-- ─── MAIN CARD ─── -->
     <div class="card">
         <div class="card-header">
-            <h2><i class="fas fa-search" style="color:#f59e0b;"></i> Scan Mahanagar Gas APIs</h2>
-            <span style="color:#64748b;font-size:12px;">Tests BP Number & CA Number</span>
+            <h2><i class="fas fa-search" style="color:#06b6d4;"></i> Enter Website URL</h2>
+            <span style="color:#64748b;font-size:12px;">I will find all APIs automatically</span>
         </div>
         <div class="card-body">
 
             <!-- ─── INPUT ─── -->
             <div class="input-group">
                 <div class="field">
-                    <i class="fas fa-link"></i>
-                    <input type="text" id="baseUrl" value="https://www.mahanagargas.com" />
+                    <i class="fas fa-globe"></i>
+                    <input type="text" id="websiteUrl" placeholder="https://example.com" value="https://mngl.in" />
                 </div>
-                <div class="field">
-                    <i class="fas fa-hashtag"></i>
-                    <input type="text" id="bpNumber" placeholder="BP Number" value="1100081082" />
-                </div>
-                <div class="field">
-                    <i class="fas fa-id-card"></i>
-                    <input type="text" id="caNumber" placeholder="CA Number" value="210000334310" />
-                </div>
-            </div>
-
-            <!-- ─── PRESETS ─── -->
-            <div class="preset-buttons">
-                <span style="color:#64748b;font-size:12px;margin-right:6px;">Quick Test:</span>
-                <button onclick="setValues('1100081082', '210000334310')">BP: 1100081082 · CA: 210000334310</button>
-                <button onclick="setValues('1100081083', '210000334311')">BP: 1100081083 · CA: 210000334311</button>
-            </div>
-
-            <!-- ─── BUTTONS ─── -->
-            <div class="flex-row">
-                <button class="btn btn-primary" id="scanBtn" style="flex:1;">
-                    <i class="fas fa-radar"></i> Scan for Leak
+                <button class="btn btn-primary" id="discoverBtn" style="flex:0 0 auto;">
+                    <i class="fas fa-radar"></i> Discover APIs
                 </button>
                 <button class="btn btn-secondary" onclick="clearAll()">
                     <i class="fas fa-times"></i> Clear
                 </button>
+            </div>
+
+            <!-- ─── OPTIONS ─── -->
+            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:#64748b;">
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                    <input type="checkbox" id="deepScan" checked /> Deep Scan (slower)
+                </label>
+                <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                    <input type="checkbox" id="testAll" checked /> Test all discovered APIs
+                </label>
             </div>
 
             <!-- ─── STATUS ─── -->
@@ -435,7 +420,7 @@
                 <div class="stat-item"><div class="num total" id="statTotal">0</div><div class="label">Total APIs</div></div>
                 <div class="stat-item"><div class="num leak" id="statLeak">0</div><div class="label">Leak Found</div></div>
                 <div class="stat-item"><div class="num secure" id="statSecure">0</div><div class="label">Secure</div></div>
-                <div class="stat-item"><div class="num" id="statError" style="color:#f59e0b;">0</div><div class="label">Errors</div></div>
+                <div class="stat-item"><div class="num" id="statError" style="color:#eab308;">0</div><div class="label">Errors</div></div>
             </div>
 
             <!-- ─── API LIST ─── -->
@@ -449,7 +434,7 @@
 
     <!-- ─── FOOTER ─── -->
     <div class="footer">
-        <span><span class="warn">⚠️</span> Tests: Mobile, Email, Address, Name, Aadhar, PAN</span>
+        <span><span class="warn">⚠️</span> Detects: Mobile, Email, Address, Name, Aadhar, PAN</span>
         <span>For authorized security testing only</span>
     </div>
 
@@ -457,10 +442,8 @@
 
 <script>
     // ─── DOM ───
-    const baseUrl = document.getElementById('baseUrl');
-    const bpNumber = document.getElementById('bpNumber');
-    const caNumber = document.getElementById('caNumber');
-    const scanBtn = document.getElementById('scanBtn');
+    const websiteUrl = document.getElementById('websiteUrl');
+    const discoverBtn = document.getElementById('discoverBtn');
     const statusDiv = document.getElementById('status');
     const logArea = document.getElementById('logArea');
     const apiList = document.getElementById('apiList');
@@ -473,15 +456,11 @@
     const statLeak = document.getElementById('statLeak');
     const statSecure = document.getElementById('statSecure');
     const statError = document.getElementById('statError');
+    const deepScan = document.getElementById('deepScan');
+    const testAll = document.getElementById('testAll');
 
     let discoveredApis = [];
     let isRunning = false;
-
-    // ─── SET VALUES ───
-    function setValues(bp, ca) {
-        bpNumber.value = bp;
-        caNumber.value = ca;
-    }
 
     // ─── LOG ───
     function log(msg, type = 'info') {
@@ -552,22 +531,18 @@
     async function discoverApis(url) {
         const apis = [];
         const commonPaths = [
-            '/api', '/api/v1', '/api/v2', '/api/v3',
-            '/ajax', '/ajax/get', '/ajax/post',
-            '/rest', '/rest/v1',
-            '/customer', '/customer/details', '/customer-zone',
-            '/residential-png', '/residential-png/api',
-            '/meter-reading', '/log-meter-reading',
-            '/without-registering', '/without-registering-log-meter-reading',
+            '/api', '/api/v1', '/api/v2', '/api/v3', '/rest', '/rest/v1',
+            '/ajax', '/ajax/get', '/ajax/post', '/ajax/details',
             '/get', '/post', '/details', '/info', '/data',
-            '/bill', '/payment', '/invoice', '/usage',
+            '/customer', '/user', '/order', '/bill', '/payment',
             '/mobile', '/email', '/profile', '/account'
         ];
 
-        const commonParams = ['bpNumber', 'bp', 'bp_no', 'BP', 'caNumber', 'ca', 'CA', 'customer_id', 'customerId', 'mobile', 'phone', 'email', 'id', 'user_id'];
+        const commonParams = ['bpNumber', 'mobile', 'phone', 'email', 'id', 'user_id', 'customer_id', 'order_id', 'bp', 'aadhar', 'pan'];
 
-        log(`🔍 Discovering APIs on: ${url}`, 'info');
+        log(`🔍 Discovering APIs for: ${url}`, 'info');
 
+        // Try all combinations
         for (const path of commonPaths) {
             for (const method of ['GET', 'POST']) {
                 const fullUrl = url + path;
@@ -588,6 +563,7 @@
                         });
                     }
                     if (response.status === 200 || response.status === 404) {
+                        // Check if it looks like an API (JSON or has data)
                         const text = await response.text();
                         const isJson = text.trim().startsWith('{') || text.trim().startsWith('[');
                         const hasData = text.length > 50 && (text.includes('{') || text.includes('['));
@@ -608,6 +584,7 @@
             }
         }
 
+        // Remove duplicates
         const unique = [];
         const seen = new Set();
         for (const api of apis) {
@@ -618,13 +595,12 @@
         return unique;
     }
 
-    // ─── TEST API ───
+    // ─── TEST SINGLE API ───
     async function testApi(api, testValues) {
         const leaks = [];
         let responseText = '';
 
         for (const [param, value] of Object.entries(testValues)) {
-            if (!value) continue;
             try {
                 const proxy = 'https://corsproxy.io/?';
                 let response;
@@ -655,6 +631,122 @@
 
         return { leaks, responseText };
     }
+
+    // ─── MAIN DISCOVER & SCAN ───
+    document.getElementById('discoverBtn').addEventListener('click', async function() {
+        if (isRunning) return;
+
+        const baseUrl = websiteUrl.value.trim();
+        if (!baseUrl) {
+            setStatus('⚠️ Please enter a website URL', 'warning');
+            return;
+        }
+
+        // Clean URL
+        let cleanUrl = baseUrl;
+        if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+            cleanUrl = 'https://' + cleanUrl;
+        }
+        if (cleanUrl.endsWith('/')) {
+            cleanUrl = cleanUrl.slice(0, -1);
+        }
+
+        isRunning = true;
+        this.disabled = true;
+        this.innerHTML = `<span class="spinner"></span> Discovering...`;
+        clearAll();
+
+        setStatus(`⏳ Discovering APIs on ${cleanUrl}...`, 'info');
+        log(`🚀 Starting discovery on: ${cleanUrl}`, 'info');
+
+        try {
+            // ─── DISCOVER ───
+            discoveredApis = await discoverApis(cleanUrl);
+            log(`✅ Discovered ${discoveredApis.length} APIs`, 'success');
+
+            if (discoveredApis.length === 0) {
+                setStatus('⚠️ No APIs discovered. Try a different URL or enable Deep Scan.', 'warning');
+                isRunning = false;
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-radar"></i> Discover APIs';
+                return;
+            }
+
+            // ─── RENDER APIS ───
+            renderApiList();
+
+            // ─── UPDATE STATS ───
+            updateStats();
+            progressWrap.style.display = 'block';
+
+            // ─── TEST EACH API ───
+            if (testAll.checked) {
+                this.innerHTML = `<span class="spinner"></span> Testing APIs...`;
+                setStatus(`🔍 Testing ${discoveredApis.length} APIs for data leaks...`, 'info');
+
+                const testValues = {
+                    'bpNumber': '50246713',
+                    'mobile': '9876543210',
+                    'phone': '9876543210',
+                    'email': 'test@example.com',
+                    'id': '1',
+                    'user_id': '1001',
+                    'customer_id': '1001',
+                    'order_id': 'ORD1001',
+                    'bp': '50246713',
+                    'aadhar': '123456789012',
+                    'pan': 'ABCDE1234F'
+                };
+
+                for (let i = 0; i < discoveredApis.length; i++) {
+                    const api = discoveredApis[i];
+                    api.status = 'scanning';
+                    updateApiItem(i);
+                    updateStats();
+
+                    const result = await testApi(api, testValues);
+                    api.leaks = result.leaks;
+                    api.response = result.responseText;
+
+                    if (result.leaks.length > 0) {
+                        api.status = 'leak';
+                        log(`🔴 ${api.method} ${api.url} - LEAK FOUND (${result.leaks.length} items)`, 'error');
+                    } else {
+                        api.status = 'secure';
+                        log(`🟢 ${api.method} ${api.url} - SECURE`, 'success');
+                    }
+
+                    updateApiItem(i);
+                    updateStats();
+
+                    // Update progress
+                    const pct = Math.round(((i + 1) / discoveredApis.length) * 100);
+                    progressFill.style.width = pct + '%';
+                    progressLabel.textContent = `${i + 1} / ${discoveredApis.length}`;
+                    progressPercent.textContent = pct + '%';
+                }
+
+                const leakCount = discoveredApis.filter(a => a.status === 'leak').length;
+                if (leakCount > 0) {
+                    setStatus(`🔴 ${leakCount} APIs found with DATA LEAK!`, 'error');
+                } else {
+                    setStatus(`✅ All ${discoveredApis.length} APIs are SECURE`, 'success');
+                }
+            } else {
+                setStatus(`✅ Discovery complete. ${discoveredApis.length} APIs found.`, 'success');
+            }
+
+            log(`🏁 Scan complete!`, 'success');
+
+        } catch (error) {
+            setStatus(`❌ Error: ${error.message}`, 'error');
+            log(`❌ ${error.message}`, 'error');
+        } finally {
+            isRunning = false;
+            this.disabled = false;
+            this.innerHTML = '<i class="fas fa-radar"></i> Discover APIs';
+        }
+    });
 
     // ─── RENDER API LIST ───
     function renderApiList() {
@@ -720,117 +812,6 @@
             }
         }
     }
-
-    // ─── MAIN SCAN ───
-    document.getElementById('scanBtn').addEventListener('click', async function() {
-        if (isRunning) return;
-
-        const url = baseUrl.value.trim();
-        const bp = bpNumber.value.trim();
-        const ca = caNumber.value.trim();
-
-        if (!url) {
-            setStatus('⚠️ Please enter a website URL', 'warning');
-            return;
-        }
-
-        let cleanUrl = url;
-        if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
-            cleanUrl = 'https://' + cleanUrl;
-        }
-        if (cleanUrl.endsWith('/')) {
-            cleanUrl = cleanUrl.slice(0, -1);
-        }
-
-        isRunning = true;
-        this.disabled = true;
-        this.innerHTML = `<span class="spinner"></span> Scanning...`;
-        clearAll();
-
-        setStatus(`⏳ Scanning ${cleanUrl} for APIs...`, 'info');
-        log(`🚀 Starting scan for Mahanagar Gas`, 'info');
-        log(`📌 BP: ${bp || 'N/A'}, CA: ${ca || 'N/A'}`, 'info');
-
-        try {
-            // ─── DISCOVER ───
-            discoveredApis = await discoverApis(cleanUrl);
-            log(`✅ Discovered ${discoveredApis.length} APIs`, 'success');
-
-            if (discoveredApis.length === 0) {
-                setStatus('⚠️ No APIs discovered. Try a different URL.', 'warning');
-                isRunning = false;
-                this.disabled = false;
-                this.innerHTML = '<i class="fas fa-radar"></i> Scan for Leak';
-                return;
-            }
-
-            renderApiList();
-            updateStats();
-            progressWrap.style.display = 'block';
-
-            // ─── TEST EACH API ───
-            const testValues = {
-                'bpNumber': bp || '1100081082',
-                'bp': bp || '1100081082',
-                'bp_no': bp || '1100081082',
-                'BP': bp || '1100081082',
-                'caNumber': ca || '210000334310',
-                'ca': ca || '210000334310',
-                'CA': ca || '210000334310',
-                'customer_id': bp || '1100081082',
-                'customerId': bp || '1100081082',
-                'mobile': '9876543210',
-                'phone': '9876543210',
-                'email': 'test@example.com',
-                'id': '1',
-                'user_id': '1001'
-            };
-
-            for (let i = 0; i < discoveredApis.length; i++) {
-                const api = discoveredApis[i];
-                api.status = 'scanning';
-                updateApiItem(i);
-                updateStats();
-
-                const result = await testApi(api, testValues);
-                api.leaks = result.leaks;
-                api.response = result.responseText;
-
-                if (result.leaks.length > 0) {
-                    api.status = 'leak';
-                    log(`🔴 ${api.method} ${api.url} - LEAK FOUND (${result.leaks.length} items)`, 'error');
-                } else {
-                    api.status = 'secure';
-                    log(`🟢 ${api.method} ${api.url} - SECURE`, 'success');
-                }
-
-                updateApiItem(i);
-                updateStats();
-
-                const pct = Math.round(((i + 1) / discoveredApis.length) * 100);
-                progressFill.style.width = pct + '%';
-                progressLabel.textContent = `${i + 1} / ${discoveredApis.length}`;
-                progressPercent.textContent = pct + '%';
-            }
-
-            const leakCount = discoveredApis.filter(a => a.status === 'leak').length;
-            if (leakCount > 0) {
-                setStatus(`🔴 ${leakCount} APIs found with DATA LEAK!`, 'error');
-            } else {
-                setStatus(`✅ All ${discoveredApis.length} APIs are SECURE`, 'success');
-            }
-
-            log(`🏁 Scan complete!`, 'success');
-
-        } catch (error) {
-            setStatus(`❌ Error: ${error.message}`, 'error');
-            log(`❌ ${error.message}`, 'error');
-        } finally {
-            isRunning = false;
-            this.disabled = false;
-            this.innerHTML = '<i class="fas fa-radar"></i> Scan for Leak';
-        }
-    });
 
     // ─── HELPERS ───
     function escapeHtml(str) {
