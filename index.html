@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>📥 MGL Direct Backup</title>
+    <title>📥 Data Accumulator – Local Save</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -17,85 +17,85 @@
             align-items: center;
         }
         .container {
-            max-width: 750px;
+            max-width: 900px;
             width: 100%;
             background: #0f172a;
             border-radius: 16px;
             padding: 24px;
             border: 1px solid #1a2744;
         }
-        h1 { color: #22c55e; font-size: 20px; }
+        h1 { color: #22c55e; font-size: 22px; }
         .sub { color: #64748b; font-size: 13px; margin-bottom: 16px; }
-        .input-group {
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: #0d1520;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border: 1px solid #1a2744;
+        }
+        .stats span { color: #94a3b8; font-size: 13px; }
+        .stats strong { color: #eef2ff; font-size: 16px; }
+        .stats .leak { color: #ef4444; }
+        .stats .secure { color: #22c55e; }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: #060b18;
+            border: 2px solid #1a2744;
+            border-radius: 8px;
+            color: #eef2ff;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            padding: 12px;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s;
+        }
+        textarea:focus { border-color: #22c55e; }
+
+        .btn-group {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 12px;
+            margin: 12px 0;
         }
-        .input-group input {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 2px solid #1a2744;
-            background: #060b18;
-            color: #eef2ff;
-            font-size: 14px;
-            outline: none;
-            min-width: 100px;
-        }
-        .input-group input:focus { border-color: #22c55e; }
         .btn {
-            padding: 12px 20px;
+            padding: 10px 20px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-success {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
-            transition: 0.2s;
         }
-        .btn:hover { transform: scale(1.02); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-success:hover { transform: scale(1.02); }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+        }
+        .btn-danger:hover { transform: scale(1.02); }
         .btn-secondary {
             background: #1a2744;
             color: #94a3b8;
             border: 1px solid #1e2d4a;
         }
         .btn-secondary:hover { background: #1e2d4a; color: #eef2ff; }
-
-        #status {
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin: 12px 0;
-            display: none;
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
         }
-        #status.success { background: #0d1c0d; border: 1px solid #22c55e; color: #22c55e; display: block; }
-        #status.error { background: #1c0d0d; border: 1px solid #ef4444; color: #ef4444; display: block; }
-        #status.info { background: #0d1a2b; border: 1px solid #3b82f6; color: #3b82f6; display: block; }
-
-        .progress-wrap { display: none; margin: 10px 0; }
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #0d1520;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-bar .fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #22c55e, #ef4444);
-            transition: width 0.3s;
-        }
-        .progress-text {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 3px;
-        }
+        .btn-warning:hover { transform: scale(1.02); }
 
         .log-area {
             background: #060b18;
@@ -114,28 +114,7 @@
         }
         .log-area .success { color: #22c55e; }
         .log-area .error { color: #ef4444; }
-
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #1a2744;
-            border-top-color: #22c55e;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .download-section {
-            display: none;
-            margin-top: 12px;
-            padding: 14px 18px;
-            background: #0d1c0d;
-            border: 1px solid #22c55e;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .download-section .big { font-size: 16px; font-weight: 700; color: #22c55e; }
+        .log-area .info { color: #3b82f6; }
 
         .footer {
             margin-top: 16px;
@@ -144,93 +123,84 @@
             text-align: center;
         }
         .footer .warn { color: #ef4444; }
-
-        .quick-ranges {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .quick-ranges button {
-            padding: 4px 12px;
-            background: #0d1520;
-            border: 1px solid #1a2744;
-            border-radius: 50px;
+        .record-count {
+            font-size: 14px;
             color: #94a3b8;
-            font-size: 11px;
-            cursor: pointer;
+            margin-top: 8px;
         }
-        .quick-ranges button:hover { border-color: #22c55e; color: #eef2ff; }
+        .record-count strong { color: #22c55e; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📥 MGL Direct Backup</h1>
-    <div class="sub">Direct API call — no popup, no proxy</div>
+    <h1>📥 Data Accumulator</h1>
+    <div class="sub">Paste CSV data → Save locally → Download Excel</div>
 
-    <div class="input-group">
-        <input type="text" id="startBP" placeholder="Start BP" value="1100081050" />
-        <input type="text" id="endBP" placeholder="End BP" value="1100081100" />
-        <button class="btn" id="fetchBtn">🔍 Fetch</button>
-        <button class="btn btn-secondary" onclick="clearAll()">✕</button>
+    <div class="stats">
+        <span>📊 Total Records: <strong id="totalRecords">0</strong></span>
+        <span>📦 Batches: <strong id="batchCount">0</strong></span>
+        <span>💾 Last Saved: <strong id="lastSaved">—</strong></span>
     </div>
 
-    <div class="quick-ranges">
-        <span style="color:#64748b;font-size:11px;margin-right:4px;">Quick:</span>
-        <button onclick="setRange('1100081031','1100081050')">1031-1050</button>
-        <button onclick="setRange('1100081050','1100081100')">1050-1100</button>
-        <button onclick="setRange('1100081100','1100081150')">1100-1150</button>
-        <button onclick="setRange('1100081150','1100081200')">1150-1200</button>
-        <button onclick="setRange('1100081031','1100081200')">Full</button>
+    <textarea id="csvInput" placeholder="Paste your CSV data here..."></textarea>
+
+    <div class="btn-group">
+        <button class="btn btn-success" id="saveBtn"><i class="fas fa-save"></i> Save Batch</button>
+        <button class="btn btn-warning" id="downloadBtn"><i class="fas fa-file-excel"></i> Download Excel</button>
+        <button class="btn btn-danger" id="clearBtn"><i class="fas fa-trash"></i> Clear All</button>
+        <button class="btn btn-secondary" id="previewBtn"><i class="fas fa-eye"></i> Preview</button>
     </div>
 
-    <div id="status"></div>
-
-    <div class="progress-wrap" id="progressWrap">
-        <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
-        <div class="progress-text">
-            <span id="progressLabel">0 / 0</span>
-            <span id="progressPercent">0%</span>
-        </div>
-    </div>
-
-    <div class="download-section" id="downloadSection">
-        <div class="big"><i class="fas fa-check-circle"></i> Done! <span id="downloadInfo">0 records</span></div>
-        <button class="btn" id="downloadBtn" style="margin-top:8px;"><i class="fas fa-file-csv"></i> Download CSV</button>
+    <div class="record-count">
+        📋 <strong id="recordCountDisplay">0</strong> records saved locally
     </div>
 
     <div class="log-area" id="logArea"></div>
 
     <div class="footer">
-        <span class="warn">⚠️</span> Direct API — exactly what I use.
+        <span class="warn">⚠️</span> Data saved in your browser's local storage.
     </div>
 </div>
 
 <script>
-    const startBP = document.getElementById('startBP');
-    const endBP = document.getElementById('endBP');
-    const fetchBtn = document.getElementById('fetchBtn');
-    const statusDiv = document.getElementById('status');
-    const logArea = document.getElementById('logArea');
-    const progressWrap = document.getElementById('progressWrap');
-    const progressFill = document.getElementById('progressFill');
-    const progressLabel = document.getElementById('progressLabel');
-    const progressPercent = document.getElementById('progressPercent');
-    const downloadSection = document.getElementById('downloadSection');
+    const csvInput = document.getElementById('csvInput');
+    const saveBtn = document.getElementById('saveBtn');
     const downloadBtn = document.getElementById('downloadBtn');
-    const downloadInfo = document.getElementById('downloadInfo');
+    const clearBtn = document.getElementById('clearBtn');
+    const previewBtn = document.getElementById('previewBtn');
+    const logArea = document.getElementById('logArea');
+    const totalRecords = document.getElementById('totalRecords');
+    const batchCount = document.getElementById('batchCount');
+    const lastSaved = document.getElementById('lastSaved');
+    const recordCountDisplay = document.getElementById('recordCountDisplay');
 
-    let allData = [];
-    let isRunning = false;
+    const STORAGE_KEY = 'mgl_backup_data';
 
-    function setRange(start, end) {
-        startBP.value = start;
-        endBP.value = end;
-        clearAll();
-        setTimeout(() => fetchBtn.click(), 300);
+    // ─── LOAD FROM LOCAL STORAGE ───
+    function loadData() {
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : [];
+        } catch (e) { return []; }
     }
 
+    // ─── SAVE TO LOCAL STORAGE ───
+    function saveData(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        updateStats(data);
+    }
+
+    // ─── UPDATE STATS ───
+    function updateStats(data) {
+        const total = data.length;
+        totalRecords.textContent = total;
+        recordCountDisplay.textContent = total;
+        batchCount.textContent = localStorage.getItem('mgl_batch_count') || 0;
+        lastSaved.textContent = new Date().toLocaleTimeString();
+    }
+
+    // ─── LOG ───
     function log(msg, type = 'info') {
         logArea.style.display = 'block';
         const line = document.createElement('div');
@@ -240,146 +210,63 @@
         logArea.scrollTop = logArea.scrollHeight;
     }
 
-    function setStatus(msg, type = 'info') {
-        statusDiv.className = type;
-        statusDiv.innerHTML = msg;
-        statusDiv.style.display = 'block';
+    // ─── PARSE CSV ───
+    function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        if (lines.length < 2) return [];
+        const headers = lines[0].split(',').map(h => h.trim());
+        const result = [];
+        for (let i = 1; i < lines.length; i++) {
+            const values = lines[i].split(',').map(v => v.trim());
+            if (values.length === headers.length) {
+                const obj = {};
+                headers.forEach((h, idx) => { obj[h] = values[idx] || ''; });
+                result.push(obj);
+            }
+        }
+        return result;
     }
 
-    function clearAll() {
-        logArea.innerHTML = '';
-        logArea.style.display = 'none';
-        downloadSection.style.display = 'none';
-        progressWrap.style.display = 'none';
-        statusDiv.style.display = 'none';
-        allData = [];
-    }
-
-    function extractData(json, bp) {
-        const d = json.response || json;
-        return {
-            bp_number: d.bp_number || bp,
-            full_name: d.full_name || 'N/A',
-            mobile: d.mobile || 'N/A',
-            city: d.city || 'N/A',
-            district: d.district || 'N/A',
-            postal_code: d.postal_code || 'N/A',
-            house_number: d.house_number || 'N/A',
-            location: d.location || 'N/A',
-            bill_number: d.bill_number || 'N/A',
-            due_date: d.due_date || 'N/A',
-            total_bil_amount: d.total_bil_amount || '0.00',
-            amount_to_be_paid: d.amount_to_be_paid || '0.00'
-        };
-    }
-
-    document.getElementById('fetchBtn').addEventListener('click', async function() {
-        if (isRunning) return;
-
-        const start = parseInt(startBP.value.trim());
-        const end = parseInt(endBP.value.trim());
-
-        if (isNaN(start) || isNaN(end) || start > end) {
-            setStatus('⚠️ Valid range needed', 'error');
+    // ─── SAVE BATCH ───
+    saveBtn.addEventListener('click', function() {
+        const text = csvInput.value.trim();
+        if (!text) {
+            log('⚠️ No data to save!', 'error');
             return;
         }
 
-        isRunning = true;
-        this.disabled = true;
-        this.innerHTML = `<span class="spinner"></span> Fetching...`;
-        clearAll();
-
-        const total = end - start + 1;
-        let scanned = 0;
-        let found = 0;
-        allData = [];
-
-        setStatus(`⏳ Fetching ${total} BP numbers...`, 'info');
-        log(`🚀 Starting: ${start} to ${end} (${total})`, 'info');
-
-        progressWrap.style.display = 'block';
-
-        for (let i = start; i <= end; i++) {
-            const bp = i.toString();
-            try {
-                // ─── DIRECT API CALL (NO POPUP) ───
-                const response = await fetch('https://www.mahanagargas.com/ajax/get-billing-details', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `bpNumber=${bp}&bp=${bp}&bp_number=${bp}`
-                });
-
-                const text = await response.text();
-                const match = text.match(/\{.*\}/s);
-                if (match) {
-                    try {
-                        const json = JSON.parse(match[0]);
-                        if (json.response) {
-                            const data = extractData(json, bp);
-                            allData.push(data);
-                            found++;
-                            log(`✅ ${bp} - ${data.full_name}`, 'success');
-                        }
-                    } catch (e) {}
-                } else {
-                    log(`🟢 ${bp} - No data`, 'info');
-                }
-            } catch (e) {
-                log(`❌ ${bp} - Error`, 'error');
-            }
-
-            scanned++;
-            const pct = Math.round((scanned / total) * 100);
-            progressFill.style.width = pct + '%';
-            progressLabel.textContent = `${scanned} / ${total}`;
-            progressPercent.textContent = pct + '%';
-
-            await new Promise(r => setTimeout(r, 100));
+        const newData = parseCSV(text);
+        if (newData.length === 0) {
+            log('⚠️ Invalid CSV format!', 'error');
+            return;
         }
 
-        progressFill.style.width = '100%';
-        progressPercent.textContent = '100%';
+        const existing = loadData();
+        const combined = existing.concat(newData);
+        saveData(combined);
 
-        setStatus(
-            found > 0 ?
-            `✅ ${found} records found!` :
-            '⚠️ No data found',
-            found > 0 ? 'success' : 'error'
-        );
+        let batch = parseInt(localStorage.getItem('mgl_batch_count')) || 0;
+        batch++;
+        localStorage.setItem('mgl_batch_count', batch);
 
-        if (allData.length > 0) {
-            downloadSection.style.display = 'block';
-            downloadInfo.textContent = `${allData.length} records`;
-            downloadBtn.onclick = function() {
-                downloadCSV(allData);
-            };
-        } else {
-            downloadSection.style.display = 'block';
-            downloadInfo.textContent = 'No data found';
-            downloadBtn.style.display = 'none';
-        }
-
-        log(`🏁 Complete! ${found} records found.`, 'success');
-
-        isRunning = false;
-        this.disabled = false;
-        this.innerHTML = '🔍 Fetch';
+        csvInput.value = '';
+        log(`✅ Saved ${newData.length} records! Total: ${combined.length}`, 'success');
+        updateStats(combined);
     });
 
-    function downloadCSV(data) {
-        if (!data || data.length === 0) return;
+    // ─── DOWNLOAD EXCEL ───
+    downloadBtn.addEventListener('click', function() {
+        const data = loadData();
+        if (data.length === 0) {
+            log('⚠️ No data to download!', 'error');
+            return;
+        }
 
-        const headers = [
-            'BP Number', 'Customer Name', 'Mobile', 'City', 'District',
-            'Postal Code', 'House Number', 'Location',
-            'Bill Number', 'Due Date', 'Total Bill (₹)', 'Amount to Pay (₹)'
-        ];
-
+        const headers = Object.keys(data[0]);
         let csv = headers.join(',') + '\n';
-        data.forEach(r => {
+        data.forEach(row => {
             csv += headers.map(h => {
-                const key = h.toLowerCase().replace(/[\(\)₹]/g, '').replace(/ /g, '_');
-                let val = r[key] || '';
+                let val = row[h] || '';
                 if (val.includes(',') || val.includes('"')) val = '"' + val.replace(/"/g, '""') + '"';
                 return val;
             }).join(',') + '\n';
@@ -389,18 +276,40 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `backup_${new Date().toISOString().slice(0,10)}.csv`;
+        a.download = `backup_${new Date().toISOString().slice(0,10)}_${data.length}_records.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
 
-        const toast = document.createElement('div');
-        toast.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 20px;background:#0f172a;border:1px solid #22c55e;border-radius:8px;color:#22c55e;font-weight:500;font-size:13px;z-index:999;';
-        toast.textContent = '✅ CSV Downloaded!';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-    }
+        log(`📥 Downloaded ${data.length} records!`, 'success');
+    });
+
+    // ─── CLEAR ALL ───
+    clearBtn.addEventListener('click', function() {
+        if (confirm('⚠️ Delete all saved data?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem('mgl_batch_count');
+            csvInput.value = '';
+            log('🗑️ All data cleared!', 'info');
+            updateStats([]);
+        }
+    });
+
+    // ─── PREVIEW ───
+    previewBtn.addEventListener('click', function() {
+        const data = loadData();
+        if (data.length === 0) {
+            log('⚠️ No data to preview!', 'error');
+            return;
+        }
+        const preview = data.slice(0, 5);
+        log(`📋 Preview (${data.length} total):\n${JSON.stringify(preview, null, 2)}`, 'info');
+    });
+
+    // ─── INIT ───
+    updateStats(loadData());
+    log('💾 Ready! Paste data and click "Save Batch"', 'info');
 </script>
 </body>
 </html>
