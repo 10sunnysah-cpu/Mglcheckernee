@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🏦 IBA BC — HTML to Excel</title>
+    <title>🏦 IBA BC Converter — Fixed</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: system-ui, sans-serif; background: #f0f4ff; padding: 16px; }
@@ -26,7 +26,6 @@
         #status.loading { display: block; background: #fff3e0; color: #e65100; }
         #status.success { display: block; background: #e8f5e9; color: #2e7d32; }
         #status.error { display: block; background: #ffebee; color: #c62828; }
-        #status.info { display: block; background: #e3f2fd; color: #0d47a1; }
         .stats { display: none; margin-top: 12px; padding: 12px; background: #f5f5f5; border-radius: 12px; }
         .stats.show { display: block; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
@@ -47,18 +46,13 @@
         .key-status.show { display: block; }
         .key-status .found { color: #2e7d32; font-weight: 600; }
         .key-status .not-found { color: #c62828; font-weight: 600; }
-        .progress-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 10px; margin-top: 12px; display: none; overflow: hidden; }
-        .progress-bar.show { display: block; }
-        .progress-bar .fill { height: 100%; background: #3f51b5; width: 0%; transition: width 0.3s; }
-        .sample-box { display: none; margin-top: 12px; padding: 12px; background: #e8eaf6; border-radius: 10px; font-size: 13px; border-left: 4px solid #3f51b5; }
-        .sample-box.show { display: block; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>🏦 IBA BC Converter</h1>
-    <p class="subtitle">HTML se Excel — 100% Working Decryption</p>
+    <p class="subtitle">HTML se Excel — Working Decryption</p>
 
     <div class="upload-area" id="uploadArea">
         <div class="upload-icon">📂</div>
@@ -74,11 +68,9 @@
     </div>
 
     <button class="btn btn-primary" id="convertBtn" disabled>🔄 Convert to Excel</button>
-    <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
 
     <div id="keyStatus" class="key-status"></div>
     <div id="status"></div>
-    <div class="sample-box" id="sampleBox"></div>
 
     <div class="stats" id="stats">
         <div class="stats-grid">
@@ -100,7 +92,7 @@
 
 <script>
     // ================================================================
-    // REAL DECRYPTION — REVERSE ENGINEERED FROM IBA WEBSITE
+    // WORKING DECRYPTION — REAL IBA ENCRYPTION
     // ================================================================
 
     const uploadArea = document.getElementById('uploadArea');
@@ -119,9 +111,6 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
     const keyStatus = document.getElementById('keyStatus');
-    const progressBar = document.getElementById('progressBar');
-    const progressFill = document.getElementById('progressFill');
-    const sampleBox = document.getElementById('sampleBox');
 
     let currentData = [];
     let currentHtmlContent = '';
@@ -160,23 +149,18 @@
     });
 
     // ================================================================
-    // WORKING DECRYPTION — REAL IBA ENCRYPTION
+    // REAL DECRYPTION — XOR with 'remittance' key
     // ================================================================
     function decryptPhone(encrypted) {
         try {
             // Step 1: Base64 Decode
             const decoded = atob(encrypted);
             
-            // Step 2: XOR + Bitwise Complement with 'remittance' key
+            // Step 2: XOR with 'remittance' key
             const key = 'remittance';
             let result = '';
             for (let i = 0; i < decoded.length; i++) {
-                // XOR operation
-                let charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-                // Bitwise Complement (~) as in Java
-                charCode = ~charCode;
-                // Keep within 0-255 range
-                charCode = charCode & 0xFF;
+                const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
                 result += String.fromCharCode(charCode);
             }
             
@@ -185,18 +169,6 @@
             if (phone.length >= 10) {
                 return phone.slice(-10);
             }
-            
-            // Fallback: Try XOR without complement
-            let fallbackResult = '';
-            for (let i = 0; i < decoded.length; i++) {
-                let charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-                fallbackResult += String.fromCharCode(charCode);
-            }
-            let fallbackPhone = fallbackResult.replace(/[^0-9]/g, '');
-            if (fallbackPhone.length >= 10) {
-                return fallbackPhone.slice(-10);
-            }
-            
             return null;
         } catch (e) {
             return null;
@@ -207,9 +179,6 @@
     function processHtml(html) {
         showStatus('⏳ Processing HTML... Please wait.', 'loading');
         convertBtn.disabled = true;
-        progressBar.classList.add('show');
-        progressFill.style.width = '0%';
-        sampleBox.classList.remove('show');
 
         setTimeout(() => {
             try {
@@ -226,8 +195,6 @@
                     rows = doc.querySelectorAll('tr');
                 }
 
-                let totalRows = rows.length;
-                let processed = 0;
                 let encryptedFound = 0;
                 let decryptedCount = 0;
 
@@ -300,16 +267,11 @@
                         });
 
                     } catch (err) {}
-                    
-                    processed++;
-                    let percent = Math.min(Math.round((processed / totalRows) * 100), 100);
-                    progressFill.style.width = percent + '%';
                 });
 
                 if (results.length === 0) {
                     showStatus('❌ No BC records found!', 'error');
                     convertBtn.disabled = false;
-                    progressBar.classList.remove('show');
                     return;
                 }
 
@@ -328,31 +290,19 @@
                 downloadSection.classList.add('show');
 
                 if (phones > 0) {
-                    keyStatus.innerHTML = '🔓 <span class="found">Decryption successful!</span> ' + phones + ' phone numbers found.';
+                    keyStatus.innerHTML = '🔓 <span class="found">Decryption successful!</span> ' + phones + ' phone numbers found. (Key: remittance)';
                     keyStatus.classList.add('show');
                 } else {
                     keyStatus.innerHTML = '🔒 <span class="not-found">Decryption failed.</span> ' + encryptedFound + ' encrypted strings found, but none could be decrypted.';
                     keyStatus.classList.add('show');
                 }
 
-                // Show sample decryption
-                const sampleEncrypted = results.find(r => r.encrypted !== undefined && r.encrypted !== '')?.encrypted || '57rc4a8v5I7AZTUOqZu51g==';
-                const sampleDecrypted = decryptPhone(sampleEncrypted) || '9955588847';
-                sampleBox.innerHTML = `
-                    <strong>🔓 Sample Decryption:</strong><br>
-                    Encrypted: <code>${sampleEncrypted.substring(0, 20)}...</code><br>
-                    Decrypted: <strong style="color:#2e7d32;font-size:18px;">${sampleDecrypted}</strong>
-                `;
-                sampleBox.classList.add('show');
-
                 showStatus(`✅ Success! ${results.length} BC records extracted.`, 'success');
                 convertBtn.disabled = false;
-                progressBar.classList.remove('show');
 
             } catch (err) {
                 showStatus('❌ Error: ' + err.message, 'error');
                 convertBtn.disabled = false;
-                progressBar.classList.remove('show');
             }
         }, 150);
     }
@@ -419,10 +369,7 @@
         previewTable.innerHTML = '';
         downloadSection.classList.remove('show');
         keyStatus.classList.remove('show');
-        sampleBox.classList.remove('show');
         statusDiv.style.display = 'none';
-        progressBar.classList.remove('show');
-        progressFill.style.width = '0%';
     });
 
     // ----- Status -----
