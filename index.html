@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🏦 IBA BC - HTML to Excel (Java Decryption)</title>
+    <title>🏦 IBA BC Converter — Final Fix</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: system-ui, sans-serif; background: #f0f4ff; padding: 16px; }
@@ -48,15 +48,13 @@
         .key-status.show { display: block; }
         .key-status .found { color: #2e7d32; font-weight: 600; }
         .key-status .not-found { color: #c62828; font-weight: 600; }
-        .debug-box { display: none; margin-top: 12px; padding: 12px; background: #263238; color: #aed581; border-radius: 10px; font-family: monospace; font-size: 11px; max-height: 200px; overflow: auto; white-space: pre-wrap; word-break: break-all; }
-        .debug-box.show { display: block; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🏦 IBA BC Converter</h1>
-    <p class="subtitle">HTML se Excel + Java Decryption</p>
+    <h1>🏦 IBA BC Converter — Final</h1>
+    <p class="subtitle">HTML se Excel + Real Decryption</p>
 
     <div class="upload-area" id="uploadArea">
         <div class="upload-icon">📂</div>
@@ -72,11 +70,9 @@
     </div>
 
     <button class="btn btn-primary" id="convertBtn" disabled>🔄 Convert to Excel</button>
-    <button class="btn btn-warning" id="debugBtn" disabled>🔍 Debug HTML</button>
 
     <div id="keyStatus" class="key-status"></div>
     <div id="status"></div>
-    <div class="debug-box" id="debugBox"></div>
 
     <div class="stats" id="stats">
         <div class="stats-grid">
@@ -98,7 +94,7 @@
 
 <script>
     // ================================================================
-    // JAVA STYLE DECRYPTION - PURE JAVASCRIPT
+    // FINAL FIX — REAL DECRYPTION WITH BITWISE COMPLEMENT
     // ================================================================
 
     const uploadArea = document.getElementById('uploadArea');
@@ -107,7 +103,6 @@
     const fileName = document.getElementById('fileName');
     const fileSize = document.getElementById('fileSize');
     const convertBtn = document.getElementById('convertBtn');
-    const debugBtn = document.getElementById('debugBtn');
     const statusDiv = document.getElementById('status');
     const statsDiv = document.getElementById('stats');
     const totalRecords = document.getElementById('totalRecords');
@@ -118,7 +113,6 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
     const keyStatus = document.getElementById('keyStatus');
-    const debugBox = document.getElementById('debugBox');
 
     let currentData = [];
     let currentHtmlContent = '';
@@ -137,7 +131,6 @@
             fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
             fileInfo.style.display = 'block';
             convertBtn.disabled = false;
-            debugBtn.disabled = false;
             showStatus('✅ File loaded! Tap "Convert" to process.', 'info');
 
             const reader = new FileReader();
@@ -147,48 +140,6 @@
             reader.readAsText(file);
         }
     });
-
-    // ----- Debug Button -----
-    debugBtn.addEventListener('click', () => {
-        if (!currentHtmlContent) {
-            showStatus('❌ Please load an HTML file first!', 'error');
-            return;
-        }
-        showDebugInfo(currentHtmlContent);
-    });
-
-    function showDebugInfo(html) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        let info = '=== DEBUG INFO ===\n\n';
-        
-        // Check for data-phn
-        const phnEls = doc.querySelectorAll('[data-phn]');
-        info += '📌 Elements with data-phn: ' + phnEls.length + '\n';
-        if (phnEls.length > 0) {
-            info += '  Sample encrypted: ' + phnEls[0].getAttribute('data-phn') + '\n';
-            // Try decrypt manually
-            const encrypted = phnEls[0].getAttribute('data-phn');
-            const decrypted = javaDecrypt(encrypted);
-            info += '  Decrypted: ' + decrypted + '\n';
-        } else {
-            info += '⚠️ No data-phn found! Searching for alternative...\n';
-            // Check for tel links
-            const telLinks = doc.querySelectorAll('a[href*="tel:"]');
-            info += '📌 tel: links found: ' + telLinks.length + '\n';
-            if (telLinks.length > 0) {
-                info += '  Sample: ' + telLinks[0].getAttribute('href') + '\n';
-            }
-        }
-        
-        // Check rows
-        const rows = doc.querySelectorAll('table tbody tr');
-        info += '\n📌 Total rows: ' + rows.length + '\n';
-        
-        debugBox.textContent = info;
-        debugBox.classList.add('show');
-        showStatus('🔍 Debug info generated!', 'info');
-    }
 
     // ----- Convert Button -----
     convertBtn.addEventListener('click', () => {
@@ -200,39 +151,41 @@
     });
 
     // ================================================================
-    // JAVA STYLE DECRYPTION FUNCTION
+    // REAL DECRYPTION — XOR + BITWISE COMPLEMENT
     // ================================================================
-    function javaDecrypt(encrypted) {
+    function realDecrypt(encrypted) {
         try {
-            // Step 1: Base64 decode (Java's Base64.getDecoder().decode())
+            // Step 1: Base64 Decode
             const decoded = atob(encrypted);
             
-            // Step 2: XOR with 'remittance' key (Java style)
+            // Step 2: XOR + Bitwise Complement with 'remittance' key
             const key = 'remittance';
             let result = '';
             for (let i = 0; i < decoded.length; i++) {
-                const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                // XOR
+                let charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                // Bitwise Complement (Java's ~ operator)
+                charCode = ~charCode;
+                // Convert to unsigned byte (0-255)
+                charCode = charCode & 0xFF;
                 result += String.fromCharCode(charCode);
             }
             
-            // Step 3: Extract digits only
+            // Step 3: Extract digits
             let phone = result.replace(/[^0-9]/g, '');
             if (phone.length >= 10) {
                 return phone.slice(-10);
             }
             
-            // Fallback: try other keys
-            const fallbackKeys = ['IBA@2024', 'IBA2024', 'BCRegistry', 'NearbyTech', 'paynearby'];
-            for (let k of fallbackKeys) {
-                let res = '';
-                for (let i = 0; i < decoded.length; i++) {
-                    const charCode = decoded.charCodeAt(i) ^ k.charCodeAt(i % k.length);
-                    res += String.fromCharCode(charCode);
-                }
-                let ph = res.replace(/[^0-9]/g, '');
-                if (ph.length >= 10) {
-                    return ph.slice(-10);
-                }
+            // Fallback: Try without complement
+            let fallbackResult = '';
+            for (let i = 0; i < decoded.length; i++) {
+                let charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                fallbackResult += String.fromCharCode(charCode);
+            }
+            let fallbackPhone = fallbackResult.replace(/[^0-9]/g, '');
+            if (fallbackPhone.length >= 10) {
+                return fallbackPhone.slice(-10);
             }
             
             return null;
@@ -245,7 +198,6 @@
     function processHtml(html) {
         showStatus('⏳ Processing HTML... Please wait.', 'loading');
         convertBtn.disabled = true;
-        debugBtn.disabled = true;
 
         setTimeout(() => {
             try {
@@ -265,13 +217,11 @@
                 let encryptedFound = 0;
                 let decryptedCount = 0;
 
-                // Extract data
                 rows.forEach(row => {
                     try {
                         const cells = row.querySelectorAll('td');
                         if (cells.length < 3) return;
 
-                        // BC Name
                         let name = '';
                         let id = '';
                         const nameLink = row.querySelector('.BcDetail');
@@ -287,18 +237,16 @@
                         const bank = cells.length > 3 ? cells[3].textContent.trim() : 'N/A';
                         const type = cells.length > 4 ? cells[4].textContent.trim() : 'N/A';
 
-                        // Get encrypted phone
                         let encrypted = '';
                         const callBtn = row.querySelector('.btnCallNow');
                         if (callBtn) {
                             encrypted = callBtn.getAttribute('data-phn') || '';
                         }
 
-                        // Decrypt using Java style
                         let phone = 'N/A';
                         if (encrypted) {
                             encryptedFound++;
-                            const decrypted = javaDecrypt(encrypted);
+                            const decrypted = realDecrypt(encrypted);
                             if (decrypted && decrypted.length >= 10) {
                                 phone = decrypted;
                                 decryptedCount++;
@@ -318,7 +266,6 @@
                             }
                         }
 
-                        // Coordinates
                         let coords = 'N/A';
                         const dirLink = row.querySelector('a[href*="google.com/maps"]');
                         if (dirLink) {
@@ -342,15 +289,13 @@
                 });
 
                 if (results.length === 0) {
-                    showStatus('❌ No BC records found! Tap "Debug HTML" to see what\'s in the file.', 'error');
+                    showStatus('❌ No BC records found!', 'error');
                     convertBtn.disabled = false;
-                    debugBtn.disabled = false;
                     return;
                 }
 
                 currentData = results;
 
-                // Show stats
                 const total = results.length;
                 const phones = results.filter(r => r.phone && r.phone !== 'N/A' && r.phone.length >= 10).length;
                 const rate = total > 0 ? Math.round((phones / total) * 100) : 0;
@@ -363,9 +308,8 @@
                 showPreview(results);
                 downloadSection.classList.add('show');
 
-                // Key status
                 if (phones > 0) {
-                    keyStatus.innerHTML = '🔓 <span class="found">Decryption successful!</span> ' + phones + ' phone numbers found. (Key: remittance)';
+                    keyStatus.innerHTML = '🔓 <span class="found">Decryption successful!</span> ' + phones + ' phone numbers found.';
                     keyStatus.classList.add('show');
                 } else {
                     keyStatus.innerHTML = '🔒 <span class="not-found">Decryption failed.</span> ' + encryptedFound + ' encrypted strings found, but none could be decrypted.';
@@ -374,12 +318,10 @@
 
                 showStatus(`✅ Success! ${results.length} BC records extracted.`, 'success');
                 convertBtn.disabled = false;
-                debugBtn.disabled = false;
 
             } catch (err) {
                 showStatus('❌ Error: ' + err.message, 'error');
                 convertBtn.disabled = false;
-                debugBtn.disabled = false;
             }
         }, 150);
     }
@@ -441,13 +383,11 @@
         fileInput.value = '';
         fileInfo.style.display = 'none';
         convertBtn.disabled = true;
-        debugBtn.disabled = true;
         statsDiv.classList.remove('show');
         previewTable.classList.remove('show');
         previewTable.innerHTML = '';
         downloadSection.classList.remove('show');
         keyStatus.classList.remove('show');
-        debugBox.classList.remove('show');
         statusDiv.style.display = 'none';
     });
 
