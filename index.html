@@ -3,273 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🏦 IBA BC Registry - HTML to Excel Converter</title>
+    <title>🏦 HTML to Excel Converter - IBA BC</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f0f4ff;
-            min-height: 100vh;
-            padding: 16px;
-        }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            font-size: 24px;
-            color: #1a237e;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-        .upload-area {
-            border: 2px dashed #3f51b5;
-            border-radius: 16px;
-            padding: 40px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: #f8f9ff;
-        }
-        .upload-area:hover {
-            background: #e8eaf6;
-            border-color: #1a237e;
-        }
-        .upload-area.dragover {
-            background: #e8eaf6;
-            border-color: #1a237e;
-        }
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-        .upload-text {
-            color: #333;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        .upload-hint {
-            color: #888;
-            font-size: 13px;
-            margin-top: 8px;
-        }
-        #fileInput {
-            display: none;
-        }
-        #fileInfo {
-            display: none;
-            margin-top: 16px;
-            padding: 12px 16px;
-            background: #e8f5e9;
-            border-radius: 10px;
-            color: #2e7d32;
-            font-size: 14px;
-        }
-        #fileInfo .file-name {
-            font-weight: 600;
-            word-break: break-all;
-        }
-        #fileInfo .file-size {
-            color: #555;
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 16px;
-        }
-        .btn-primary {
-            background: #3f51b5;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #1a237e;
-        }
-        .btn-primary:disabled {
-            background: #9fa8da;
-            cursor: not-allowed;
-        }
-        .btn-success {
-            background: #2e7d32;
-            color: white;
-        }
-        .btn-success:hover {
-            background: #1b5e20;
-        }
-        .btn-danger {
-            background: #c62828;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #8e0000;
-        }
-        #status {
-            margin-top: 16px;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            display: none;
-        }
-        #status.loading {
-            display: block;
-            background: #fff3e0;
-            color: #e65100;
-        }
-        #status.success {
-            display: block;
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-        #status.error {
-            display: block;
-            background: #ffebee;
-            color: #c62828;
-        }
-        #status.info {
-            display: block;
-            background: #e3f2fd;
-            color: #0d47a1;
-        }
-        .stats {
-            display: none;
-            margin-top: 16px;
-            padding: 16px;
-            background: #f5f5f5;
-            border-radius: 12px;
-        }
-        .stats.show {
-            display: block;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .stat-item {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .stat-item .number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1a237e;
-        }
-        .stat-item .label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 4px;
-        }
-        .preview-table {
-            margin-top: 16px;
-            max-height: 300px;
-            overflow: auto;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
-            display: none;
-        }
-        .preview-table.show {
-            display: block;
-        }
-        .preview-table table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
-        .preview-table th {
-            background: #3f51b5;
-            color: white;
-            padding: 8px 10px;
-            text-align: left;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        .preview-table td {
-            padding: 6px 10px;
-            border-bottom: 1px solid #eee;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 120px;
-        }
-        .preview-table tr:nth-child(even) {
-            background: #f8f9ff;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 24px;
-            color: #999;
-            font-size: 12px;
-        }
-        .download-section {
-            display: none;
-            margin-top: 16px;
-        }
-        .download-section.show {
-            display: block;
-        }
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .badge-success {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-        .badge-warning {
-            background: #fff3e0;
-            color: #e65100;
-        }
-        @media (max-width: 480px) {
-            .container {
-                padding: 16px;
-            }
-            h1 {
-                font-size: 20px;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .stat-item .number {
-                font-size: 22px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: #f0f4ff; padding: 16px; }
+        .container { max-width: 700px; margin: 0 auto; background: white; border-radius: 20px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        h1 { font-size: 22px; color: #1a237e; text-align: center; margin-bottom: 4px; }
+        .subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 20px; }
+        .upload-area { border: 2px dashed #3f51b5; border-radius: 16px; padding: 30px 20px; text-align: center; cursor: pointer; background: #f8f9ff; }
+        .upload-area:hover { background: #e8eaf6; }
+        .upload-icon { font-size: 40px; }
+        .upload-text { font-size: 16px; font-weight: 500; color: #333; }
+        .upload-hint { font-size: 13px; color: #888; margin-top: 4px; }
+        #fileInput { display: none; }
+        #fileInfo { display: none; margin-top: 12px; padding: 10px 14px; background: #e8f5e9; border-radius: 10px; font-size: 14px; }
+        #fileInfo .file-name { font-weight: 600; }
+        .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 12px; }
+        .btn-primary { background: #3f51b5; color: white; }
+        .btn-primary:disabled { background: #9fa8da; cursor: not-allowed; }
+        .btn-success { background: #2e7d32; color: white; }
+        .btn-danger { background: #c62828; color: white; }
+        #status { margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 14px; display: none; }
+        #status.loading { display: block; background: #fff3e0; color: #e65100; }
+        #status.success { display: block; background: #e8f5e9; color: #2e7d32; }
+        #status.error { display: block; background: #ffebee; color: #c62828; }
+        #status.info { display: block; background: #e3f2fd; color: #0d47a1; }
+        .stats { display: none; margin-top: 12px; padding: 12px; background: #f5f5f5; border-radius: 12px; }
+        .stats.show { display: block; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-item { background: white; padding: 10px; border-radius: 8px; text-align: center; }
+        .stat-item .number { font-size: 24px; font-weight: 700; color: #1a237e; }
+        .stat-item .label { font-size: 11px; color: #666; }
+        .preview-table { margin-top: 12px; max-height: 250px; overflow: auto; border: 1px solid #e0e0e0; border-radius: 10px; display: none; }
+        .preview-table.show { display: block; }
+        .preview-table table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .preview-table th { background: #3f51b5; color: white; padding: 6px 8px; text-align: left; position: sticky; top: 0; }
+        .preview-table td { padding: 5px 8px; border-bottom: 1px solid #eee; }
+        .download-section { display: none; margin-top: 12px; }
+        .download-section.show { display: block; }
+        .debug-box { display: none; margin-top: 12px; padding: 12px; background: #263238; color: #aed581; border-radius: 10px; font-family: monospace; font-size: 11px; max-height: 150px; overflow: auto; white-space: pre-wrap; word-break: break-all; }
+        .debug-box.show { display: block; }
+        .footer { text-align: center; margin-top: 20px; color: #999; font-size: 11px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🏦 IBA BC Registry Converter</h1>
-    <p class="subtitle">HTML file se Excel banayein — Mobile friendly!</p>
+    <h1>🏦 HTML to Excel Converter</h1>
+    <p class="subtitle">Apni downloaded HTML file se data nikaalein</p>
 
-    <!-- Upload Area -->
     <div class="upload-area" id="uploadArea">
         <div class="upload-icon">📂</div>
         <div class="upload-text">Tap to select HTML file</div>
@@ -278,56 +60,39 @@
 
     <input type="file" id="fileInput" accept=".html,.htm,.txt">
 
-    <!-- File Info -->
     <div id="fileInfo">
         <div>📄 <span class="file-name" id="fileName">-</span></div>
-        <div class="file-size" id="fileSize">-</div>
+        <div id="fileSize">-</div>
     </div>
 
-    <!-- Buttons -->
     <button class="btn btn-primary" id="convertBtn" disabled>🔄 Convert to Excel</button>
+    <button class="btn btn-danger" id="debugBtn" style="background:#455a64;">🔍 Debug HTML Structure</button>
 
-    <!-- Status -->
     <div id="status"></div>
 
-    <!-- Stats -->
     <div class="stats" id="stats">
         <div class="stats-grid">
-            <div class="stat-item">
-                <div class="number" id="totalRecords">0</div>
-                <div class="label">Total BC Records</div>
-            </div>
-            <div class="stat-item">
-                <div class="number" id="phonesFound">0</div>
-                <div class="label">Phone Numbers Found</div>
-            </div>
-            <div class="stat-item">
-                <div class="number" id="banksFound">0</div>
-                <div class="label">Unique Banks</div>
-            </div>
-            <div class="stat-item">
-                <div class="number" id="dataSize">0 KB</div>
-                <div class="label">Data Size</div>
-            </div>
+            <div class="stat-item"><div class="number" id="totalRecords">0</div><div class="label">Total Records</div></div>
+            <div class="stat-item"><div class="number" id="phonesFound">0</div><div class="label">Phone Numbers</div></div>
+            <div class="stat-item"><div class="number" id="banksFound">0</div><div class="label">Unique Banks</div></div>
+            <div class="stat-item"><div class="number" id="dataSize">0 KB</div><div class="label">Data Size</div></div>
         </div>
     </div>
 
-    <!-- Preview -->
     <div class="preview-table" id="previewTable"></div>
+    <div class="debug-box" id="debugBox"></div>
 
-    <!-- Download -->
     <div class="download-section" id="downloadSection">
-        <button class="btn btn-success" id="downloadBtn">📥 Download Excel File</button>
-        <button class="btn btn-danger" id="resetBtn" style="margin-top:8px; background:#757575;">🔄 Reset</button>
+        <button class="btn btn-success" id="downloadBtn">📥 Download Excel (CSV)</button>
+        <button class="btn btn-danger" id="resetBtn" style="background:#757575; margin-top: 8px;">🔄 Reset</button>
     </div>
 
-    <div class="footer">Made with ❤️ • Data stays on your device</div>
+    <div class="footer">Data stays on your device • No upload to server</div>
 </div>
 
 <script>
     // ================================================================
-    // COMPLETE JAVASCRIPT - HTML to Excel Converter
-    // No external libraries needed!
+    // UPDATED: Better HTML parsing with multiple selector fallbacks
     // ================================================================
 
     const uploadArea = document.getElementById('uploadArea');
@@ -336,6 +101,7 @@
     const fileName = document.getElementById('fileName');
     const fileSize = document.getElementById('fileSize');
     const convertBtn = document.getElementById('convertBtn');
+    const debugBtn = document.getElementById('debugBtn');
     const statusDiv = document.getElementById('status');
     const statsDiv = document.getElementById('stats');
     const totalRecords = document.getElementById('totalRecords');
@@ -346,75 +112,103 @@
     const downloadSection = document.getElementById('downloadSection');
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
+    const debugBox = document.getElementById('debugBox');
 
     let currentData = [];
     let currentHtmlContent = '';
+    let debugInfo = '';
 
-    // ----- Upload Area Click -----
+    // ----- Upload -----
     uploadArea.addEventListener('click', () => fileInput.click());
 
-    // ----- Drag & Drop Support -----
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-    });
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('dragover');
-    });
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        if (e.dataTransfer.files.length) {
-            handleFile(e.dataTransfer.files[0]);
-        }
-    });
-
-    // ----- File Selection -----
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length) {
-            handleFile(e.target.files[0]);
+            const file = e.target.files[0];
+            if (file.size > 50 * 1024 * 1024) {
+                showStatus('❌ File too large! Max 50MB.', 'error');
+                return;
+            }
+            fileName.textContent = file.name;
+            fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+            fileInfo.style.display = 'block';
+            convertBtn.disabled = false;
+            showStatus('✅ File loaded! Tap "Convert" to process.', 'info');
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentHtmlContent = e.target.result;
+                debugInfo = 'File loaded. Size: ' + currentHtmlContent.length + ' chars';
+            };
+            reader.readAsText(file);
         }
     });
 
-    // ----- Handle File -----
-    function handleFile(file) {
-        const validTypes = ['text/html', 'text/plain', 'application/xhtml+xml'];
-        const ext = file.name.split('.').pop().toLowerCase();
-        if (!validTypes.includes(file.type) && !['html', 'htm', 'txt'].includes(ext)) {
-            showStatus('❌ Please select an HTML file (.html, .htm, .txt)', 'error');
+    // ----- Debug Button -----
+    debugBtn.addEventListener('click', () => {
+        if (!currentHtmlContent) {
+            showStatus('❌ Please load an HTML file first!', 'error');
             return;
         }
+        showDebugInfo(currentHtmlContent);
+    });
 
-        if (file.size > 50 * 1024 * 1024) {
-            showStatus('❌ File too large! Max 50MB.', 'error');
-            return;
+    function showDebugInfo(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        let info = '=== HTML STRUCTURE DEBUG ===\n\n';
+        info += '📌 Total characters: ' + html.length + '\n';
+        info += '📌 Table rows found:\n';
+
+        // Try ALL possible selectors
+        const selectors = [
+            'tr[role="row"]',
+            'table tbody tr',
+            'table tr',
+            '.dt-row',
+            '.dtr-control',
+            'tr'
+        ];
+
+        let totalFound = 0;
+        for (let sel of selectors) {
+            const els = doc.querySelectorAll(sel);
+            info += `  - "${sel}": ${els.length}\n`;
+            totalFound += els.length;
         }
 
-        // Show file info
-        fileName.textContent = file.name;
-        fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-        fileInfo.style.display = 'block';
-        convertBtn.disabled = false;
-        showStatus('✅ File loaded! Tap "Convert to Excel" to process.', 'info');
+        // Sample first row
+        const firstRow = doc.querySelector('tr');
+        if (firstRow) {
+            info += '\n📌 First row HTML (first 300 chars):\n';
+            info += firstRow.outerHTML.substring(0, 300) + '...\n';
+        }
 
-        // Read file content
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            currentHtmlContent = e.target.result;
-        };
-        reader.readAsText(file);
+        // Find any element with data-phn
+        const phnEls = doc.querySelectorAll('[data-phn]');
+        info += '\n📌 Elements with data-phn: ' + phnEls.length + '\n';
+        if (phnEls.length > 0) {
+            info += '  Sample: ' + phnEls[0].outerHTML.substring(0, 150) + '...\n';
+        }
+
+        // Find any link with tel:
+        const telLinks = doc.querySelectorAll('a[href*="tel:"]');
+        info += '📌 Links with tel:: ' + telLinks.length + '\n';
+
+        debugBox.textContent = info;
+        debugBox.classList.add('show');
+        showStatus('🔍 Debug info generated! Scroll down to see.', 'info');
     }
 
     // ----- Convert Button -----
     convertBtn.addEventListener('click', () => {
         if (!currentHtmlContent) {
-            showStatus('❌ No file loaded! Please select an HTML file first.', 'error');
+            showStatus('❌ No file loaded!', 'error');
             return;
         }
         processHtml(currentHtmlContent);
     });
 
-    // ----- Process HTML -----
+    // ----- Main Processing -----
     function processHtml(html) {
         showStatus('⏳ Processing HTML... Please wait.', 'loading');
         convertBtn.disabled = true;
@@ -424,34 +218,73 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
 
-                // --- Extract data ---
-                const results = [];
-                const rows = doc.querySelectorAll('tr[role="row"]');
+                // Try MULTIPLE methods to extract data
+                let results = [];
+                let methodUsed = '';
 
-                if (rows.length === 0) {
-                    // Try alternative selector
-                    const altRows = doc.querySelectorAll('table tbody tr');
-                    if (altRows.length > 0) {
-                        altRows.forEach(row => extractRow(row, results));
-                    } else {
-                        showStatus('❌ No data found! Is this the correct HTML file?', 'error');
-                        convertBtn.disabled = false;
-                        return;
-                    }
-                } else {
+                // Method 1: tr[role="row"]
+                let rows = doc.querySelectorAll('tr[role="row"]');
+                if (rows.length > 0) {
+                    methodUsed = 'tr[role="row"]';
                     rows.forEach(row => extractRow(row, results));
                 }
 
+                // Method 2: table tbody tr
                 if (results.length === 0) {
-                    showStatus('❌ No BC records found in this HTML file.', 'error');
+                    rows = doc.querySelectorAll('table tbody tr');
+                    if (rows.length > 0) {
+                        methodUsed = 'table tbody tr';
+                        rows.forEach(row => extractRow(row, results));
+                    }
+                }
+
+                // Method 3: All tr (filter out header)
+                if (results.length === 0) {
+                    rows = doc.querySelectorAll('tr');
+                    if (rows.length > 0) {
+                        methodUsed = 'all tr (filtered)';
+                        rows.forEach(row => {
+                            // Skip if contains header text
+                            const text = row.textContent.toLowerCase();
+                            if (!text.includes('bc name') && !text.includes('s.no') && !text.includes('pincode')) {
+                                extractRow(row, results);
+                            }
+                        });
+                    }
+                }
+
+                // Method 4: Direct data-phn search
+                if (results.length === 0) {
+                    const phnEls = doc.querySelectorAll('[data-phn]');
+                    if (phnEls.length > 0) {
+                        methodUsed = 'direct [data-phn] search';
+                        phnEls.forEach(el => {
+                            const row = el.closest('tr');
+                            if (row) extractRow(row, results);
+                        });
+                    }
+                }
+
+                // Method 5: Look for any table with data
+                if (results.length === 0) {
+                    const tables = doc.querySelectorAll('table');
+                    for (let table of tables) {
+                        const trs = table.querySelectorAll('tr');
+                        for (let tr of trs) {
+                            extractRow(tr, results);
+                        }
+                        if (results.length > 0) break;
+                    }
+                }
+
+                if (results.length === 0) {
+                    showStatus('❌ No BC records found! Tap "Debug HTML Structure" to see what\'s in the file.', 'error');
                     convertBtn.disabled = false;
                     return;
                 }
 
-                // --- Store data ---
+                // ---- Success ----
                 currentData = results;
-
-                // --- Show stats ---
                 const uniqueBanks = new Set(results.map(r => r.bank).filter(b => b && b !== 'N/A'));
                 const phonesFoundCount = results.filter(r => r.phone && r.phone !== 'N/A' && r.phone.length >= 10).length;
                 const dataSizeBytes = new Blob([JSON.stringify(results)]).size;
@@ -459,54 +292,95 @@
                 totalRecords.textContent = results.length;
                 phonesFound.textContent = phonesFoundCount;
                 banksFound.textContent = uniqueBanks.size;
-                dataSize.textContent = (dataSizeBytes / 1024 / 1024).toFixed(2) + ' MB';
+                dataSize.textContent = (dataSizeBytes / 1024).toFixed(1) + ' KB';
                 statsDiv.classList.add('show');
 
-                // --- Show preview (first 10 rows) ---
                 showPreview(results);
-
-                // --- Show download ---
                 downloadSection.classList.add('show');
-
-                showStatus(`✅ Success! ${results.length} BC records extracted.`, 'success');
+                showStatus(`✅ Success! ${results.length} BC records extracted. Method: ${methodUsed}`, 'success');
                 convertBtn.disabled = false;
 
             } catch (err) {
-                showStatus('❌ Error processing HTML: ' + err.message, 'error');
+                showStatus('❌ Error: ' + err.message, 'error');
                 convertBtn.disabled = false;
             }
-        }, 100);
+        }, 150);
     }
 
-    // ----- Extract Row -----
+    // ----- Extract Row (Improved) -----
     function extractRow(row, results) {
         try {
-            // Skip header rows
-            if (row.classList && row.classList.contains('dt-head')) return;
+            // Skip if row is header
+            const text = row.textContent.toLowerCase();
+            if (text.includes('bc name') || text.includes('s.no') || text.includes('pincode')) return;
 
-            // BC Name
+            // Find BC Name - try multiple ways
+            let bcName = '';
+            let bcId = '';
+
+            // Try .BcDetail
             let nameElem = row.querySelector('.BcDetail');
-            if (!nameElem) nameElem = row.querySelector('td:nth-child(2) a');
-            if (!nameElem) return;
-            const bcName = nameElem.textContent.trim();
-            const bcId = nameElem.getAttribute('data-bcid') || '';
+            if (nameElem) {
+                bcName = nameElem.textContent.trim();
+                bcId = nameElem.getAttribute('data-bcid') || '';
+            }
 
-            // Cells
+            // Try td:nth-child(2) a
+            if (!bcName) {
+                const cell = row.querySelector('td:nth-child(2) a');
+                if (cell) {
+                    bcName = cell.textContent.trim();
+                    bcId = cell.getAttribute('data-bcid') || '';
+                }
+            }
+
+            // Try any link in second cell
+            if (!bcName) {
+                const cells = row.querySelectorAll('td');
+                if (cells.length > 1) {
+                    const link = cells[1].querySelector('a');
+                    if (link) {
+                        bcName = link.textContent.trim();
+                        bcId = link.getAttribute('data-bcid') || '';
+                    } else {
+                        bcName = cells[1].textContent.trim();
+                    }
+                }
+            }
+
+            // Try any strong/bold text
+            if (!bcName) {
+                const strong = row.querySelector('strong, b');
+                if (strong) bcName = strong.textContent.trim();
+            }
+
+            // If still no name, skip
+            if (!bcName || bcName.length < 2) return;
+
+            // Get all cells
             const cells = row.querySelectorAll('td');
-            if (cells.length < 3) return;
+            let pincode = 'N/A', bankName = 'N/A', bcType = 'N/A';
 
-            let pincode = cells.length > 2 ? cells[2].textContent.trim() : 'N/A';
-            let bankName = cells.length > 3 ? cells[3].textContent.trim() : 'N/A';
-            let bcType = cells.length > 4 ? cells[4].textContent.trim() : 'N/A';
+            if (cells.length >= 3) pincode = cells[2].textContent.trim();
+            if (cells.length >= 4) bankName = cells[3].textContent.trim();
+            if (cells.length >= 5) bcType = cells[4].textContent.trim();
 
-            // Phone - encrypted
+            // Phone - try encrypted
             let phone = 'N/A';
             let encryptedPhone = 'N/A';
             const callBtn = row.querySelector('.btnCallNow');
             if (callBtn) {
                 encryptedPhone = callBtn.getAttribute('data-phn') || '';
-                if (encryptedPhone) {
-                    phone = decryptPhone(encryptedPhone);
+                if (encryptedPhone) phone = decryptPhone(encryptedPhone);
+            }
+
+            // Try direct tel: link
+            if (phone === 'N/A') {
+                const telLink = row.querySelector('a[href*="tel:"]');
+                if (telLink) {
+                    const href = telLink.getAttribute('href') || '';
+                    const num = href.replace('tel:', '').replace(/[^0-9]/g, '');
+                    if (num.length >= 10) phone = num.slice(-10);
                 }
             }
 
@@ -530,18 +404,17 @@
                 encrypted: encryptedPhone,
                 coords: coords
             });
+
         } catch (err) {
-            // Skip problematic rows
+            // Skip
         }
     }
 
-    // ----- Decrypt Phone (Client-side) -----
+    // ----- Decrypt -----
     function decryptPhone(encrypted) {
         try {
-            // Base64 decode
             const decoded = atob(encrypted);
-            // XOR with key (try common keys)
-            const keys = ['IBA@2024', 'IBA2024', 'BCRegistry', 'NearbyTech'];
+            const keys = ['IBA@2024', 'IBA2024', 'BCRegistry', 'NearbyTech', 'remittance'];
             for (let key of keys) {
                 let result = '';
                 for (let i = 0; i < decoded.length; i++) {
@@ -550,56 +423,38 @@
                     );
                 }
                 let phone = result.replace(/[^0-9]/g, '');
-                if (phone.length >= 10) {
-                    return phone.slice(-10);
-                }
+                if (phone.length >= 10) return phone.slice(-10);
             }
             return 'N/A';
-        } catch (e) {
-            return 'N/A';
-        }
+        } catch (e) { return 'N/A'; }
     }
 
-    // ----- Show Preview -----
+    // ----- Preview -----
     function showPreview(data) {
         const maxPreview = Math.min(data.length, 10);
-        let html = `<table>
-            <thead><tr>
-                <th>#</th><th>BC Name</th><th>Bank</th><th>Phone</th><th>Pincode</th>
-            </tr></thead><tbody>`;
+        let html = `<table><thead><tr><th>#</th><th>BC Name</th><th>Bank</th><th>Phone</th><th>Pincode</th></tr></thead><tbody>`;
         for (let i = 0; i < maxPreview; i++) {
             const row = data[i];
-            html += `<tr>
-                <td>${i+1}</td>
-                <td title="${row.name}">${row.name.substring(0, 20)}${row.name.length > 20 ? '…' : ''}</td>
-                <td>${row.bank}</td>
-                <td>${row.phone}</td>
-                <td>${row.pincode}</td>
-            </tr>`;
+            html += `<tr><td>${i+1}</td><td>${row.name.substring(0, 25)}</td><td>${row.bank}</td><td>${row.phone}</td><td>${row.pincode}</td></tr>`;
         }
         html += `</tbody></table>`;
         if (data.length > 10) {
-            html += `<p style="text-align:center;padding:8px;color:#666;font-size:13px;">... and ${data.length - 10} more records</p>`;
+            html += `<p style="text-align:center;padding:8px;color:#666;font-size:12px;">... and ${data.length - 10} more</p>`;
         }
         previewTable.innerHTML = html;
         previewTable.classList.add('show');
     }
 
-    // ----- Download Excel (CSV) -----
+    // ----- Download CSV -----
     downloadBtn.addEventListener('click', () => {
         if (currentData.length === 0) {
             showStatus('❌ No data to download!', 'error');
             return;
         }
-        downloadExcel(currentData);
-    });
-
-    function downloadExcel(data) {
-        // Create CSV
         const headers = ['S.No', 'BC Name', 'BC ID', 'Pincode', 'Bank Name', 'BC Type', 'Phone Number', 'Coordinates'];
         let csv = headers.join(',') + '\n';
-        data.forEach((row, idx) => {
-            const values = [
+        currentData.forEach((row, idx) => {
+            csv += [
                 idx + 1,
                 `"${row.name}"`,
                 `"${row.id}"`,
@@ -608,24 +463,20 @@
                 `"${row.type}"`,
                 `"${row.phone}"`,
                 `"${row.coords}"`
-            ];
-            csv += values.join(',') + '\n';
+            ].join(',') + '\n';
         });
-
-        // Create download
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.href = url;
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-        link.download = `BC_Registry_Data_${timestamp}.csv`;
+        const ts = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+        link.download = `BC_Registry_Data_${ts}.csv`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-
-        showStatus(`📥 Download started! ${data.length} records in CSV format.`, 'success');
-    }
+        showStatus('📥 Download started!', 'success');
+    });
 
     // ----- Reset -----
     resetBtn.addEventListener('click', () => {
@@ -638,23 +489,15 @@
         previewTable.classList.remove('show');
         previewTable.innerHTML = '';
         downloadSection.classList.remove('show');
+        debugBox.classList.remove('show');
         statusDiv.style.display = 'none';
-        statusDiv.className = '';
-        statusDiv.textContent = '';
     });
 
-    // ----- Show Status -----
+    // ----- Status -----
     function showStatus(msg, type) {
         statusDiv.textContent = msg;
         statusDiv.className = type;
         statusDiv.style.display = 'block';
-        if (type === 'success' || type === 'info') {
-            setTimeout(() => {
-                if (statusDiv.className === type) {
-                    // Keep visible
-                }
-            }, 5000);
-        }
     }
 </script>
 </body>
