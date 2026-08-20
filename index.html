@@ -3,57 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🏦 IBA BC Converter — Fixed</title>
+    <title>🏦 IBA BC — Bulk Decryption to Excel</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, sans-serif; background: #f0f4ff; padding: 16px; }
-        .container { max-width: 700px; margin: 0 auto; background: white; border-radius: 20px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        h1 { font-size: 22px; color: #1a237e; text-align: center; }
-        .subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 16px; }
-        .upload-area { border: 2px dashed #3f51b5; border-radius: 16px; padding: 30px 20px; text-align: center; cursor: pointer; background: #f8f9ff; }
-        .upload-area:hover { background: #e8eaf6; }
-        .upload-icon { font-size: 40px; }
-        .upload-text { font-size: 16px; font-weight: 500; }
-        .upload-hint { font-size: 13px; color: #888; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f0f4ff; padding: 16px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { max-width: 750px; width: 100%; margin: 0 auto; background: white; border-radius: 24px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); }
+        h1 { font-size: 24px; color: #1a237e; text-align: center; }
+        .subtitle { text-align: center; color: #666; font-size: 14px; margin-bottom: 20px; }
+        .upload-area { border: 2.5px dashed #3f51b5; border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; background: #f8f9ff; transition: 0.3s; }
+        .upload-area:hover { background: #e8eaf6; border-color: #1a237e; }
+        .upload-area.dragover { background: #e8eaf6; border-color: #1a237e; }
+        .upload-icon { font-size: 48px; }
+        .upload-text { font-size: 17px; font-weight: 500; color: #333; }
+        .upload-hint { font-size: 13px; color: #888; margin-top: 6px; }
         #fileInput { display: none; }
-        #fileInfo { display: none; margin-top: 12px; padding: 10px 14px; background: #e8f5e9; border-radius: 10px; font-size: 14px; }
-        .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 12px; }
+        #fileInfo { display: none; margin-top: 14px; padding: 12px 16px; background: #e8f5e9; border-radius: 10px; font-size: 14px; }
+        #fileInfo .file-name { font-weight: 600; word-break: break-all; }
+        #fileInfo .file-size { color: #555; }
+        .btn { display: block; width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 14px; }
         .btn-primary { background: #3f51b5; color: white; }
+        .btn-primary:hover { background: #1a237e; }
         .btn-primary:disabled { background: #9fa8da; cursor: not-allowed; }
         .btn-success { background: #2e7d32; color: white; }
+        .btn-success:hover { background: #1b5e20; }
         .btn-danger { background: #c62828; color: white; }
-        #status { margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 14px; display: none; }
+        .btn-danger:hover { background: #8e0000; }
+        .btn-warning { background: #e65100; color: white; }
+        .btn-warning:hover { background: #bf360c; }
+        #status { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 14px; display: none; }
         #status.loading { display: block; background: #fff3e0; color: #e65100; }
         #status.success { display: block; background: #e8f5e9; color: #2e7d32; }
         #status.error { display: block; background: #ffebee; color: #c62828; }
-        .stats { display: none; margin-top: 12px; padding: 12px; background: #f5f5f5; border-radius: 12px; }
+        #status.info { display: block; background: #e3f2fd; color: #0d47a1; }
+        .stats { display: none; margin-top: 14px; padding: 16px; background: #f5f5f5; border-radius: 12px; }
         .stats.show { display: block; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-        .stat-item { background: white; padding: 8px; border-radius: 8px; text-align: center; }
-        .stat-item .number { font-size: 22px; font-weight: 700; color: #1a237e; }
-        .stat-item .label { font-size: 10px; color: #666; }
-        .preview-table { margin-top: 12px; max-height: 300px; overflow: auto; border: 1px solid #e0e0e0; border-radius: 10px; display: none; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .stat-item { background: white; padding: 10px; border-radius: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .stat-item .number { font-size: 26px; font-weight: 700; color: #1a237e; }
+        .stat-item .label { font-size: 11px; color: #666; margin-top: 2px; }
+        .preview-table { margin-top: 14px; max-height: 320px; overflow: auto; border: 1px solid #e0e0e0; border-radius: 10px; display: none; }
         .preview-table.show { display: block; }
         .preview-table table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .preview-table th { background: #3f51b5; color: white; padding: 6px 8px; text-align: left; position: sticky; top: 0; z-index: 10; }
-        .preview-table td { padding: 5px 8px; border-bottom: 1px solid #eee; }
+        .preview-table th { background: #3f51b5; color: white; padding: 8px 10px; text-align: left; position: sticky; top: 0; z-index: 10; }
+        .preview-table td { padding: 6px 10px; border-bottom: 1px solid #eee; }
         .preview-table .phone-found { color: #2e7d32; font-weight: 600; }
         .preview-table .phone-missing { color: #c62828; }
-        .download-section { display: none; margin-top: 12px; }
+        .download-section { display: none; margin-top: 14px; }
         .download-section.show { display: block; }
-        .footer { text-align: center; margin-top: 16px; color: #999; font-size: 11px; }
-        .key-status { display: none; margin-top: 8px; padding: 8px 12px; background: #fff8e1; border-radius: 8px; font-size: 13px; }
+        .footer { text-align: center; margin-top: 20px; color: #999; font-size: 12px; }
+        .progress-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 10px; margin-top: 14px; display: none; overflow: hidden; }
+        .progress-bar.show { display: block; }
+        .progress-bar .fill { height: 100%; background: #3f51b5; width: 0%; transition: width 0.3s; }
+        .key-status { display: none; margin-top: 10px; padding: 8px 14px; background: #fff8e1; border-radius: 8px; font-size: 13px; }
         .key-status.show { display: block; }
         .key-status .found { color: #2e7d32; font-weight: 600; }
         .key-status .not-found { color: #c62828; font-weight: 600; }
+        .sample-box { display: none; margin-top: 12px; padding: 12px 16px; background: #e8eaf6; border-radius: 10px; border-left: 4px solid #3f51b5; font-size: 13px; }
+        .sample-box.show { display: block; }
+        @media (max-width: 480px) {
+            .container { padding: 16px; }
+            h1 { font-size: 20px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .stat-item .number { font-size: 20px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🏦 IBA BC Converter</h1>
-    <p class="subtitle">HTML se Excel — Working Decryption</p>
+    <h1>🏦 IBA BC Bulk Decryptor</h1>
+    <p class="subtitle">HTML file upload karein → Saare numbers decrypt → Excel download</p>
 
+    <!-- Upload Area -->
     <div class="upload-area" id="uploadArea">
         <div class="upload-icon">📂</div>
         <div class="upload-text">Tap to select HTML file</div>
@@ -62,26 +83,40 @@
 
     <input type="file" id="fileInput" accept=".html,.htm,.txt">
 
+    <!-- File Info -->
     <div id="fileInfo">
         <div>📄 <span class="file-name" id="fileName">-</span></div>
-        <div id="fileSize">-</div>
+        <div class="file-size" id="fileSize">-</div>
     </div>
 
-    <button class="btn btn-primary" id="convertBtn" disabled>🔄 Convert to Excel</button>
+    <!-- Buttons -->
+    <button class="btn btn-primary" id="convertBtn" disabled>🔄 Decrypt & Convert to Excel</button>
 
+    <!-- Progress -->
+    <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+
+    <!-- Key Status -->
     <div id="keyStatus" class="key-status"></div>
+
+    <!-- Status -->
     <div id="status"></div>
 
+    <!-- Sample Box -->
+    <div class="sample-box" id="sampleBox"></div>
+
+    <!-- Stats -->
     <div class="stats" id="stats">
         <div class="stats-grid">
-            <div class="stat-item"><div class="number" id="totalRecords">0</div><div class="label">Total</div></div>
-            <div class="stat-item"><div class="number" id="phonesFound">0</div><div class="label">Phones</div></div>
+            <div class="stat-item"><div class="number" id="totalRecords">0</div><div class="label">Total Records</div></div>
+            <div class="stat-item"><div class="number" id="phonesFound">0</div><div class="label">Phone Numbers</div></div>
             <div class="stat-item"><div class="number" id="decryptRate">0%</div><div class="label">Decrypt Rate</div></div>
         </div>
     </div>
 
+    <!-- Preview -->
     <div class="preview-table" id="previewTable"></div>
 
+    <!-- Download -->
     <div class="download-section" id="downloadSection">
         <button class="btn btn-success" id="downloadBtn">📥 Download Excel (CSV)</button>
         <button class="btn btn-danger" id="resetBtn" style="background:#757575; margin-top:8px;">🔄 Reset</button>
@@ -92,9 +127,10 @@
 
 <script>
     // ================================================================
-    // WORKING DECRYPTION — REAL IBA ENCRYPTION
+    // COMPLETE WORKING CODE — Bulk Decryption + Excel Export
     // ================================================================
 
+    // ---------- DOM Elements ----------
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
     const fileInfo = document.getElementById('fileInfo');
@@ -111,98 +147,132 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
     const keyStatus = document.getElementById('keyStatus');
+    const sampleBox = document.getElementById('sampleBox');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
 
+    // ---------- Global Variables ----------
     let currentData = [];
     let currentHtmlContent = '';
-
-    // ----- Upload -----
-    uploadArea.addEventListener('click', () => fileInput.click());
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length) {
-            const file = e.target.files[0];
-            if (file.size > 50 * 1024 * 1024) {
-                showStatus('❌ File too large! Max 50MB.', 'error');
-                return;
-            }
-            fileName.textContent = file.name;
-            fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-            fileInfo.style.display = 'block';
-            convertBtn.disabled = false;
-            showStatus('✅ File loaded! Tap "Convert" to process.', 'info');
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                currentHtmlContent = e.target.result;
-            };
-            reader.readAsText(file);
-        }
-    });
-
-    // ----- Convert Button -----
-    convertBtn.addEventListener('click', () => {
-        if (!currentHtmlContent) {
-            showStatus('❌ No file loaded!', 'error');
-            return;
-        }
-        processHtml(currentHtmlContent);
-    });
+    let decryptedCount = 0;
+    let totalProcessed = 0;
 
     // ================================================================
-    // REAL DECRYPTION — XOR with 'remittance' key
+    // 1. DECRYPTION FUNCTION — REAL IBA KEY
     // ================================================================
+    const SECRET_KEY = "remittance";
+
     function decryptPhone(encrypted) {
         try {
-            // Step 1: Base64 Decode
+            if (!encrypted) return null;
             const decoded = atob(encrypted);
-            
-            // Step 2: XOR with 'remittance' key
-            const key = 'remittance';
             let result = '';
             for (let i = 0; i < decoded.length; i++) {
-                const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-                result += String.fromCharCode(charCode);
+                result += String.fromCharCode(
+                    decoded.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length)
+                );
             }
-            
-            // Step 3: Extract digits only
             let phone = result.replace(/[^0-9]/g, '');
-            if (phone.length >= 10) {
-                return phone.slice(-10);
-            }
+            if (phone.length >= 10) return phone.slice(-10);
             return null;
         } catch (e) {
             return null;
         }
     }
 
-    // ----- Main Processing -----
+    // ================================================================
+    // 2. UPLOAD HANDLING
+    // ================================================================
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    function handleFile(file) {
+        const validTypes = ['text/html', 'text/plain', 'application/xhtml+xml'];
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!validTypes.includes(file.type) && !['html', 'htm', 'txt'].includes(ext)) {
+            showStatus('❌ Please select an HTML file (.html, .htm, .txt)', 'error');
+            return;
+        }
+        if (file.size > 50 * 1024 * 1024) {
+            showStatus('❌ File too large! Max 50MB.', 'error');
+            return;
+        }
+
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+        fileInfo.style.display = 'block';
+        convertBtn.disabled = false;
+        showStatus('✅ File loaded! Tap "Decrypt & Convert to Excel" to process.', 'info');
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            currentHtmlContent = e.target.result;
+        };
+        reader.readAsText(file);
+    }
+
+    // ================================================================
+    // 3. CONVERT BUTTON — MAIN PROCESSING
+    // ================================================================
+    convertBtn.addEventListener('click', () => {
+        if (!currentHtmlContent) {
+            showStatus('❌ No file loaded! Please select an HTML file first.', 'error');
+            return;
+        }
+        processHtml(currentHtmlContent);
+    });
+
     function processHtml(html) {
         showStatus('⏳ Processing HTML... Please wait.', 'loading');
         convertBtn.disabled = true;
+        progressBar.classList.add('show');
+        progressFill.style.width = '0%';
+        keyStatus.classList.remove('show');
+        sampleBox.classList.remove('show');
 
         setTimeout(() => {
             try {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
 
-                let results = [];
+                // ---------- Extract rows ----------
                 let rows = doc.querySelectorAll('table tbody tr');
-                
-                if (rows.length === 0) {
-                    rows = doc.querySelectorAll('tr[role="row"]');
-                }
-                if (rows.length === 0) {
-                    rows = doc.querySelectorAll('tr');
-                }
+                if (rows.length === 0) rows = doc.querySelectorAll('tr[role="row"]');
+                if (rows.length === 0) rows = doc.querySelectorAll('tr');
 
+                const results = [];
                 let encryptedFound = 0;
-                let decryptedCount = 0;
+                decryptedCount = 0;
+                totalProcessed = 0;
+                const totalRows = rows.length;
 
-                rows.forEach(row => {
+                // ---------- Process each row ----------
+                rows.forEach((row, index) => {
                     try {
                         const cells = row.querySelectorAll('td');
                         if (cells.length < 3) return;
 
+                        // BC Name
                         let name = '';
                         let id = '';
                         const nameLink = row.querySelector('.BcDetail');
@@ -214,10 +284,12 @@
                         }
                         if (!name || name.length < 2) return;
 
+                        // Other fields
                         const pincode = cells.length > 2 ? cells[2].textContent.trim() : 'N/A';
                         const bank = cells.length > 3 ? cells[3].textContent.trim() : 'N/A';
                         const type = cells.length > 4 ? cells[4].textContent.trim() : 'N/A';
 
+                        // Phone — encrypted
                         let encrypted = '';
                         const callBtn = row.querySelector('.btnCallNow');
                         if (callBtn) {
@@ -234,19 +306,7 @@
                             }
                         }
 
-                        // Try direct tel link
-                        if (phone === 'N/A') {
-                            const telLink = row.querySelector('a[href*="tel:"]');
-                            if (telLink) {
-                                const href = telLink.getAttribute('href') || '';
-                                const num = href.replace('tel:', '').replace(/[^0-9]/g, '');
-                                if (num.length >= 10) {
-                                    phone = num.slice(-10);
-                                    decryptedCount++;
-                                }
-                            }
-                        }
-
+                        // Coordinates
                         let coords = 'N/A';
                         const dirLink = row.querySelector('a[href*="google.com/maps"]');
                         if (dirLink) {
@@ -266,17 +326,30 @@
                             coords: coords
                         });
 
-                    } catch (err) {}
+                        totalProcessed++;
+
+                        // Update progress
+                        const percent = Math.min(Math.round((index / totalRows) * 100), 100);
+                        progressFill.style.width = percent + '%';
+
+                    } catch (err) {
+                        // Skip problematic rows
+                    }
                 });
 
+                progressFill.style.width = '100%';
+
+                // ---------- Check results ----------
                 if (results.length === 0) {
-                    showStatus('❌ No BC records found!', 'error');
+                    showStatus('❌ No BC records found! Make sure the HTML file is correct.', 'error');
                     convertBtn.disabled = false;
+                    progressBar.classList.remove('show');
                     return;
                 }
 
                 currentData = results;
 
+                // ---------- Update UI ----------
                 const total = results.length;
                 const phones = results.filter(r => r.phone && r.phone !== 'N/A' && r.phone.length >= 10).length;
                 const rate = total > 0 ? Math.round((phones / total) * 100) : 0;
@@ -286,9 +359,17 @@
                 decryptRate.textContent = rate + '%';
                 statsDiv.classList.add('show');
 
-                showPreview(results);
-                downloadSection.classList.add('show');
+                // ---------- Show sample ----------
+                const sample = results.find(r => r.phone && r.phone !== 'N/A');
+                if (sample) {
+                    sampleBox.innerHTML = `
+                        <strong>🔓 Sample Decryption:</strong><br>
+                        ${sample.name}: <strong style="color:#2e7d32;font-size:18px;">${sample.phone}</strong>
+                    `;
+                    sampleBox.classList.add('show');
+                }
 
+                // ---------- Key status ----------
                 if (phones > 0) {
                     keyStatus.innerHTML = '🔓 <span class="found">Decryption successful!</span> ' + phones + ' phone numbers found. (Key: remittance)';
                     keyStatus.classList.add('show');
@@ -297,24 +378,42 @@
                     keyStatus.classList.add('show');
                 }
 
+                // ---------- Show preview ----------
+                showPreview(results);
+
+                // ---------- Show download section ----------
+                downloadSection.classList.add('show');
+
                 showStatus(`✅ Success! ${results.length} BC records extracted.`, 'success');
                 convertBtn.disabled = false;
+                progressBar.classList.remove('show');
 
             } catch (err) {
                 showStatus('❌ Error: ' + err.message, 'error');
                 convertBtn.disabled = false;
+                progressBar.classList.remove('show');
             }
         }, 150);
     }
 
-    // ----- Preview -----
+    // ================================================================
+    // 4. PREVIEW TABLE
+    // ================================================================
     function showPreview(data) {
         const maxPreview = Math.min(data.length, 15);
-        let html = `<table><thead><tr><th>#</th><th>BC Name</th><th>Bank</th><th>Phone</th><th>Pincode</th></tr></thead><tbody>`;
+        let html = `<table><thead><tr>
+            <th>#</th><th>BC Name</th><th>Bank</th><th>Phone</th><th>Pincode</th>
+        </tr></thead><tbody>`;
         for (let i = 0; i < maxPreview; i++) {
             const row = data[i];
             const phoneClass = row.phone && row.phone !== 'N/A' && row.phone.length >= 10 ? 'phone-found' : 'phone-missing';
-            html += `<tr><td>${i+1}</td><td>${row.name.substring(0, 25)}</td><td>${row.bank}</td><td class="${phoneClass}">${row.phone || 'N/A'}</td><td>${row.pincode}</td></tr>`;
+            html += `<tr>
+                <td>${i+1}</td>
+                <td>${row.name.substring(0, 25)}</td>
+                <td>${row.bank}</td>
+                <td class="${phoneClass}">${row.phone || 'N/A'}</td>
+                <td>${row.pincode}</td>
+            </tr>`;
         }
         html += `</tbody></table>`;
         if (data.length > 15) {
@@ -324,15 +423,21 @@
         previewTable.classList.add('show');
     }
 
-    // ----- Download CSV -----
+    // ================================================================
+    // 5. DOWNLOAD EXCEL (CSV)
+    // ================================================================
     downloadBtn.addEventListener('click', () => {
         if (currentData.length === 0) {
             showStatus('❌ No data to download!', 'error');
             return;
         }
+        downloadCSV(currentData);
+    });
+
+    function downloadCSV(data) {
         const headers = ['S.No', 'BC Name', 'BC ID', 'Pincode', 'Bank Name', 'BC Type', 'Phone Number', 'Coordinates'];
         let csv = headers.join(',') + '\n';
-        currentData.forEach((row, idx) => {
+        data.forEach((row, idx) => {
             csv += [
                 idx + 1,
                 `"${row.name}"`,
@@ -344,20 +449,24 @@
                 `"${row.coords}"`
             ].join(',') + '\n';
         });
+
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.href = url;
-        const ts = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-        link.download = `BC_Registry_Data_${ts}.csv`;
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+        link.download = `BC_Registry_Data_${timestamp}.csv`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-        showStatus('📥 Download started!', 'success');
-    });
 
-    // ----- Reset -----
+        showStatus('📥 Download started!', 'success');
+    }
+
+    // ================================================================
+    // 6. RESET
+    // ================================================================
     resetBtn.addEventListener('click', () => {
         currentData = [];
         currentHtmlContent = '';
@@ -369,10 +478,15 @@
         previewTable.innerHTML = '';
         downloadSection.classList.remove('show');
         keyStatus.classList.remove('show');
+        sampleBox.classList.remove('show');
         statusDiv.style.display = 'none';
+        progressBar.classList.remove('show');
+        progressFill.style.width = '0%';
     });
 
-    // ----- Status -----
+    // ================================================================
+    // 7. STATUS HELPER
+    // ================================================================
     function showStatus(msg, type) {
         statusDiv.textContent = msg;
         statusDiv.className = type;
