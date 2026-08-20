@@ -1,315 +1,661 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>📥 Data Accumulator – Local Save</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🏦 IBA BC Registry - HTML to Excel Converter</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #0a0e17;
-            color: #eef2ff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f4ff;
             min-height: 100vh;
             padding: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         .container {
-            max-width: 900px;
-            width: 100%;
-            background: #0f172a;
-            border-radius: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
             padding: 24px;
-            border: 1px solid #1a2744;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
-        h1 { color: #22c55e; font-size: 22px; }
-        .sub { color: #64748b; font-size: 13px; margin-bottom: 16px; }
-        .stats {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            background: #0d1520;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            border: 1px solid #1a2744;
-        }
-        .stats span { color: #94a3b8; font-size: 13px; }
-        .stats strong { color: #eef2ff; font-size: 16px; }
-        .stats .leak { color: #ef4444; }
-        .stats .secure { color: #22c55e; }
-
-        textarea {
-            width: 100%;
-            height: 180px;
-            background: #060b18;
-            border: 2px solid #1a2744;
-            border-radius: 8px;
-            color: #eef2ff;
-            font-size: 12px;
-            font-family: 'Courier New', monospace;
-            padding: 12px;
-            resize: vertical;
-            outline: none;
-            transition: all 0.3s;
-        }
-        textarea:focus { border-color: #22c55e; }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 12px 0;
-        }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-success {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-        }
-        .btn-success:hover { transform: scale(1.02); }
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-        }
-        .btn-danger:hover { transform: scale(1.02); }
-        .btn-secondary {
-            background: #1a2744;
-            color: #94a3b8;
-            border: 1px solid #1e2d4a;
-        }
-        .btn-secondary:hover { background: #1e2d4a; color: #eef2ff; }
-        .btn-warning {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #fff;
-        }
-        .btn-warning:hover { transform: scale(1.02); }
-
-        .log-area {
-            background: #060b18;
-            border-radius: 8px;
-            border: 1px solid #1a2744;
-            padding: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            color: #94a3b8;
-            white-space: pre-wrap;
-            word-break: break-all;
-            margin-top: 12px;
-            display: none;
-        }
-        .log-area .success { color: #22c55e; }
-        .log-area .error { color: #ef4444; }
-        .log-area .info { color: #3b82f6; }
-
-        .footer {
-            margin-top: 16px;
-            font-size: 11px;
-            color: #475569;
+        h1 {
+            font-size: 24px;
+            color: #1a237e;
             text-align: center;
+            margin-bottom: 8px;
         }
-        .footer .warn { color: #ef4444; }
-        .record-count {
+        .subtitle {
+            text-align: center;
+            color: #666;
             font-size: 14px;
-            color: #94a3b8;
+            margin-bottom: 24px;
+        }
+        .upload-area {
+            border: 2px dashed #3f51b5;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9ff;
+        }
+        .upload-area:hover {
+            background: #e8eaf6;
+            border-color: #1a237e;
+        }
+        .upload-area.dragover {
+            background: #e8eaf6;
+            border-color: #1a237e;
+        }
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .upload-text {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .upload-hint {
+            color: #888;
+            font-size: 13px;
             margin-top: 8px;
         }
-        .record-count strong { color: #22c55e; font-size: 18px; }
+        #fileInput {
+            display: none;
+        }
+        #fileInfo {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            color: #2e7d32;
+            font-size: 14px;
+        }
+        #fileInfo .file-name {
+            font-weight: 600;
+            word-break: break-all;
+        }
+        #fileInfo .file-size {
+            color: #555;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 16px;
+        }
+        .btn-primary {
+            background: #3f51b5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1a237e;
+        }
+        .btn-primary:disabled {
+            background: #9fa8da;
+            cursor: not-allowed;
+        }
+        .btn-success {
+            background: #2e7d32;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #1b5e20;
+        }
+        .btn-danger {
+            background: #c62828;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #8e0000;
+        }
+        #status {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+        }
+        #status.loading {
+            display: block;
+            background: #fff3e0;
+            color: #e65100;
+        }
+        #status.success {
+            display: block;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        #status.error {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+        }
+        #status.info {
+            display: block;
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+        .stats {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 12px;
+        }
+        .stats.show {
+            display: block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .stat-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stat-item .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a237e;
+        }
+        .stat-item .label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .preview-table {
+            margin-top: 16px;
+            max-height: 300px;
+            overflow: auto;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            display: none;
+        }
+        .preview-table.show {
+            display: block;
+        }
+        .preview-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .preview-table th {
+            background: #3f51b5;
+            color: white;
+            padding: 8px 10px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .preview-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+        .preview-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            color: #999;
+            font-size: 12px;
+        }
+        .download-section {
+            display: none;
+            margin-top: 16px;
+        }
+        .download-section.show {
+            display: block;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .badge-warning {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .stat-item .number {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>📥 Data Accumulator</h1>
-    <div class="sub">Paste CSV data → Save locally → Download Excel</div>
+    <h1>🏦 IBA BC Registry Converter</h1>
+    <p class="subtitle">HTML file se Excel banayein — Mobile friendly!</p>
 
-    <div class="stats">
-        <span>📊 Total Records: <strong id="totalRecords">0</strong></span>
-        <span>📦 Batches: <strong id="batchCount">0</strong></span>
-        <span>💾 Last Saved: <strong id="lastSaved">—</strong></span>
+    <!-- Upload Area -->
+    <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">Tap to select HTML file</div>
+        <div class="upload-hint">.html .htm .txt (Max 50MB)</div>
     </div>
 
-    <textarea id="csvInput" placeholder="Paste your CSV data here..."></textarea>
+    <input type="file" id="fileInput" accept=".html,.htm,.txt">
 
-    <div class="btn-group">
-        <button class="btn btn-success" id="saveBtn"><i class="fas fa-save"></i> Save Batch</button>
-        <button class="btn btn-warning" id="downloadBtn"><i class="fas fa-file-excel"></i> Download Excel</button>
-        <button class="btn btn-danger" id="clearBtn"><i class="fas fa-trash"></i> Clear All</button>
-        <button class="btn btn-secondary" id="previewBtn"><i class="fas fa-eye"></i> Preview</button>
+    <!-- File Info -->
+    <div id="fileInfo">
+        <div>📄 <span class="file-name" id="fileName">-</span></div>
+        <div class="file-size" id="fileSize">-</div>
     </div>
 
-    <div class="record-count">
-        📋 <strong id="recordCountDisplay">0</strong> records saved locally
+    <!-- Buttons -->
+    <button class="btn btn-primary" id="convertBtn" disabled>🔄 Convert to Excel</button>
+
+    <!-- Status -->
+    <div id="status"></div>
+
+    <!-- Stats -->
+    <div class="stats" id="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="number" id="totalRecords">0</div>
+                <div class="label">Total BC Records</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="phonesFound">0</div>
+                <div class="label">Phone Numbers Found</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="banksFound">0</div>
+                <div class="label">Unique Banks</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="dataSize">0 KB</div>
+                <div class="label">Data Size</div>
+            </div>
+        </div>
     </div>
 
-    <div class="log-area" id="logArea"></div>
+    <!-- Preview -->
+    <div class="preview-table" id="previewTable"></div>
 
-    <div class="footer">
-        <span class="warn">⚠️</span> Data saved in your browser's local storage.
+    <!-- Download -->
+    <div class="download-section" id="downloadSection">
+        <button class="btn btn-success" id="downloadBtn">📥 Download Excel File</button>
+        <button class="btn btn-danger" id="resetBtn" style="margin-top:8px; background:#757575;">🔄 Reset</button>
     </div>
+
+    <div class="footer">Made with ❤️ • Data stays on your device</div>
 </div>
 
 <script>
-    const csvInput = document.getElementById('csvInput');
-    const saveBtn = document.getElementById('saveBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const previewBtn = document.getElementById('previewBtn');
-    const logArea = document.getElementById('logArea');
+    // ================================================================
+    // COMPLETE JAVASCRIPT - HTML to Excel Converter
+    // No external libraries needed!
+    // ================================================================
+
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const convertBtn = document.getElementById('convertBtn');
+    const statusDiv = document.getElementById('status');
+    const statsDiv = document.getElementById('stats');
     const totalRecords = document.getElementById('totalRecords');
-    const batchCount = document.getElementById('batchCount');
-    const lastSaved = document.getElementById('lastSaved');
-    const recordCountDisplay = document.getElementById('recordCountDisplay');
+    const phonesFound = document.getElementById('phonesFound');
+    const banksFound = document.getElementById('banksFound');
+    const dataSize = document.getElementById('dataSize');
+    const previewTable = document.getElementById('previewTable');
+    const downloadSection = document.getElementById('downloadSection');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const resetBtn = document.getElementById('resetBtn');
 
-    const STORAGE_KEY = 'mgl_backup_data';
+    let currentData = [];
+    let currentHtmlContent = '';
 
-    // ─── LOAD FROM LOCAL STORAGE ───
-    function loadData() {
-        try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            return stored ? JSON.parse(stored) : [];
-        } catch (e) { return []; }
-    }
+    // ----- Upload Area Click -----
+    uploadArea.addEventListener('click', () => fileInput.click());
 
-    // ─── SAVE TO LOCAL STORAGE ───
-    function saveData(data) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        updateStats(data);
-    }
-
-    // ─── UPDATE STATS ───
-    function updateStats(data) {
-        const total = data.length;
-        totalRecords.textContent = total;
-        recordCountDisplay.textContent = total;
-        batchCount.textContent = localStorage.getItem('mgl_batch_count') || 0;
-        lastSaved.textContent = new Date().toLocaleTimeString();
-    }
-
-    // ─── LOG ───
-    function log(msg, type = 'info') {
-        logArea.style.display = 'block';
-        const line = document.createElement('div');
-        line.className = type;
-        line.textContent = msg;
-        logArea.appendChild(line);
-        logArea.scrollTop = logArea.scrollHeight;
-    }
-
-    // ─── PARSE CSV ───
-    function parseCSV(text) {
-        const lines = text.trim().split('\n');
-        if (lines.length < 2) return [];
-        const headers = lines[0].split(',').map(h => h.trim());
-        const result = [];
-        for (let i = 1; i < lines.length; i++) {
-            const values = lines[i].split(',').map(v => v.trim());
-            if (values.length === headers.length) {
-                const obj = {};
-                headers.forEach((h, idx) => { obj[h] = values[idx] || ''; });
-                result.push(obj);
-            }
+    // ----- Drag & Drop Support -----
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            handleFile(e.dataTransfer.files[0]);
         }
-        return result;
-    }
-
-    // ─── SAVE BATCH ───
-    saveBtn.addEventListener('click', function() {
-        const text = csvInput.value.trim();
-        if (!text) {
-            log('⚠️ No data to save!', 'error');
-            return;
-        }
-
-        const newData = parseCSV(text);
-        if (newData.length === 0) {
-            log('⚠️ Invalid CSV format!', 'error');
-            return;
-        }
-
-        const existing = loadData();
-        const combined = existing.concat(newData);
-        saveData(combined);
-
-        let batch = parseInt(localStorage.getItem('mgl_batch_count')) || 0;
-        batch++;
-        localStorage.setItem('mgl_batch_count', batch);
-
-        csvInput.value = '';
-        log(`✅ Saved ${newData.length} records! Total: ${combined.length}`, 'success');
-        updateStats(combined);
     });
 
-    // ─── DOWNLOAD EXCEL ───
-    downloadBtn.addEventListener('click', function() {
-        const data = loadData();
-        if (data.length === 0) {
-            log('⚠️ No data to download!', 'error');
+    // ----- File Selection -----
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    // ----- Handle File -----
+    function handleFile(file) {
+        const validTypes = ['text/html', 'text/plain', 'application/xhtml+xml'];
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!validTypes.includes(file.type) && !['html', 'htm', 'txt'].includes(ext)) {
+            showStatus('❌ Please select an HTML file (.html, .htm, .txt)', 'error');
             return;
         }
 
-        const headers = Object.keys(data[0]);
+        if (file.size > 50 * 1024 * 1024) {
+            showStatus('❌ File too large! Max 50MB.', 'error');
+            return;
+        }
+
+        // Show file info
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+        fileInfo.style.display = 'block';
+        convertBtn.disabled = false;
+        showStatus('✅ File loaded! Tap "Convert to Excel" to process.', 'info');
+
+        // Read file content
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentHtmlContent = e.target.result;
+        };
+        reader.readAsText(file);
+    }
+
+    // ----- Convert Button -----
+    convertBtn.addEventListener('click', () => {
+        if (!currentHtmlContent) {
+            showStatus('❌ No file loaded! Please select an HTML file first.', 'error');
+            return;
+        }
+        processHtml(currentHtmlContent);
+    });
+
+    // ----- Process HTML -----
+    function processHtml(html) {
+        showStatus('⏳ Processing HTML... Please wait.', 'loading');
+        convertBtn.disabled = true;
+
+        setTimeout(() => {
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // --- Extract data ---
+                const results = [];
+                const rows = doc.querySelectorAll('tr[role="row"]');
+
+                if (rows.length === 0) {
+                    // Try alternative selector
+                    const altRows = doc.querySelectorAll('table tbody tr');
+                    if (altRows.length > 0) {
+                        altRows.forEach(row => extractRow(row, results));
+                    } else {
+                        showStatus('❌ No data found! Is this the correct HTML file?', 'error');
+                        convertBtn.disabled = false;
+                        return;
+                    }
+                } else {
+                    rows.forEach(row => extractRow(row, results));
+                }
+
+                if (results.length === 0) {
+                    showStatus('❌ No BC records found in this HTML file.', 'error');
+                    convertBtn.disabled = false;
+                    return;
+                }
+
+                // --- Store data ---
+                currentData = results;
+
+                // --- Show stats ---
+                const uniqueBanks = new Set(results.map(r => r.bank).filter(b => b && b !== 'N/A'));
+                const phonesFoundCount = results.filter(r => r.phone && r.phone !== 'N/A' && r.phone.length >= 10).length;
+                const dataSizeBytes = new Blob([JSON.stringify(results)]).size;
+
+                totalRecords.textContent = results.length;
+                phonesFound.textContent = phonesFoundCount;
+                banksFound.textContent = uniqueBanks.size;
+                dataSize.textContent = (dataSizeBytes / 1024 / 1024).toFixed(2) + ' MB';
+                statsDiv.classList.add('show');
+
+                // --- Show preview (first 10 rows) ---
+                showPreview(results);
+
+                // --- Show download ---
+                downloadSection.classList.add('show');
+
+                showStatus(`✅ Success! ${results.length} BC records extracted.`, 'success');
+                convertBtn.disabled = false;
+
+            } catch (err) {
+                showStatus('❌ Error processing HTML: ' + err.message, 'error');
+                convertBtn.disabled = false;
+            }
+        }, 100);
+    }
+
+    // ----- Extract Row -----
+    function extractRow(row, results) {
+        try {
+            // Skip header rows
+            if (row.classList && row.classList.contains('dt-head')) return;
+
+            // BC Name
+            let nameElem = row.querySelector('.BcDetail');
+            if (!nameElem) nameElem = row.querySelector('td:nth-child(2) a');
+            if (!nameElem) return;
+            const bcName = nameElem.textContent.trim();
+            const bcId = nameElem.getAttribute('data-bcid') || '';
+
+            // Cells
+            const cells = row.querySelectorAll('td');
+            if (cells.length < 3) return;
+
+            let pincode = cells.length > 2 ? cells[2].textContent.trim() : 'N/A';
+            let bankName = cells.length > 3 ? cells[3].textContent.trim() : 'N/A';
+            let bcType = cells.length > 4 ? cells[4].textContent.trim() : 'N/A';
+
+            // Phone - encrypted
+            let phone = 'N/A';
+            let encryptedPhone = 'N/A';
+            const callBtn = row.querySelector('.btnCallNow');
+            if (callBtn) {
+                encryptedPhone = callBtn.getAttribute('data-phn') || '';
+                if (encryptedPhone) {
+                    phone = decryptPhone(encryptedPhone);
+                }
+            }
+
+            // Coordinates
+            let coords = 'N/A';
+            const dirLink = row.querySelector('a[href*="google.com/maps"]');
+            if (dirLink) {
+                const href = dirLink.getAttribute('href') || '';
+                if (href.includes('destination=')) {
+                    coords = href.split('destination=')[1].split('&')[0];
+                }
+            }
+
+            results.push({
+                name: bcName,
+                id: bcId,
+                pincode: pincode,
+                bank: bankName,
+                type: bcType,
+                phone: phone,
+                encrypted: encryptedPhone,
+                coords: coords
+            });
+        } catch (err) {
+            // Skip problematic rows
+        }
+    }
+
+    // ----- Decrypt Phone (Client-side) -----
+    function decryptPhone(encrypted) {
+        try {
+            // Base64 decode
+            const decoded = atob(encrypted);
+            // XOR with key (try common keys)
+            const keys = ['IBA@2024', 'IBA2024', 'BCRegistry', 'NearbyTech'];
+            for (let key of keys) {
+                let result = '';
+                for (let i = 0; i < decoded.length; i++) {
+                    result += String.fromCharCode(
+                        decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                    );
+                }
+                let phone = result.replace(/[^0-9]/g, '');
+                if (phone.length >= 10) {
+                    return phone.slice(-10);
+                }
+            }
+            return 'N/A';
+        } catch (e) {
+            return 'N/A';
+        }
+    }
+
+    // ----- Show Preview -----
+    function showPreview(data) {
+        const maxPreview = Math.min(data.length, 10);
+        let html = `<table>
+            <thead><tr>
+                <th>#</th><th>BC Name</th><th>Bank</th><th>Phone</th><th>Pincode</th>
+            </tr></thead><tbody>`;
+        for (let i = 0; i < maxPreview; i++) {
+            const row = data[i];
+            html += `<tr>
+                <td>${i+1}</td>
+                <td title="${row.name}">${row.name.substring(0, 20)}${row.name.length > 20 ? '…' : ''}</td>
+                <td>${row.bank}</td>
+                <td>${row.phone}</td>
+                <td>${row.pincode}</td>
+            </tr>`;
+        }
+        html += `</tbody></table>`;
+        if (data.length > 10) {
+            html += `<p style="text-align:center;padding:8px;color:#666;font-size:13px;">... and ${data.length - 10} more records</p>`;
+        }
+        previewTable.innerHTML = html;
+        previewTable.classList.add('show');
+    }
+
+    // ----- Download Excel (CSV) -----
+    downloadBtn.addEventListener('click', () => {
+        if (currentData.length === 0) {
+            showStatus('❌ No data to download!', 'error');
+            return;
+        }
+        downloadExcel(currentData);
+    });
+
+    function downloadExcel(data) {
+        // Create CSV
+        const headers = ['S.No', 'BC Name', 'BC ID', 'Pincode', 'Bank Name', 'BC Type', 'Phone Number', 'Coordinates'];
         let csv = headers.join(',') + '\n';
-        data.forEach(row => {
-            csv += headers.map(h => {
-                let val = row[h] || '';
-                if (val.includes(',') || val.includes('"')) val = '"' + val.replace(/"/g, '""') + '"';
-                return val;
-            }).join(',') + '\n';
+        data.forEach((row, idx) => {
+            const values = [
+                idx + 1,
+                `"${row.name}"`,
+                `"${row.id}"`,
+                `"${row.pincode}"`,
+                `"${row.bank}"`,
+                `"${row.type}"`,
+                `"${row.phone}"`,
+                `"${row.coords}"`
+            ];
+            csv += values.join(',') + '\n';
         });
 
+        // Create download
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `backup_${new Date().toISOString().slice(0,10)}_${data.length}_records.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        link.href = url;
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+        link.download = `BC_Registry_Data_${timestamp}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         URL.revokeObjectURL(url);
 
-        log(`📥 Downloaded ${data.length} records!`, 'success');
+        showStatus(`📥 Download started! ${data.length} records in CSV format.`, 'success');
+    }
+
+    // ----- Reset -----
+    resetBtn.addEventListener('click', () => {
+        currentData = [];
+        currentHtmlContent = '';
+        fileInput.value = '';
+        fileInfo.style.display = 'none';
+        convertBtn.disabled = true;
+        statsDiv.classList.remove('show');
+        previewTable.classList.remove('show');
+        previewTable.innerHTML = '';
+        downloadSection.classList.remove('show');
+        statusDiv.style.display = 'none';
+        statusDiv.className = '';
+        statusDiv.textContent = '';
     });
 
-    // ─── CLEAR ALL ───
-    clearBtn.addEventListener('click', function() {
-        if (confirm('⚠️ Delete all saved data?')) {
-            localStorage.removeItem(STORAGE_KEY);
-            localStorage.removeItem('mgl_batch_count');
-            csvInput.value = '';
-            log('🗑️ All data cleared!', 'info');
-            updateStats([]);
+    // ----- Show Status -----
+    function showStatus(msg, type) {
+        statusDiv.textContent = msg;
+        statusDiv.className = type;
+        statusDiv.style.display = 'block';
+        if (type === 'success' || type === 'info') {
+            setTimeout(() => {
+                if (statusDiv.className === type) {
+                    // Keep visible
+                }
+            }, 5000);
         }
-    });
-
-    // ─── PREVIEW ───
-    previewBtn.addEventListener('click', function() {
-        const data = loadData();
-        if (data.length === 0) {
-            log('⚠️ No data to preview!', 'error');
-            return;
-        }
-        const preview = data.slice(0, 5);
-        log(`📋 Preview (${data.length} total):\n${JSON.stringify(preview, null, 2)}`, 'info');
-    });
-
-    // ─── INIT ───
-    updateStats(loadData());
-    log('💾 Ready! Paste data and click "Save Batch"', 'info');
+    }
 </script>
 </body>
 </html>
