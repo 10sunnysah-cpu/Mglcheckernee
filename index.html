@@ -1,497 +1,746 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🏦 IBA BC — Bulk Decryption to Excel</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CSV to Excel Converter — Smart SaaS Tool</title>
+
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: #f0f4ff; padding: 16px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .container { max-width: 750px; width: 100%; margin: 0 auto; background: white; border-radius: 24px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); }
-        h1 { font-size: 24px; color: #1a237e; text-align: center; }
-        .subtitle { text-align: center; color: #666; font-size: 14px; margin-bottom: 20px; }
-        .upload-area { border: 2.5px dashed #3f51b5; border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; background: #f8f9ff; transition: 0.3s; }
-        .upload-area:hover { background: #e8eaf6; border-color: #1a237e; }
-        .upload-area.dragover { background: #e8eaf6; border-color: #1a237e; }
-        .upload-icon { font-size: 48px; }
-        .upload-text { font-size: 17px; font-weight: 500; color: #333; }
-        .upload-hint { font-size: 13px; color: #888; margin-top: 6px; }
-        #fileInput { display: none; }
-        #fileInfo { display: none; margin-top: 14px; padding: 12px 16px; background: #e8f5e9; border-radius: 10px; font-size: 14px; }
-        #fileInfo .file-name { font-weight: 600; word-break: break-all; }
-        #fileInfo .file-size { color: #555; }
-        .btn { display: block; width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 14px; }
-        .btn-primary { background: #3f51b5; color: white; }
-        .btn-primary:hover { background: #1a237e; }
-        .btn-primary:disabled { background: #9fa8da; cursor: not-allowed; }
-        .btn-success { background: #2e7d32; color: white; }
-        .btn-success:hover { background: #1b5e20; }
-        .btn-danger { background: #c62828; color: white; }
-        .btn-danger:hover { background: #8e0000; }
-        .btn-warning { background: #e65100; color: white; }
-        .btn-warning:hover { background: #bf360c; }
-        #status { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 14px; display: none; }
-        #status.loading { display: block; background: #fff3e0; color: #e65100; }
-        #status.success { display: block; background: #e8f5e9; color: #2e7d32; }
-        #status.error { display: block; background: #ffebee; color: #c62828; }
-        #status.info { display: block; background: #e3f2fd; color: #0d47a1; }
-        .stats { display: none; margin-top: 14px; padding: 16px; background: #f5f5f5; border-radius: 12px; }
-        .stats.show { display: block; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-        .stat-item { background: white; padding: 10px; border-radius: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .stat-item .number { font-size: 26px; font-weight: 700; color: #1a237e; }
-        .stat-item .label { font-size: 11px; color: #666; margin-top: 2px; }
-        .preview-table { margin-top: 14px; max-height: 320px; overflow: auto; border: 1px solid #e0e0e0; border-radius: 10px; display: none; }
-        .preview-table.show { display: block; }
-        .preview-table table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .preview-table th { background: #3f51b5; color: white; padding: 8px 10px; text-align: left; position: sticky; top: 0; z-index: 10; }
-        .preview-table td { padding: 6px 10px; border-bottom: 1px solid #eee; }
-        .preview-table .phone-found { color: #2e7d32; font-weight: 600; }
-        .preview-table .phone-missing { color: #c62828; }
-        .download-section { display: none; margin-top: 14px; }
-        .download-section.show { display: block; }
-        .footer { text-align: center; margin-top: 20px; color: #999; font-size: 12px; }
-        .progress-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 10px; margin-top: 14px; display: none; overflow: hidden; }
-        .progress-bar.show { display: block; }
-        .progress-bar .fill { height: 100%; background: #3f51b5; width: 0%; transition: width 0.3s; }
-        .key-status { display: none; margin-top: 10px; padding: 8px 14px; background: #fff8e1; border-radius: 8px; font-size: 13px; }
-        .key-status.show { display: block; }
-        .key-status .found { color: #2e7d32; font-weight: 600; }
-        .key-status .not-found { color: #c62828; font-weight: 600; }
-        .sample-box { display: none; margin-top: 12px; padding: 12px 16px; background: #e8eaf6; border-radius: 10px; border-left: 4px solid #3f51b5; font-size: 13px; }
-        .sample-box.show { display: block; }
-        @media (max-width: 480px) {
-            .container { padding: 16px; }
-            h1 { font-size: 20px; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .stat-item .number { font-size: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
+
+        body {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6edf7 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .card {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            padding: 40px 36px;
+            box-shadow: 0 20px 60px rgba(0, 20, 40, 0.12);
+            transition: 0.2s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #0b1b33;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: #eef5ff;
+            color: #1a5cff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 16px;
+            border-radius: 40px;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+        }
+
+        .subhead {
+            color: #4a5a72;
+            margin: 12px 0 24px 0;
+            font-size: 16px;
+            border-left: 4px solid #1a5cff;
+            padding-left: 18px;
+            background: #f8faff;
+            border-radius: 0 12px 12px 0;
+            line-height: 1.6;
+        }
+
+        .upload-zone {
+            margin: 20px 0 24px;
+            border: 2px dashed #d0dbe8;
+            border-radius: 24px;
+            padding: 48px 20px;
+            text-align: center;
+            background: #fafcff;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover {
+            border-color: #1a5cff;
+            background: #f2f7ff;
+        }
+
+        .upload-zone.dragover {
+            border-color: #1a5cff;
+            background: #e7f0ff;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .upload-zone h3 {
+            font-weight: 600;
+            color: #0b1b33;
+            font-size: 18px;
+        }
+
+        .upload-zone p {
+            color: #5f738c;
+            margin-top: 6px;
+            font-size: 15px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .action-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 20px 0 24px;
+        }
+
+        .btn {
+            background: white;
+            border: 1px solid #d0dbe8;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 15px;
+            color: #1f3349;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8faff;
+        }
+
+        .btn-primary {
+            background: #1a5cff;
+            border: 1px solid #1a5cff;
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 92, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #0f4ad6;
+            transform: scale(1.02);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            filter: grayscale(0.4);
+        }
+
+        .btn-success {
+            background: #00a86b;
+            border: 1px solid #00a86b;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+        }
+
+        .btn-success:hover {
+            background: #008f5a;
+            transform: scale(1.02);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #d0dbe8;
+        }
+
+        .btn-outline:hover {
+            background: #eef4fa;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            border: 1px solid #ff4757;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e63946;
+        }
+
+        .stats {
+            font-size: 14px;
+            color: #3b5570;
+            background: #f2f7fd;
+            padding: 6px 18px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #e5ecf3;
+            background: white;
+            margin-top: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 800px;
+        }
+
+        th {
+            background: #f2f7fd;
+            color: #1f3a57;
+            font-weight: 600;
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 2px solid #dce5ef;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eef3f9;
+            color: #1f3349;
+            max-width: 220px;
+            word-break: break-word;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight-mobile {
+            background: #e3f0ff !important;
+            font-weight: 500;
+            font-family: 'SF Mono', 'Courier New', monospace;
+        }
+
+        .highlight-name {
+            background: #e9f7e9 !important;
+            font-weight: 500;
+        }
+
+        .highlight-amount {
+            background: #fff3e0 !important;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #8499b3;
+        }
+
+        .empty-state span {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .footer-note {
+            margin-top: 24px;
+            font-size: 14px;
+            color: #5f738c;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e8eef6;
+            padding-top: 20px;
+            gap: 12px;
+        }
+
+        .pill {
+            background: #eef5ff;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 13px;
+            color: #1a5cff;
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        @media (max-width: 600px) {
+            .card { padding: 24px 18px; }
+            h1 { font-size: 22px; }
+        }
+
+        /* scroll style */
+        ::-webkit-scrollbar { height: 6px; width: 6px; }
+        ::-webkit-scrollbar-track { background: #eef3f9; border-radius: 12px; }
+        ::-webkit-scrollbar-thumb { background: #bccbd9; border-radius: 12px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🏦 IBA BC Bulk Decryptor</h1>
-    <p class="subtitle">HTML file upload karein → Saare numbers decrypt → Excel download</p>
-
-    <!-- Upload Area -->
-    <div class="upload-area" id="uploadArea">
-        <div class="upload-icon">📂</div>
-        <div class="upload-text">Tap to select HTML file</div>
-        <div class="upload-hint">.html .htm .txt (Max 50MB)</div>
+<div class="card">
+    <div class="header">
+        <div>
+            <h1>
+                📊 CSV → Excel Converter
+                <span class="badge">✨ Smart Format</span>
+            </h1>
+        </div>
+        <span class="pill">🚀 Host on GitHub Pages</span>
     </div>
 
-    <input type="file" id="fileInput" accept=".html,.htm,.txt">
-
-    <!-- File Info -->
-    <div id="fileInfo">
-        <div>📄 <span class="file-name" id="fileName">-</span></div>
-        <div class="file-size" id="fileSize">-</div>
+    <div class="subhead">
+        ⚡ Auto‑detects <strong>mobile numbers</strong> (blue), <strong>names</strong> (green), and <strong>amounts</strong> (orange) — perfect for customer data
     </div>
 
-    <!-- Buttons -->
-    <button class="btn btn-primary" id="convertBtn" disabled>🔄 Decrypt & Convert to Excel</button>
+    <!-- Upload -->
+    <div class="upload-zone" id="dropZone">
+        <div class="upload-icon">📁</div>
+        <h3>Drop your CSV here</h3>
+        <p>or click to browse &nbsp;·&nbsp; .csv only</p>
+        <input type="file" id="fileInput" class="file-input" accept=".csv" />
+    </div>
 
-    <!-- Progress -->
-    <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
-
-    <!-- Key Status -->
-    <div id="keyStatus" class="key-status"></div>
-
-    <!-- Status -->
-    <div id="status"></div>
-
-    <!-- Sample Box -->
-    <div class="sample-box" id="sampleBox"></div>
-
-    <!-- Stats -->
-    <div class="stats" id="stats">
-        <div class="stats-grid">
-            <div class="stat-item"><div class="number" id="totalRecords">0</div><div class="label">Total Records</div></div>
-            <div class="stat-item"><div class="number" id="phonesFound">0</div><div class="label">Phone Numbers</div></div>
-            <div class="stat-item"><div class="number" id="decryptRate">0%</div><div class="label">Decrypt Rate</div></div>
+    <!-- Action bar -->
+    <div class="action-bar">
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+            <button class="btn btn-success" id="exportBtn" disabled>
+                ⬇️ Download Excel (.xlsx)
+            </button>
+            <button class="btn btn-outline" id="clearBtn">
+                🗑️ Clear
+            </button>
+            <button class="btn btn-outline" id="sampleBtn">
+                📋 Load Sample
+            </button>
+        </div>
+        <div>
+            <span class="stats" id="rowStats">📋 0 rows</span>
         </div>
     </div>
 
-    <!-- Preview -->
-    <div class="preview-table" id="previewTable"></div>
-
-    <!-- Download -->
-    <div class="download-section" id="downloadSection">
-        <button class="btn btn-success" id="downloadBtn">📥 Download Excel (CSV)</button>
-        <button class="btn btn-danger" id="resetBtn" style="background:#757575; margin-top:8px;">🔄 Reset</button>
+    <!-- Table preview -->
+    <div class="table-wrapper" id="tableWrapper">
+        <div class="empty-state" id="emptyState">
+            <span>📄</span>
+            No data loaded — upload a CSV or click "Load Sample"
+        </div>
+        <table id="dataTable" style="display: none;">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+        </table>
     </div>
 
-    <div class="footer">Data stays on your device • No upload to server</div>
+    <div class="footer-note">
+        <div class="legend">
+            <span class="legend-item">
+                <span class="legend-color" style="background:#e3f0ff;"></span> Mobile
+            </span>
+            <span class="legend-item">
+                <span class="legend-color" style="background:#e9f7e9;"></span> Name
+            </span>
+            <span class="legend-item">
+                <span class="legend-color" style="background:#fff3e0;"></span> Amount
+            </span>
+        </div>
+        <span>🔍 Columns with ₹ or amount values are auto-detected</span>
+    </div>
 </div>
 
 <script>
-    // ================================================================
-    // COMPLETE WORKING CODE — Bulk Decryption + Excel Export
-    // ================================================================
+    (function() {
+        "use strict";
 
-    // ---------- DOM Elements ----------
-    const uploadArea = document.getElementById('uploadArea');
-    const fileInput = document.getElementById('fileInput');
-    const fileInfo = document.getElementById('fileInfo');
-    const fileName = document.getElementById('fileName');
-    const fileSize = document.getElementById('fileSize');
-    const convertBtn = document.getElementById('convertBtn');
-    const statusDiv = document.getElementById('status');
-    const statsDiv = document.getElementById('stats');
-    const totalRecords = document.getElementById('totalRecords');
-    const phonesFound = document.getElementById('phonesFound');
-    const decryptRate = document.getElementById('decryptRate');
-    const previewTable = document.getElementById('previewTable');
-    const downloadSection = document.getElementById('downloadSection');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const keyStatus = document.getElementById('keyStatus');
-    const sampleBox = document.getElementById('sampleBox');
-    const progressBar = document.getElementById('progressBar');
-    const progressFill = document.getElementById('progressFill');
+        // DOM refs
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        const exportBtn = document.getElementById('exportBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const sampleBtn = document.getElementById('sampleBtn');
+        const rowStats = document.getElementById('rowStats');
+        const emptyState = document.getElementById('emptyState');
+        const table = document.getElementById('dataTable');
+        const thead = document.getElementById('tableHead');
+        const tbody = document.getElementById('tableBody');
 
-    // ---------- Global Variables ----------
-    let currentData = [];
-    let currentHtmlContent = '';
-    let decryptedCount = 0;
-    let totalProcessed = 0;
+        // ---------- state ----------
+        let parsedRows = [];
+        let headers = [];
 
-    // ================================================================
-    // 1. DECRYPTION FUNCTION — REAL IBA KEY
-    // ================================================================
-    const SECRET_KEY = "remittance";
+        // ---------- SAMPLE DATA (your CSV) ----------
+        const SAMPLE_CSV = `BP Number,Full Name,Mobile,Email,City,District,Postal Code,Street,House Number,Location,Bill Number,Due Date,Total Bill (₹),Amount to Pay (₹)
+50240501,PREM NAIDU,9689271236,,PUNE,RAHATANI,411017,SHREE APARTMENT,505,NEAR TAMBE SCHOOL NAKHATE VASTI,008012315737,2026-08-31,,
+50240505,AMIT VIJAY PENDSE,9823640764,,PUNE,PIMPLE SAUDAGAR,411027,SAI ORCHARD CHS,603,NEAR GOVIND GARDEN HOTEL,008011987452,2026-07-18,,
+50240506,NEHA KOHLI,9552930200,,PUNE,WAKAD,411057,ALLIANCE NISARG WHITE LILY,201,NEAR PUMPKIN PATCH SCHOOL & POLICE LINE,008012308747,2026-08-31,,
+50240507,PREMALATA NANADKUMAR PAI,9823195743,,PUNE,SINHAGAD ROAD,411030,ROHAN KRITIKA,104,NXT TO P L DESHPANDE UDYAN DATTAWADI,008011744480,2026-06-15,,
+50240509,SHIRISH PARAKH,9763301729,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,3,NEAR BHARAT JYOTI BUS STOP,008012181569,2026-08-19,,
+50240510,SHRIKANT KALE,9422570670,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,4,NEAR BHARAT JYOTI BUS STOP,008012181570,2026-08-19,,
+50240511,JAGDISH SHETTY,9766351995,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,5,NEAR BHARAT JYOTI BUS STOP,008012181571,2026-08-19,,
+50240514,VISHWANATH PUJARI,9890914444,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,11,NEAR BHARAT JYOTI BUS STOP,008012181574,2026-08-19,,
+50240515,SANTOSH JAIN,9822115107,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,12,NEAR BHARAT JYOTI BUS STOP,008012181575,2026-08-19,,
+50240516,RAKESH VEDPATHAK,9823088959,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,20,NEAR BHARAT JYOTI BUS STOP,008012181576,2026-08-19,,
+50240517,AASAVARI BHATE,9423574067,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,3,NEAR BHARAT JYOTI BUS STOP,008012181577,2026-08-19,,
+50240518,HIRALAL KATKAR,9422001984,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,4,NEAR BHARAT JYOTI BUS STOP,008012181578,2026-08-19,,
+50240521,VENKATRAO INDURKAR,9890010016,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,8,NEAR BHARAT JYOTI BUS STOP,008012181580,2026-08-19,,
+50240522,HARSHAWARDHAN DONGREY,9028056849,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,10,NEAR BHARAT JYOTI BUS STOP,008012181581,2026-08-19,,
+50240523,SITARAM ALURKAR,9850823256,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,11,NEAR BHARAT JYOTI BUS STOP,008012181582,2026-08-19,,
+50240525,PANDHARINATH LAVHALE,9552527101,,PUNE,BIBWEWADI,411037,RAJMATA BUNGLOW SOCIETY,8,KENJALE NAGAR,008012181584,2026-08-19,,
+50240526,RITESH PATEL,9371007412,,PUNE,BIBWEWADI,411037,SOLITAIRE,804,KENJALE NAGAR,008012181585,2026-08-19,,
+50240527,SHALINI MARNE,9623923722,,PUNE,BIBWEWADI,411037,CHINTAMANI NAGAR,A1/2,NEAR MAHESH SOCIETY,008012166998,2026-08-19,,
+50240531,AJIT KHOPDE,9545238787,,PUNE,KONDHWA,411048,MORAYA NAGARI,1,NEAR VIIT COLLLEGE,008007311118,2024-03-18,,
+50240536,ANAND SOMAN,9403348333,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181586,2026-08-19,,
+50240537,AKHILESH RAJPUT,9503770991,,PUNE,KATRAJ,411046,SEEMA SAGAR,,BEHIND TELEPHONE EXCHANGE,008012181587,2026-08-19,,
+50240538,SHIVKUMAR RAJPUT,7588229742,,PUNE,KATRAJ,411046,SEEMA SAGAR,,BEHIND TELEPHONE EXCHANGE,008012181588,2026-08-19,,
+50240539,DINESH RAJPUT,9762016432,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181589,2026-08-19,,
+50240540,YOGESH RAJPUT,9762016431,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181590,2026-08-19,,
+50240542,PURUSHOTTAM RAJE,8380896285,,PUNE,KATRAJ,411046,SEEMA SAGAR,7,BEHIND TELEPHONE EXCHANGE,008012181591,2026-08-19,,
+50240543,SHAMAL KANHERKAR,9730525243,,PUNE,KATRAJ,411046,SEEMA SAGAR,5,BEHIND TELEPHONE EXCHANGE,008005782465,2023-04-24,,
+50240545,SANKET PIPARIYA,7304059194,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,304,NEAR VIIT COLLLEGE,008012036787,2026-07-20,,
+50240546,BHAVESH SHAH,9028963772,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,404,NEAR VIIT COLLLEGE,008012036788,2026-07-20,,
+50240547,JAYESH SHAH,9421002345,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1102,NEAR VIIT COLLLEGE,008012036789,2026-07-20,,
+50240548,MANOJ KASAT,7350799253,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1102,NEAR VIIT COLLLEGE,008012036790,2026-07-20,,
+50240549,ANANT SHAH,9922063575,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1003,NEAR VIIT COLLLEGE,008012036791,2026-07-20,,
+50240550,RICHIE OSWAL,8411099007,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,904,NEAR VIIT COLLLEGE,008012036792,2026-07-20,`;
 
-    function decryptPhone(encrypted) {
-        try {
-            if (!encrypted) return null;
-            const decoded = atob(encrypted);
-            let result = '';
-            for (let i = 0; i < decoded.length; i++) {
-                result += String.fromCharCode(
-                    decoded.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length)
-                );
+        // ---------- helpers ----------
+        function isMobileNumber(str) {
+            if (typeof str !== 'string') return false;
+            const cleaned = str.replace(/[\s\-\(\)\+]/g, '');
+            return /^[+]?[\d]{10,15}$/.test(cleaned) && /\d/.test(cleaned);
+        }
+
+        function isNameField(header) {
+            const lower = header.trim().toLowerCase();
+            const nameIndicators = ['name', 'fullname', 'firstname', 'lastname', 'contactname', 'person', 'customer', 'client', 'user'];
+            return nameIndicators.some(ind => lower === ind || lower.includes(ind));
+        }
+
+        function isAmountField(header) {
+            const lower = header.trim().toLowerCase();
+            const amountIndicators = ['amount', 'total', 'bill', 'price', 'payment', 'due', 'pay', '₹', 'rs'];
+            return amountIndicators.some(ind => lower.includes(ind));
+        }
+
+        function detectColumnType(header, values) {
+            if (isNameField(header)) return 'name';
+
+            let mobileCount = 0;
+            let amountCount = 0;
+            let totalChecked = 0;
+
+            for (let v of values) {
+                if (v === undefined || v === null || v === '') continue;
+                totalChecked++;
+                const str = String(v);
+                if (isMobileNumber(str)) mobileCount++;
+                // Check if it looks like an amount
+                if (/^[\d,]+\.?[\d]{0,2}$/.test(str.replace(/,/g, '')) && parseFloat(str.replace(/,/g, '')) > 0) {
+                    amountCount++;
+                }
             }
-            let phone = result.replace(/[^0-9]/g, '');
-            if (phone.length >= 10) return phone.slice(-10);
-            return null;
-        } catch (e) {
-            return null;
-        }
-    }
 
-    // ================================================================
-    // 2. UPLOAD HANDLING
-    // ================================================================
-    uploadArea.addEventListener('click', () => fileInput.click());
+            if (totalChecked === 0) return 'text';
+            
+            const mobileRatio = mobileCount / totalChecked;
+            const amountRatio = amountCount / totalChecked;
 
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-    });
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('dragover');
-    });
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        if (e.dataTransfer.files.length) {
-            handleFile(e.dataTransfer.files[0]);
-        }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length) {
-            handleFile(e.target.files[0]);
-        }
-    });
-
-    function handleFile(file) {
-        const validTypes = ['text/html', 'text/plain', 'application/xhtml+xml'];
-        const ext = file.name.split('.').pop().toLowerCase();
-        if (!validTypes.includes(file.type) && !['html', 'htm', 'txt'].includes(ext)) {
-            showStatus('❌ Please select an HTML file (.html, .htm, .txt)', 'error');
-            return;
-        }
-        if (file.size > 50 * 1024 * 1024) {
-            showStatus('❌ File too large! Max 50MB.', 'error');
-            return;
+            if (mobileRatio >= 0.4) return 'mobile';
+            if (amountRatio >= 0.4 || isAmountField(header)) return 'amount';
+            return 'text';
         }
 
-        fileName.textContent = file.name;
-        fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-        fileInfo.style.display = 'block';
-        convertBtn.disabled = false;
-        showStatus('✅ File loaded! Tap "Decrypt & Convert to Excel" to process.', 'info');
+        // ---------- parse CSV ----------
+        function parseCSV(text) {
+            const rows = [];
+            let row = [];
+            let field = '';
+            let inQuotes = false;
+            let i = 0;
+            const len = text.length;
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            currentHtmlContent = e.target.result;
-        };
-        reader.readAsText(file);
-    }
+            function pushField() {
+                row.push(field.trim());
+                field = '';
+            }
 
-    // ================================================================
-    // 3. CONVERT BUTTON — MAIN PROCESSING
-    // ================================================================
-    convertBtn.addEventListener('click', () => {
-        if (!currentHtmlContent) {
-            showStatus('❌ No file loaded! Please select an HTML file first.', 'error');
-            return;
-        }
-        processHtml(currentHtmlContent);
-    });
+            function pushRow() {
+                if (row.length > 0 || rows.length === 0) {
+                    rows.push(row);
+                    row = [];
+                }
+            }
 
-    function processHtml(html) {
-        showStatus('⏳ Processing HTML... Please wait.', 'loading');
-        convertBtn.disabled = true;
-        progressBar.classList.add('show');
-        progressFill.style.width = '0%';
-        keyStatus.classList.remove('show');
-        sampleBox.classList.remove('show');
+            if (text.charCodeAt(0) === 0xFEFF) i = 1;
 
-        setTimeout(() => {
-            try {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-
-                // ---------- Extract rows ----------
-                let rows = doc.querySelectorAll('table tbody tr');
-                if (rows.length === 0) rows = doc.querySelectorAll('tr[role="row"]');
-                if (rows.length === 0) rows = doc.querySelectorAll('tr');
-
-                const results = [];
-                let encryptedFound = 0;
-                decryptedCount = 0;
-                totalProcessed = 0;
-                const totalRows = rows.length;
-
-                // ---------- Process each row ----------
-                rows.forEach((row, index) => {
-                    try {
-                        const cells = row.querySelectorAll('td');
-                        if (cells.length < 3) return;
-
-                        // BC Name
-                        let name = '';
-                        let id = '';
-                        const nameLink = row.querySelector('.BcDetail');
-                        if (nameLink) {
-                            name = nameLink.textContent.trim();
-                            id = nameLink.getAttribute('data-bcid') || '';
-                        } else if (cells.length > 1) {
-                            name = cells[1].textContent.trim();
-                        }
-                        if (!name || name.length < 2) return;
-
-                        // Other fields
-                        const pincode = cells.length > 2 ? cells[2].textContent.trim() : 'N/A';
-                        const bank = cells.length > 3 ? cells[3].textContent.trim() : 'N/A';
-                        const type = cells.length > 4 ? cells[4].textContent.trim() : 'N/A';
-
-                        // Phone — encrypted
-                        let encrypted = '';
-                        const callBtn = row.querySelector('.btnCallNow');
-                        if (callBtn) {
-                            encrypted = callBtn.getAttribute('data-phn') || '';
-                        }
-
-                        let phone = 'N/A';
-                        if (encrypted) {
-                            encryptedFound++;
-                            const decrypted = decryptPhone(encrypted);
-                            if (decrypted && decrypted.length >= 10) {
-                                phone = decrypted;
-                                decryptedCount++;
-                            }
-                        }
-
-                        // Coordinates
-                        let coords = 'N/A';
-                        const dirLink = row.querySelector('a[href*="google.com/maps"]');
-                        if (dirLink) {
-                            const href = dirLink.getAttribute('href') || '';
-                            if (href.includes('destination=')) {
-                                coords = href.split('destination=')[1].split('&')[0];
-                            }
-                        }
-
-                        results.push({
-                            name: name,
-                            id: id,
-                            pincode: pincode,
-                            bank: bank,
-                            type: type,
-                            phone: phone,
-                            coords: coords
-                        });
-
-                        totalProcessed++;
-
-                        // Update progress
-                        const percent = Math.min(Math.round((index / totalRows) * 100), 100);
-                        progressFill.style.width = percent + '%';
-
-                    } catch (err) {
-                        // Skip problematic rows
+            while (i < len) {
+                const ch = text[i];
+                if (ch === '"') {
+                    if (inQuotes && i+1 < len && text[i+1] === '"') {
+                        field += '"';
+                        i += 2;
+                        continue;
                     }
-                });
-
-                progressFill.style.width = '100%';
-
-                // ---------- Check results ----------
-                if (results.length === 0) {
-                    showStatus('❌ No BC records found! Make sure the HTML file is correct.', 'error');
-                    convertBtn.disabled = false;
-                    progressBar.classList.remove('show');
-                    return;
+                    inQuotes = !inQuotes;
+                    i++;
+                    continue;
                 }
-
-                currentData = results;
-
-                // ---------- Update UI ----------
-                const total = results.length;
-                const phones = results.filter(r => r.phone && r.phone !== 'N/A' && r.phone.length >= 10).length;
-                const rate = total > 0 ? Math.round((phones / total) * 100) : 0;
-
-                totalRecords.textContent = total;
-                phonesFound.textContent = phones;
-                decryptRate.textContent = rate + '%';
-                statsDiv.classList.add('show');
-
-                // ---------- Show sample ----------
-                const sample = results.find(r => r.phone && r.phone !== 'N/A');
-                if (sample) {
-                    sampleBox.innerHTML = `
-                        <strong>🔓 Sample Decryption:</strong><br>
-                        ${sample.name}: <strong style="color:#2e7d32;font-size:18px;">${sample.phone}</strong>
-                    `;
-                    sampleBox.classList.add('show');
+                if (ch === ',' && !inQuotes) {
+                    pushField();
+                    i++;
+                    continue;
                 }
-
-                // ---------- Key status ----------
-                if (phones > 0) {
-                    keyStatus.innerHTML = '🔓 <span class="found">Decryption successful!</span> ' + phones + ' phone numbers found. (Key: remittance)';
-                    keyStatus.classList.add('show');
-                } else {
-                    keyStatus.innerHTML = '🔒 <span class="not-found">Decryption failed.</span> ' + encryptedFound + ' encrypted strings found, but none could be decrypted.';
-                    keyStatus.classList.add('show');
+                if ((ch === '\n' || ch === '\r') && !inQuotes) {
+                    pushField();
+                    pushRow();
+                    if (ch === '\r' && i+1 < len && text[i+1] === '\n') i++;
+                    i++;
+                    continue;
                 }
-
-                // ---------- Show preview ----------
-                showPreview(results);
-
-                // ---------- Show download section ----------
-                downloadSection.classList.add('show');
-
-                showStatus(`✅ Success! ${results.length} BC records extracted.`, 'success');
-                convertBtn.disabled = false;
-                progressBar.classList.remove('show');
-
-            } catch (err) {
-                showStatus('❌ Error: ' + err.message, 'error');
-                convertBtn.disabled = false;
-                progressBar.classList.remove('show');
+                field += ch;
+                i++;
             }
-        }, 150);
-    }
+            if (field !== '' || row.length > 0) {
+                pushField();
+                pushRow();
+            }
 
-    // ================================================================
-    // 4. PREVIEW TABLE
-    // ================================================================
-    function showPreview(data) {
-        const maxPreview = Math.min(data.length, 15);
-        let html = `<table><thead><tr>
-            <th>#</th><th>BC Name</th><th>Bank</th><th>Phone</th><th>Pincode</th>
-        </tr></thead><tbody>`;
-        for (let i = 0; i < maxPreview; i++) {
-            const row = data[i];
-            const phoneClass = row.phone && row.phone !== 'N/A' && row.phone.length >= 10 ? 'phone-found' : 'phone-missing';
-            html += `<tr>
-                <td>${i+1}</td>
-                <td>${row.name.substring(0, 25)}</td>
-                <td>${row.bank}</td>
-                <td class="${phoneClass}">${row.phone || 'N/A'}</td>
-                <td>${row.pincode}</td>
-            </tr>`;
-        }
-        html += `</tbody></table>`;
-        if (data.length > 15) {
-            html += `<p style="text-align:center;padding:8px;color:#666;font-size:12px;">... and ${data.length - 15} more</p>`;
-        }
-        previewTable.innerHTML = html;
-        previewTable.classList.add('show');
-    }
+            while (rows.length > 0 && rows[rows.length-1].length === 1 && rows[rows.length-1][0] === '') rows.pop();
 
-    // ================================================================
-    // 5. DOWNLOAD EXCEL (CSV)
-    // ================================================================
-    downloadBtn.addEventListener('click', () => {
-        if (currentData.length === 0) {
-            showStatus('❌ No data to download!', 'error');
-            return;
-        }
-        downloadCSV(currentData);
-    });
+            if (rows.length === 0) return { headers: [], rows: [] };
 
-    function downloadCSV(data) {
-        const headers = ['S.No', 'BC Name', 'BC ID', 'Pincode', 'Bank Name', 'BC Type', 'Phone Number', 'Coordinates'];
-        let csv = headers.join(',') + '\n';
-        data.forEach((row, idx) => {
-            csv += [
-                idx + 1,
-                `"${row.name}"`,
-                `"${row.id}"`,
-                `"${row.pincode}"`,
-                `"${row.bank}"`,
-                `"${row.type}"`,
-                `"${row.phone || 'N/A'}"`,
-                `"${row.coords}"`
-            ].join(',') + '\n';
+            const headerRow = rows[0];
+            const cleanHeaders = headerRow.map(h => h.replace(/^["']|["']$/g, '').trim());
+            const finalHeaders = cleanHeaders.map((h, idx) => h ? h : `Column ${idx+1}`);
+
+            const dataRows = rows.slice(1).filter(r => r.some(f => f.trim() !== ''));
+
+            const result = [];
+            for (let r of dataRows) {
+                const obj = {};
+                for (let j = 0; j < finalHeaders.length; j++) {
+                    obj[finalHeaders[j]] = (r[j] !== undefined) ? r[j].trim() : '';
+                }
+                result.push(obj);
+            }
+
+            return { headers: finalHeaders, rows: result };
+        }
+
+        // ---------- render table ----------
+        function renderTable() {
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+
+            if (!parsedRows.length || !headers.length) {
+                table.style.display = 'none';
+                emptyState.style.display = 'block';
+                rowStats.textContent = '📋 0 rows';
+                exportBtn.disabled = true;
+                return;
+            }
+
+            table.style.display = '';
+            emptyState.style.display = 'none';
+            rowStats.textContent = `📋 ${parsedRows.length} rows · ${headers.length} columns`;
+            exportBtn.disabled = false;
+
+            const colTypes = {};
+            for (let h of headers) {
+                const values = parsedRows.map(row => row[h] !== undefined ? row[h] : '');
+                colTypes[h] = detectColumnType(h, values);
+            }
+
+            const trHead = document.createElement('tr');
+            for (let h of headers) {
+                const th = document.createElement('th');
+                th.textContent = h;
+                const type = colTypes[h];
+                if (type === 'mobile') {
+                    th.innerHTML += ' <span style="font-weight:400;font-size:11px;background:#d4e6ff;padding:0 8px;border-radius:30px;margin-left:6px;">📱</span>';
+                } else if (type === 'name') {
+                    th.innerHTML += ' <span style="font-weight:400;font-size:11px;background:#d4f0d4;padding:0 8px;border-radius:30px;margin-left:6px;">👤</span>';
+                } else if (type === 'amount') {
+                    th.innerHTML += ' <span style="font-weight:400;font-size:11px;background:#ffe0b2;padding:0 8px;border-radius:30px;margin-left:6px;">💰</span>';
+                }
+                trHead.appendChild(th);
+            }
+            thead.appendChild(trHead);
+
+            for (let row of parsedRows) {
+                const tr = document.createElement('tr');
+                for (let h of headers) {
+                    const td = document.createElement('td');
+                    let val = row[h] !== undefined && row[h] !== null ? String(row[h]) : '';
+                    td.textContent = val;
+
+                    const type = colTypes[h];
+                    if (type === 'mobile' && val) {
+                        td.classList.add('highlight-mobile');
+                    } else if (type === 'name' && val) {
+                        td.classList.add('highlight-name');
+                    } else if (type === 'amount' && val && !isNaN(parseFloat(val.replace(/,/g, '')))) {
+                        td.classList.add('highlight-amount');
+                    }
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+        }
+
+        // ---------- load data ----------
+        function loadData(csvText) {
+            const parsed = parseCSV(csvText);
+            if (parsed.headers.length === 0 || parsed.rows.length === 0) {
+                alert('⚠️ No valid data found in CSV. Please check the format.');
+                return;
+            }
+            headers = parsed.headers;
+            parsedRows = parsed.rows;
+            renderTable();
+        }
+
+        function loadFile(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                loadData(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+
+        // ---------- export to Excel ----------
+        function exportExcel() {
+            if (!parsedRows.length || !headers.length) {
+                alert('No data to export.');
+                return;
+            }
+
+            const data = [headers];
+            for (let row of parsedRows) {
+                const rowArr = headers.map(h => row[h] !== undefined ? row[h] : '');
+                data.push(rowArr);
+            }
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Customer Data');
+
+            const colWidths = headers.map((h, idx) => {
+                let maxLen = h.length;
+                for (let row of parsedRows) {
+                    const val = String(row[h] || '');
+                    if (val.length > maxLen) maxLen = val.length;
+                }
+                return { wch: Math.min(Math.max(maxLen + 4, 12), 50) };
+            });
+            ws['!cols'] = colWidths;
+
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([wbout], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'customer_data.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ---------- clear ----------
+        function clearData() {
+            parsedRows = [];
+            headers = [];
+            renderTable();
+            fileInput.value = '';
+        }
+
+        // ---------- event listeners ----------
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length && files[0].name.endsWith('.csv')) {
+                loadFile(files[0]);
+            } else {
+                alert('Please drop a .csv file.');
+            }
         });
 
-        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-        link.download = `BC_Registry_Data_${timestamp}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        fileInput.addEventListener('change', (e) => {
+            if (fileInput.files.length) {
+                loadFile(fileInput.files[0]);
+            }
+        });
 
-        showStatus('📥 Download started!', 'success');
-    }
+        exportBtn.addEventListener('click', exportExcel);
+        clearBtn.addEventListener('click', clearData);
+        sampleBtn.addEventListener('click', () => loadData(SAMPLE_CSV));
 
-    // ================================================================
-    // 6. RESET
-    // ================================================================
-    resetBtn.addEventListener('click', () => {
-        currentData = [];
-        currentHtmlContent = '';
-        fileInput.value = '';
-        fileInfo.style.display = 'none';
-        convertBtn.disabled = true;
-        statsDiv.classList.remove('show');
-        previewTable.classList.remove('show');
-        previewTable.innerHTML = '';
-        downloadSection.classList.remove('show');
-        keyStatus.classList.remove('show');
-        sampleBox.classList.remove('show');
-        statusDiv.style.display = 'none';
-        progressBar.classList.remove('show');
-        progressFill.style.width = '0%';
-    });
-
-    // ================================================================
-    // 7. STATUS HELPER
-    // ================================================================
-    function showStatus(msg, type) {
-        statusDiv.textContent = msg;
-        statusDiv.className = type;
-        statusDiv.style.display = 'block';
-    }
+        // initial render
+        renderTable();
+        console.log('✅ CSV to Excel SaaS ready');
+    })();
 </script>
 </body>
 </html>
