@@ -3,38 +3,102 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>CSV to Excel Converter — Smart SaaS Tool</title>
+    <title>CSV to Excel Pro — Smart Converter</title>
 
     <!-- SheetJS for Excel export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2332;
+            --bg-hover: #243044;
+            --border-color: #2d3b4f;
+            --text-primary: #e8edf5;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
-            background: linear-gradient(135deg, #f0f7ff 0%, #e6edf7 100%);
+            background: var(--bg-primary);
+            background-image: 
+                radial-gradient(ellipse at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             padding: 24px;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float-particle 20s infinite linear;
+        }
+
+        @keyframes float-particle {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.15; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
         .card {
-            max-width: 1200px;
+            max-width: 1300px;
             width: 100%;
-            background: white;
-            border-radius: 32px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
             padding: 40px 36px;
-            box-shadow: 0 20px 60px rgba(0, 20, 40, 0.12);
-            transition: 0.2s;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out;
         }
 
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -44,81 +108,154 @@
             margin-bottom: 8px;
         }
 
-        h1 {
-            font-size: 30px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #0b1b33;
+        .logo-section {
             display: flex;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            animation: pulseGlow 3s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .badge {
-            background: #eef5ff;
-            color: #1a5cff;
-            font-size: 13px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            color: var(--accent-blue);
+            font-size: 12px;
             font-weight: 600;
-            padding: 4px 16px;
+            padding: 4px 14px;
             border-radius: 40px;
-            letter-spacing: 0.2px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .subhead {
-            color: #4a5a72;
+            color: var(--text-secondary);
             margin: 12px 0 24px 0;
-            font-size: 16px;
-            border-left: 4px solid #1a5cff;
+            font-size: 15px;
             padding-left: 18px;
-            background: #f8faff;
+            border-left: 3px solid var(--accent-blue);
+            line-height: 1.7;
+            background: rgba(59, 130, 246, 0.05);
             border-radius: 0 12px 12px 0;
-            line-height: 1.6;
+            padding: 12px 18px;
         }
 
+        .subhead i {
+            color: var(--accent-blue);
+            margin-right: 8px;
+        }
+
+        /* Upload Zone */
         .upload-zone {
             margin: 20px 0 24px;
-            border: 2px dashed #d0dbe8;
-            border-radius: 24px;
-            padding: 48px 20px;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius);
+            padding: 50px 20px;
             text-align: center;
-            background: #fafcff;
-            transition: 0.2s;
+            background: rgba(255, 255, 255, 0.02);
+            transition: var(--transition);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.03), transparent, rgba(139, 92, 246, 0.03), transparent);
+            animation: rotateBg 10s linear infinite;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .upload-zone:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes rotateBg {
+            100% { transform: rotate(360deg); }
         }
 
         .upload-zone:hover {
-            border-color: #1a5cff;
-            background: #f2f7ff;
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.1);
         }
 
         .upload-zone.dragover {
-            border-color: #1a5cff;
-            background: #e7f0ff;
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+            transform: scale(1.01);
         }
 
         .upload-icon {
-            font-size: 48px;
+            font-size: 52px;
             margin-bottom: 12px;
+            display: block;
+            animation: bounceIcon 2s infinite;
+        }
+
+        @keyframes bounceIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         .upload-zone h3 {
             font-weight: 600;
-            color: #0b1b33;
+            color: var(--text-primary);
             font-size: 18px;
+            position: relative;
+            z-index: 1;
         }
 
         .upload-zone p {
-            color: #5f738c;
+            color: var(--text-secondary);
             margin-top: 6px;
-            font-size: 15px;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
         }
 
         .file-input {
             display: none;
         }
 
+        /* Action Bar */
         .action-bar {
             display: flex;
             flex-wrap: wrap;
@@ -128,119 +265,164 @@
             margin: 20px 0 24px;
         }
 
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         .btn {
-            background: white;
-            border: 1px solid #d0dbe8;
             padding: 10px 24px;
             border-radius: 60px;
             font-weight: 500;
-            font-size: 15px;
-            color: #1f3349;
+            font-size: 14px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #f8faff;
+            border: none;
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
         }
 
         .btn-primary {
-            background: #1a5cff;
-            border: 1px solid #1a5cff;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             color: white;
-            box-shadow: 0 4px 12px rgba(26, 92, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
         }
 
         .btn-primary:hover {
-            background: #0f4ad6;
-            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .btn-primary:disabled {
             opacity: 0.4;
-            pointer-events: none;
-            filter: grayscale(0.4);
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         .btn-success {
-            background: #00a86b;
-            border: 1px solid #00a86b;
+            background: linear-gradient(135deg, var(--accent-green), #059669);
             color: white;
-            box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
         }
 
         .btn-success:hover {
-            background: #008f5a;
-            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(16, 185, 129, 0.5);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid #d0dbe8;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
         }
 
         .btn-outline:hover {
-            background: #eef4fa;
+            background: var(--bg-hover);
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
         }
 
         .btn-danger {
-            background: #ff4757;
-            border: 1px solid #ff4757;
-            color: white;
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
         .btn-danger:hover {
-            background: #e63946;
+            background: rgba(239, 68, 68, 0.25);
+            transform: translateY(-2px);
         }
 
         .stats {
             font-size: 14px;
-            color: #3b5570;
-            background: #f2f7fd;
-            padding: 6px 18px;
+            color: var(--text-secondary);
+            background: var(--bg-hover);
+            padding: 8px 18px;
             border-radius: 40px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             font-weight: 500;
+            border: 1px solid var(--border-color);
         }
 
+        .stats i {
+            color: var(--accent-blue);
+        }
+
+        /* Table */
         .table-wrapper {
-            overflow-x: auto;
-            border-radius: 20px;
-            border: 1px solid #e5ecf3;
-            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
             margin-top: 12px;
             max-height: 500px;
-            overflow-y: auto;
+            overflow: auto;
+            position: relative;
+        }
+
+        .table-wrapper::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 12px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+            font-size: 13px;
             min-width: 800px;
         }
 
         th {
-            background: #f2f7fd;
-            color: #1f3a57;
+            background: var(--bg-hover);
+            color: var(--text-primary);
             font-weight: 600;
             padding: 14px 16px;
             text-align: left;
-            border-bottom: 2px solid #dce5ef;
+            border-bottom: 2px solid var(--border-color);
             white-space: nowrap;
             position: sticky;
             top: 0;
             z-index: 10;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         td {
             padding: 12px 16px;
-            border-bottom: 1px solid #eef3f9;
-            color: #1f3349;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
             max-width: 220px;
             word-break: break-word;
+            transition: var(--transition);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
         }
 
         tr:last-child td {
@@ -248,57 +430,57 @@
         }
 
         .highlight-mobile {
-            background: #e3f0ff !important;
+            color: #60a5fa !important;
             font-weight: 500;
-            font-family: 'SF Mono', 'Courier New', monospace;
+            font-family: 'Courier New', monospace;
         }
 
         .highlight-name {
-            background: #e9f7e9 !important;
+            color: #34d399 !important;
             font-weight: 500;
         }
 
         .highlight-amount {
-            background: #fff3e0 !important;
+            color: #fbbf24 !important;
             font-weight: 600;
         }
 
         .empty-state {
             padding: 60px 20px;
             text-align: center;
-            color: #8499b3;
+            color: var(--text-muted);
         }
 
-        .empty-state span {
-            font-size: 48px;
+        .empty-state i {
+            font-size: 56px;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
+            color: var(--text-muted);
+            opacity: 0.3;
         }
 
+        .empty-state h3 {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
         .footer-note {
             margin-top: 24px;
-            font-size: 14px;
-            color: #5f738c;
+            font-size: 13px;
+            color: var(--text-muted);
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #e8eef6;
+            border-top: 1px solid var(--border-color);
             padding-top: 20px;
             gap: 12px;
         }
 
-        .pill {
-            background: #eef5ff;
-            padding: 4px 14px;
-            border-radius: 40px;
-            font-size: 13px;
-            color: #1a5cff;
-        }
-
         .legend {
             display: flex;
-            gap: 16px;
+            gap: 18px;
             flex-wrap: wrap;
         }
 
@@ -306,75 +488,135 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        .legend-color {
-            width: 16px;
-            height: 16px;
+        .legend-dot {
+            width: 12px;
+            height: 12px;
             border-radius: 4px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
         }
 
-        @media (max-width: 600px) {
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: blink 2s infinite;
+            margin-right: 6px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Loading animation */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
             .card { padding: 24px 18px; }
             h1 { font-size: 22px; }
+            .header { flex-direction: column; }
+            .action-bar { flex-direction: column; align-items: stretch; }
+            .btn-group { justify-content: center; }
+            .stats { justify-content: center; }
+            .footer-note { flex-direction: column; text-align: center; }
+            .legend { justify-content: center; }
         }
 
-        /* scroll style */
-        ::-webkit-scrollbar { height: 6px; width: 6px; }
-        ::-webkit-scrollbar-track { background: #eef3f9; border-radius: 12px; }
-        ::-webkit-scrollbar-thumb { background: #bccbd9; border-radius: 12px; }
+        @media (max-width: 480px) {
+            .btn { font-size: 12px; padding: 8px 16px; }
+            .upload-zone { padding: 30px 16px; }
+            .upload-icon { font-size: 36px; }
+        }
     </style>
 </head>
 <body>
 
+<!-- Animated Background -->
+<div class="bg-particles" id="particles"></div>
+
 <div class="card">
+    <!-- Header -->
     <div class="header">
-        <div>
-            <h1>
-                📊 CSV → Excel Converter
-                <span class="badge">✨ Smart Format</span>
-            </h1>
+        <div class="logo-section">
+            <div class="logo-icon">
+                <i class="fas fa-file-csv"></i>
+            </div>
+            <div>
+                <h1>CSV <span>to Excel</span></h1>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                    <span class="badge"><i class="fas fa-bolt" style="margin-right: 4px;"></i>Pro</span>
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: var(--accent-green);">
+                        <i class="fas fa-check-circle"></i> Live
+                    </span>
+                </div>
+            </div>
         </div>
-        <span class="pill">🚀 Host on GitHub Pages</span>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span class="status-dot"></span>
+            <span style="color: var(--text-secondary); font-size: 13px;">System Ready</span>
+        </div>
     </div>
 
     <div class="subhead">
-        ⚡ Auto‑detects <strong>mobile numbers</strong> (blue), <strong>names</strong> (green), and <strong>amounts</strong> (orange) — perfect for customer data
+        <i class="fas fa-magic"></i>
+        Auto‑detects <strong style="color: #60a5fa;">mobile numbers</strong>, 
+        <strong style="color: #34d399;">names</strong>, and 
+        <strong style="color: #fbbf24;">amounts</strong> — 
+        perfect for customer data &amp; financial records
     </div>
 
     <!-- Upload -->
     <div class="upload-zone" id="dropZone">
-        <div class="upload-icon">📁</div>
-        <h3>Drop your CSV here</h3>
-        <p>or click to browse &nbsp;·&nbsp; .csv only</p>
+        <span class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
+        <h3>Drop your CSV file here</h3>
+        <p>or click to browse &nbsp;·&nbsp; <strong>.csv</strong> only</p>
         <input type="file" id="fileInput" class="file-input" accept=".csv" />
     </div>
 
-    <!-- Action bar -->
+    <!-- Action Bar -->
     <div class="action-bar">
-        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <div class="btn-group">
             <button class="btn btn-success" id="exportBtn" disabled>
-                ⬇️ Download Excel (.xlsx)
+                <i class="fas fa-download"></i> Export Excel
             </button>
             <button class="btn btn-outline" id="clearBtn">
-                🗑️ Clear
+                <i class="fas fa-trash-alt"></i> Clear
             </button>
             <button class="btn btn-outline" id="sampleBtn">
-                📋 Load Sample
+                <i class="fas fa-file-alt"></i> Load Sample
             </button>
         </div>
         <div>
-            <span class="stats" id="rowStats">📋 0 rows</span>
+            <span class="stats" id="rowStats">
+                <i class="fas fa-table"></i> 0 rows
+            </span>
         </div>
     </div>
 
-    <!-- Table preview -->
+    <!-- Table -->
     <div class="table-wrapper" id="tableWrapper">
         <div class="empty-state" id="emptyState">
-            <span>📄</span>
-            No data loaded — upload a CSV or click "Load Sample"
+            <i class="fas fa-inbox"></i>
+            <h3>No data loaded</h3>
+            <p>Upload a CSV file or click "Load Sample" to get started</p>
         </div>
         <table id="dataTable" style="display: none;">
             <thead id="tableHead"></thead>
@@ -382,19 +624,26 @@
         </table>
     </div>
 
+    <!-- Footer -->
     <div class="footer-note">
         <div class="legend">
             <span class="legend-item">
-                <span class="legend-color" style="background:#e3f0ff;"></span> Mobile
+                <span class="legend-dot" style="background:#60a5fa;"></span> Mobile
             </span>
             <span class="legend-item">
-                <span class="legend-color" style="background:#e9f7e9;"></span> Name
+                <span class="legend-dot" style="background:#34d399;"></span> Name
             </span>
             <span class="legend-item">
-                <span class="legend-color" style="background:#fff3e0;"></span> Amount
+                <span class="legend-dot" style="background:#fbbf24;"></span> Amount
+            </span>
+            <span class="legend-item">
+                <span class="legend-dot" style="background:var(--border-color);"></span> Text
             </span>
         </div>
-        <span>🔍 Columns with ₹ or amount values are auto-detected</span>
+        <span style="display: flex; align-items: center; gap: 6px;">
+            <i class="fas fa-shield-alt" style="color: var(--accent-blue);"></i>
+            All processing happens locally — your data stays private
+        </span>
     </div>
 </div>
 
@@ -414,46 +663,46 @@
         const thead = document.getElementById('tableHead');
         const tbody = document.getElementById('tableBody');
 
-        // ---------- state ----------
+        // State
         let parsedRows = [];
         let headers = [];
 
-        // ---------- SAMPLE DATA (your CSV) ----------
+        // Sample Data
         const SAMPLE_CSV = `BP Number,Full Name,Mobile,Email,City,District,Postal Code,Street,House Number,Location,Bill Number,Due Date,Total Bill (₹),Amount to Pay (₹)
-50240501,PREM NAIDU,9689271236,,PUNE,RAHATANI,411017,SHREE APARTMENT,505,NEAR TAMBE SCHOOL NAKHATE VASTI,008012315737,2026-08-31,,
-50240505,AMIT VIJAY PENDSE,9823640764,,PUNE,PIMPLE SAUDAGAR,411027,SAI ORCHARD CHS,603,NEAR GOVIND GARDEN HOTEL,008011987452,2026-07-18,,
-50240506,NEHA KOHLI,9552930200,,PUNE,WAKAD,411057,ALLIANCE NISARG WHITE LILY,201,NEAR PUMPKIN PATCH SCHOOL & POLICE LINE,008012308747,2026-08-31,,
-50240507,PREMALATA NANADKUMAR PAI,9823195743,,PUNE,SINHAGAD ROAD,411030,ROHAN KRITIKA,104,NXT TO P L DESHPANDE UDYAN DATTAWADI,008011744480,2026-06-15,,
-50240509,SHIRISH PARAKH,9763301729,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,3,NEAR BHARAT JYOTI BUS STOP,008012181569,2026-08-19,,
-50240510,SHRIKANT KALE,9422570670,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,4,NEAR BHARAT JYOTI BUS STOP,008012181570,2026-08-19,,
-50240511,JAGDISH SHETTY,9766351995,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,5,NEAR BHARAT JYOTI BUS STOP,008012181571,2026-08-19,,
-50240514,VISHWANATH PUJARI,9890914444,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,11,NEAR BHARAT JYOTI BUS STOP,008012181574,2026-08-19,,
-50240515,SANTOSH JAIN,9822115107,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,12,NEAR BHARAT JYOTI BUS STOP,008012181575,2026-08-19,,
-50240516,RAKESH VEDPATHAK,9823088959,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,20,NEAR BHARAT JYOTI BUS STOP,008012181576,2026-08-19,,
-50240517,AASAVARI BHATE,9423574067,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,3,NEAR BHARAT JYOTI BUS STOP,008012181577,2026-08-19,,
-50240518,HIRALAL KATKAR,9422001984,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,4,NEAR BHARAT JYOTI BUS STOP,008012181578,2026-08-19,,
-50240521,VENKATRAO INDURKAR,9890010016,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,8,NEAR BHARAT JYOTI BUS STOP,008012181580,2026-08-19,,
-50240522,HARSHAWARDHAN DONGREY,9028056849,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,10,NEAR BHARAT JYOTI BUS STOP,008012181581,2026-08-19,,
-50240523,SITARAM ALURKAR,9850823256,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,11,NEAR BHARAT JYOTI BUS STOP,008012181582,2026-08-19,,
-50240525,PANDHARINATH LAVHALE,9552527101,,PUNE,BIBWEWADI,411037,RAJMATA BUNGLOW SOCIETY,8,KENJALE NAGAR,008012181584,2026-08-19,,
-50240526,RITESH PATEL,9371007412,,PUNE,BIBWEWADI,411037,SOLITAIRE,804,KENJALE NAGAR,008012181585,2026-08-19,,
-50240527,SHALINI MARNE,9623923722,,PUNE,BIBWEWADI,411037,CHINTAMANI NAGAR,A1/2,NEAR MAHESH SOCIETY,008012166998,2026-08-19,,
-50240531,AJIT KHOPDE,9545238787,,PUNE,KONDHWA,411048,MORAYA NAGARI,1,NEAR VIIT COLLLEGE,008007311118,2024-03-18,,
-50240536,ANAND SOMAN,9403348333,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181586,2026-08-19,,
-50240537,AKHILESH RAJPUT,9503770991,,PUNE,KATRAJ,411046,SEEMA SAGAR,,BEHIND TELEPHONE EXCHANGE,008012181587,2026-08-19,,
-50240538,SHIVKUMAR RAJPUT,7588229742,,PUNE,KATRAJ,411046,SEEMA SAGAR,,BEHIND TELEPHONE EXCHANGE,008012181588,2026-08-19,,
-50240539,DINESH RAJPUT,9762016432,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181589,2026-08-19,,
-50240540,YOGESH RAJPUT,9762016431,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181590,2026-08-19,,
-50240542,PURUSHOTTAM RAJE,8380896285,,PUNE,KATRAJ,411046,SEEMA SAGAR,7,BEHIND TELEPHONE EXCHANGE,008012181591,2026-08-19,,
-50240543,SHAMAL KANHERKAR,9730525243,,PUNE,KATRAJ,411046,SEEMA SAGAR,5,BEHIND TELEPHONE EXCHANGE,008005782465,2023-04-24,,
-50240545,SANKET PIPARIYA,7304059194,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,304,NEAR VIIT COLLLEGE,008012036787,2026-07-20,,
-50240546,BHAVESH SHAH,9028963772,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,404,NEAR VIIT COLLLEGE,008012036788,2026-07-20,,
-50240547,JAYESH SHAH,9421002345,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1102,NEAR VIIT COLLLEGE,008012036789,2026-07-20,,
-50240548,MANOJ KASAT,7350799253,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1102,NEAR VIIT COLLLEGE,008012036790,2026-07-20,,
-50240549,ANANT SHAH,9922063575,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1003,NEAR VIIT COLLLEGE,008012036791,2026-07-20,,
-50240550,RICHIE OSWAL,8411099007,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,904,NEAR VIIT COLLLEGE,008012036792,2026-07-20,`;
+50240501,PREM NAIDU,9689271236,,PUNE,RAHATANI,411017,SHREE APARTMENT,505,NEAR TAMBE SCHOOL NAKHATE VASTI,008012315737,2026-08-31,15000,15000
+50240505,AMIT VIJAY PENDSE,9823640764,,PUNE,PIMPLE SAUDAGAR,411027,SAI ORCHARD CHS,603,NEAR GOVIND GARDEN HOTEL,008011987452,2026-07-18,25000,25000
+50240506,NEHA KOHLI,9552930200,,PUNE,WAKAD,411057,ALLIANCE NISARG WHITE LILY,201,NEAR PUMPKIN PATCH SCHOOL,008012308747,2026-08-31,18000,18000
+50240507,PREMALATA PAI,9823195743,,PUNE,SINHAGAD ROAD,411030,ROHAN KRITIKA,104,NXT TO P L DESHPANDE UDYAN,008011744480,2026-06-15,22000,22000
+50240509,SHIRISH PARAKH,9763301729,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,3,NEAR BHARAT JYOTI BUS STOP,008012181569,2026-08-19,12000,12000
+50240510,SHRIKANT KALE,9422570670,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,4,NEAR BHARAT JYOTI BUS STOP,008012181570,2026-08-19,14000,14000
+50240511,JAGDISH SHETTY,9766351995,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,5,NEAR BHARAT JYOTI BUS STOP,008012181571,2026-08-19,16000,16000
+50240514,VISHWANATH PUJARI,9890914444,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,11,NEAR BHARAT JYOTI BUS STOP,008012181574,2026-08-19,13000,13000
+50240515,SANTOSH JAIN,9822115107,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,12,NEAR BHARAT JYOTI BUS STOP,008012181575,2026-08-19,11000,11000
+50240516,RAKESH VEDPATHAK,9823088959,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,20,NEAR BHARAT JYOTI BUS STOP,008012181576,2026-08-19,19000,19000
+50240517,AASAVARI BHATE,9423574067,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,3,NEAR BHARAT JYOTI BUS STOP,008012181577,2026-08-19,21000,21000
+50240518,HIRALAL KATKAR,9422001984,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,4,NEAR BHARAT JYOTI BUS STOP,008012181578,2026-08-19,17000,17000
+50240521,VENKATRAO INDURKAR,9890010016,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,8,NEAR BHARAT JYOTI BUS STOP,008012181580,2026-08-19,15000,15000
+50240522,HARSHAWARDHAN DONGREY,9028056849,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,10,NEAR BHARAT JYOTI BUS STOP,008012181581,2026-08-19,23000,23000
+50240523,SITARAM ALURKAR,9850823256,,PUNE,BIBWEWADI,411037,LOKESH SOCIETY,11,NEAR BHARAT JYOTI BUS STOP,008012181582,2026-08-19,12500,12500
+50240525,PANDHARINATH LAVHALE,9552527101,,PUNE,BIBWEWADI,411037,RAJMATA BUNGLOW SOCIETY,8,KENJALE NAGAR,008012181584,2026-08-19,18500,18500
+50240526,RITESH PATEL,9371007412,,PUNE,BIBWEWADI,411037,SOLITAIRE,804,KENJALE NAGAR,008012181585,2026-08-19,20500,20500
+50240527,SHALINI MARNE,9623923722,,PUNE,BIBWEWADI,411037,CHINTAMANI NAGAR,A1/2,NEAR MAHESH SOCIETY,008012166998,2026-08-19,15500,15500
+50240531,AJIT KHOPDE,9545238787,,PUNE,KONDHWA,411048,MORAYA NAGARI,1,NEAR VIIT COLLLEGE,008007311118,2024-03-18,28000,28000
+50240536,ANAND SOMAN,9403348333,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181586,2026-08-19,19500,19500
+50240537,AKHILESH RAJPUT,9503770991,,PUNE,KATRAJ,411046,SEEMA SAGAR,,BEHIND TELEPHONE EXCHANGE,008012181587,2026-08-19,17500,17500
+50240538,SHIVKUMAR RAJPUT,7588229742,,PUNE,KATRAJ,411046,SEEMA SAGAR,,BEHIND TELEPHONE EXCHANGE,008012181588,2026-08-19,16500,16500
+50240539,DINESH RAJPUT,9762016432,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181589,2026-08-19,14500,14500
+50240540,YOGESH RAJPUT,9762016431,,PUNE,KATRAJ,411046,SEEMA SAGAR,2,BEHIND TELEPHONE EXCHANGE,008012181590,2026-08-19,13500,13500
+50240542,PURUSHOTTAM RAJE,8380896285,,PUNE,KATRAJ,411046,SEEMA SAGAR,7,BEHIND TELEPHONE EXCHANGE,008012181591,2026-08-19,22500,22500
+50240543,SHAMAL KANHERKAR,9730525243,,PUNE,KATRAJ,411046,SEEMA SAGAR,5,BEHIND TELEPHONE EXCHANGE,008005782465,2023-04-24,32000,32000
+50240545,SANKET PIPARIYA,7304059194,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,304,NEAR VIIT COLLLEGE,008012036787,2026-07-20,26000,26000
+50240546,BHAVESH SHAH,9028963772,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,404,NEAR VIIT COLLLEGE,008012036788,2026-07-20,24000,24000
+50240547,JAYESH SHAH,9421002345,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1102,NEAR VIIT COLLLEGE,008012036789,2026-07-20,21500,21500
+50240548,MANOJ KASAT,7350799253,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1102,NEAR VIIT COLLLEGE,008012036790,2026-07-20,23500,23500
+50240549,ANANT SHAH,9922063575,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,1003,NEAR VIIT COLLLEGE,008012036791,2026-07-20,25500,25500
+50240550,RICHIE OSWAL,8411099007,,PUNE,KONDHWA BUDRUK,411048,YASHODHAN SOCIETY,904,NEAR VIIT COLLLEGE,008012036792,2026-07-20,27500,27500`;
 
-        // ---------- helpers ----------
+        // Helpers
         function isMobileNumber(str) {
             if (typeof str !== 'string') return false;
             const cleaned = str.replace(/[\s\-\(\)\+]/g, '');
@@ -462,14 +711,14 @@
 
         function isNameField(header) {
             const lower = header.trim().toLowerCase();
-            const nameIndicators = ['name', 'fullname', 'firstname', 'lastname', 'contactname', 'person', 'customer', 'client', 'user'];
-            return nameIndicators.some(ind => lower === ind || lower.includes(ind));
+            const indicators = ['name', 'fullname', 'firstname', 'lastname', 'contactname', 'person', 'customer', 'client', 'user'];
+            return indicators.some(ind => lower === ind || lower.includes(ind));
         }
 
         function isAmountField(header) {
             const lower = header.trim().toLowerCase();
-            const amountIndicators = ['amount', 'total', 'bill', 'price', 'payment', 'due', 'pay', '₹', 'rs'];
-            return amountIndicators.some(ind => lower.includes(ind));
+            const indicators = ['amount', 'total', 'bill', 'price', 'payment', 'due', 'pay', '₹', 'rs'];
+            return indicators.some(ind => lower.includes(ind));
         }
 
         function detectColumnType(header, values) {
@@ -484,7 +733,6 @@
                 totalChecked++;
                 const str = String(v);
                 if (isMobileNumber(str)) mobileCount++;
-                // Check if it looks like an amount
                 if (/^[\d,]+\.?[\d]{0,2}$/.test(str.replace(/,/g, '')) && parseFloat(str.replace(/,/g, '')) > 0) {
                     amountCount++;
                 }
@@ -500,7 +748,7 @@
             return 'text';
         }
 
-        // ---------- parse CSV ----------
+        // CSV Parser
         function parseCSV(text) {
             const rows = [];
             let row = [];
@@ -577,7 +825,7 @@
             return { headers: finalHeaders, rows: result };
         }
 
-        // ---------- render table ----------
+        // Render Table
         function renderTable() {
             thead.innerHTML = '';
             tbody.innerHTML = '';
@@ -585,14 +833,14 @@
             if (!parsedRows.length || !headers.length) {
                 table.style.display = 'none';
                 emptyState.style.display = 'block';
-                rowStats.textContent = '📋 0 rows';
+                rowStats.innerHTML = `<i class="fas fa-table"></i> 0 rows`;
                 exportBtn.disabled = true;
                 return;
             }
 
             table.style.display = '';
             emptyState.style.display = 'none';
-            rowStats.textContent = `📋 ${parsedRows.length} rows · ${headers.length} columns`;
+            rowStats.innerHTML = `<i class="fas fa-table"></i> ${parsedRows.length} rows · ${headers.length} columns`;
             exportBtn.disabled = false;
 
             const colTypes = {};
@@ -604,15 +852,12 @@
             const trHead = document.createElement('tr');
             for (let h of headers) {
                 const th = document.createElement('th');
-                th.textContent = h;
                 const type = colTypes[h];
-                if (type === 'mobile') {
-                    th.innerHTML += ' <span style="font-weight:400;font-size:11px;background:#d4e6ff;padding:0 8px;border-radius:30px;margin-left:6px;">📱</span>';
-                } else if (type === 'name') {
-                    th.innerHTML += ' <span style="font-weight:400;font-size:11px;background:#d4f0d4;padding:0 8px;border-radius:30px;margin-left:6px;">👤</span>';
-                } else if (type === 'amount') {
-                    th.innerHTML += ' <span style="font-weight:400;font-size:11px;background:#ffe0b2;padding:0 8px;border-radius:30px;margin-left:6px;">💰</span>';
-                }
+                let icon = '';
+                if (type === 'mobile') icon = ' <i class="fas fa-phone" style="color:#60a5fa;font-size:11px;"></i>';
+                else if (type === 'name') icon = ' <i class="fas fa-user" style="color:#34d399;font-size:11px;"></i>';
+                else if (type === 'amount') icon = ' <i class="fas fa-coins" style="color:#fbbf24;font-size:11px;"></i>';
+                th.innerHTML = h + icon;
                 trHead.appendChild(th);
             }
             thead.appendChild(trHead);
@@ -625,11 +870,9 @@
                     td.textContent = val;
 
                     const type = colTypes[h];
-                    if (type === 'mobile' && val) {
-                        td.classList.add('highlight-mobile');
-                    } else if (type === 'name' && val) {
-                        td.classList.add('highlight-name');
-                    } else if (type === 'amount' && val && !isNaN(parseFloat(val.replace(/,/g, '')))) {
+                    if (type === 'mobile' && val) td.classList.add('highlight-mobile');
+                    else if (type === 'name' && val) td.classList.add('highlight-name');
+                    else if (type === 'amount' && val && !isNaN(parseFloat(val.replace(/,/g, '')))) {
                         td.classList.add('highlight-amount');
                     }
                     tr.appendChild(td);
@@ -638,7 +881,7 @@
             }
         }
 
-        // ---------- load data ----------
+        // Load Data
         function loadData(csvText) {
             const parsed = parseCSV(csvText);
             if (parsed.headers.length === 0 || parsed.rows.length === 0) {
@@ -659,7 +902,7 @@
             reader.readAsText(file);
         }
 
-        // ---------- export to Excel ----------
+        // Export Excel
         function exportExcel() {
             if (!parsedRows.length || !headers.length) {
                 alert('No data to export.');
@@ -698,7 +941,7 @@
             URL.revokeObjectURL(url);
         }
 
-        // ---------- clear ----------
+        // Clear
         function clearData() {
             parsedRows = [];
             headers = [];
@@ -706,7 +949,23 @@
             fileInput.value = '';
         }
 
-        // ---------- event listeners ----------
+        // Create Background Particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (15 + Math.random() * 20) + 's';
+                particle.style.animationDelay = (Math.random() * 20) + 's';
+                particle.style.width = (2 + Math.random() * 4) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Event Listeners
         dropZone.addEventListener('click', () => fileInput.click());
 
         dropZone.addEventListener('dragover', (e) => {
@@ -737,9 +996,9 @@
         clearBtn.addEventListener('click', clearData);
         sampleBtn.addEventListener('click', () => loadData(SAMPLE_CSV));
 
-        // initial render
+        // Initial render
         renderTable();
-        console.log('✅ CSV to Excel SaaS ready');
+        console.log('✅ CSV to Excel Pro ready');
     })();
 </script>
 </body>
